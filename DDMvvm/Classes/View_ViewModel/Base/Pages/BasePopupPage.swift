@@ -23,7 +23,6 @@ class BasePopupPage: UIViewController, Destroyable {
     var popupType: PopupType = .popup
     var shouldDismissOnTapOutside: Bool = true
     
-    private let tapGesture = UITapGestureRecognizer()
     private lazy var tapAction: Action<Void, Void> = {
         return Action() {
             if self.shouldDismissOnTapOutside {
@@ -73,8 +72,7 @@ class BasePopupPage: UIViewController, Destroyable {
         heightConstraint = contentPage.view.autoSetDimension(.height, toSize: 480)
         contentPage.didMove(toParent: self)
         
-        overlayView.addGestureRecognizer(tapGesture)
-        tapGesture.bind(to: tapAction, input: ())
+        overlayView.tapGesture.bind(to: tapAction, input: ())
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -114,7 +112,7 @@ class BasePopupPage: UIViewController, Destroyable {
     }
     
     func destroy() {
-        tapGesture.unbindAction()
+        overlayView.tapGesture.unbindAction()
         
         (contentPage as? Destroyable)?.destroy()
         disposeBag = DisposeBag()
