@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DDMvvm'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of DDMvvm.'
+  s.version          = '1.0.0'
+  s.summary          = 'A MVVM library for iOS Swift.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,17 +18,18 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model, DI and Services
                        DESC
 
-  s.homepage         = 'https://github.com/dduy.duong@gmail.com/DDMvvm'
+  s.homepage         = 'https://github.com/duyduong/DDMvvm.git'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'dduy.duong@gmail.com' => 'dduy.duong@gmail.com' }
-  s.source           = { :git => 'https://github.com/dduy.duong@gmail.com/DDMvvm.git', :tag => s.version.to_s }
+  s.author           = { 'dduy.duong@gmail.com' => 'Dao Duy duong' }
+  s.source           = { :git => 'https://github.com/duyduong/DDMvvm.git', :tag => s.version.to_s }
+  s.swift_version    = '4.2'
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'DDMvvm/Classes/**/*'
   
@@ -37,6 +38,13 @@ TODO: Add long description of the pod here.
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.frameworks = 'UIKit'
+  
+  s.dependency 'RxSwift'
+  s.dependency 'RxCocoa'
+  s.dependency 'Action'
+  s.dependency 'Alamofire'
+  s.dependency 'AlamofireImage'
+  s.dependency 'ObjectMapper'
+  s.dependency 'PureLayout'
 end

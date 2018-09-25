@@ -1,0 +1,6 @@
+framework module DDMvvm {
+  umbrella header "DDMvvm-umbrella.h"
+
+  export *
+  module * { export * }
+}

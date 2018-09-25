@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DDMvvm
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        DependencyManager.shared.registerDefaults()
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        
+        let page = ContactListPage(viewModel: ContactListPageViewModel())
+        let rootPage = UINavigationController(rootViewController: page)
+        window?.rootViewController = rootPage
+        window?.makeKeyAndVisible()
+        
         return true
     }
 
