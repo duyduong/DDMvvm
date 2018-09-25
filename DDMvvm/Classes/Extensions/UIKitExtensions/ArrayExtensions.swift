@@ -10,7 +10,7 @@ import Foundation
 
 extension Array {
     
-    func chunked(by chunkSize: Int) -> [[Element]] {
+    public func chunked(by chunkSize: Int) -> [[Element]] {
         return stride(from: 0, to: self.count, by: chunkSize).map {
             Array(self[$0..<Swift.min($0 + chunkSize, self.count)])
         }
@@ -19,7 +19,7 @@ extension Array {
 
 extension Array where Element: Model {
     
-    func toCellViewModels<T: GenericCellViewModel>() -> [T] where T.ModelElement == Element {
+    public func toCellViewModels<T: GenericCellViewModel>() -> [T] where T.ModelElement == Element {
         return self.flatMap { [T(model: $0)] }
     }
 }

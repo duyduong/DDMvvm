@@ -11,7 +11,7 @@ import RxSwift
 
 extension Reactive where Base: UIScrollView {
     
-    var endReach: Observable<Void> {
+    public var endReach: Observable<Void> {
         return Observable.create { observer in
             return self.base.rx.contentOffset.subscribe(onNext: { offset in
                 let scrollViewHeight = self.base.frame.size.height

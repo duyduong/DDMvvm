@@ -11,13 +11,13 @@ import UIKit
 extension UIImage {
     
     // create image from mono color
-    static func from(color: UIColor) -> UIImage {
+    public static func from(color: UIColor) -> UIImage {
         let size = CGSize(width: 1, height: 1)
         return from(color: color, withSize: size)
     }
     
     // create image from mono color with specific size
-    static func from(color: UIColor, withSize size: CGSize, cornerRadius: CGFloat = 0) -> UIImage {
+    public static func from(color: UIColor, withSize size: CGSize, cornerRadius: CGFloat = 0) -> UIImage {
         UIGraphicsBeginImageContext(size)
         let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: size.width, height: size.height), cornerRadius: cornerRadius)
         path.addClip()

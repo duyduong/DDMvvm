@@ -72,6 +72,8 @@ open class BasePage<VM: GenericViewModel>: UIViewController, GenericView, UIGest
     open override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .white
+        
         loaderView = InlineLoaderView()
         view.addSubview(loaderView)
         loaderView.autoCenterInSuperview()
@@ -82,22 +84,22 @@ open class BasePage<VM: GenericViewModel>: UIViewController, GenericView, UIGest
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel?.varViewState.value = .willAppear
+        viewModel?.viewState.accept(.willAppear)
     }
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel?.varViewState.value = .willAppear
+        viewModel?.viewState.accept(.didAppear)
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        viewModel?.varViewState.value = .willAppear
+        viewModel?.viewState.accept(.willDisappear)
     }
     
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        viewModel?.varViewState.value = .didDisappear
+        viewModel?.viewState.accept(.didDisappear)
     }
     
     // MARK: - For subclass to override
@@ -117,6 +119,7 @@ open class BasePage<VM: GenericViewModel>: UIViewController, GenericView, UIGest
     
     open func createBackButton() -> UIBarButtonItem {
         let button = UIBarButtonItem()
+        button.setTitleTextAttributes([.font: Font.system.normal(withSize: 18)], for: .normal)
         button.title = "\u{2190}"
         return button
     }
@@ -133,8 +136,8 @@ open class BasePage<VM: GenericViewModel>: UIViewController, GenericView, UIGest
         // binding for loading
         if let viewModel = viewModel {
             viewModel.react()
-            viewModel.varLoading ~> loaderView.rx.show => disposeBag
-            viewModel.varLoading.asObservable().subscribe(onNext: onLoading) => disposeBag
+            viewModel.showInlineLoader ~> loaderView.rx.show => disposeBag
+            viewModel.showInlineLoader.subscribe(onNext: onLoading) => disposeBag
         }
     }
     

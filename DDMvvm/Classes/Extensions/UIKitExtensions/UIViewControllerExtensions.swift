@@ -10,9 +10,8 @@ import UIKit
 
 extension UINavigationController {
     
-    func popViewController(animated: Bool, completions: ((UIViewController?) -> Void)?) {
+    public func popViewController(animated: Bool, completions: ((UIViewController?) -> Void)?) {
         let page = topViewController
-        
         if animated {
             CATransaction.begin()
             CATransaction.setCompletionBlock { completions?(page) }
@@ -22,10 +21,9 @@ extension UINavigationController {
             popViewController(animated: animated)
             completions?(page)
         }
-        
     }
     
-    func pushViewController(_ viewController: UIViewController, animated: Bool, completions: (() -> Void)?) {
+    public func pushViewController(_ viewController: UIViewController, animated: Bool, completions: (() -> Void)?) {
         if animated {
             CATransaction.begin()
             CATransaction.setCompletionBlock(completions)

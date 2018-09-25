@@ -27,7 +27,7 @@ open class NetworkService {
     
     init() {
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = Configs.requestTimeout
+        config.timeoutIntervalForRequest = httpSettings.requestTimeout
         
         sessionManager = Alamofire.SessionManager(configuration: config)
     }
@@ -59,13 +59,7 @@ open class NetworkService {
     }
     
     private func makeHeaders(_ additionalHeaders: HTTPHeaders?) -> HTTPHeaders {
-        var headers: HTTPHeaders = [String: String]()
-        switch Configs.httpContentType {
-        case .json:
-            headers["Content-Type"] = "application/json"
-        default:
-            headers["Content-Type"] = "text/xml"
-        }
+        var headers: HTTPHeaders = ["Content-Type": httpSettings.httpContentType.rawValue]
         
         if let additionalHeaders = additionalHeaders {
             additionalHeaders.forEach { pair in
@@ -79,7 +73,6 @@ open class NetworkService {
 }
 
 public class JsonService: NetworkService {
-    
     
     
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 public protocol Destroyable: class {
     
@@ -38,8 +39,8 @@ public protocol IViewModel: Destroyable {
 
 public protocol GenericViewModel: IViewModel {
     
-    var varViewState: Variable<ViewState> { get }
-    var varLoading: Variable<Bool> { get }
+    var viewState: BehaviorRelay<ViewState> { get }
+    var showInlineLoader: BehaviorRelay<Bool> { get }
     
     var navigationService: INavigationService { get }
     
@@ -50,9 +51,9 @@ public protocol GenericListViewModel: GenericViewModel {
     
     associatedtype CellViewModelElement: GenericCellViewModel
     
-    var itemsSource: SectionList<CellViewModelElement> { get }
-    var varSelectedItem: Variable<CellViewModelElement?> { get }
-    var varSelectedIndex: Variable<IndexPath?> { get }
+    var itemsSource: ReactiveCollection<CellViewModelElement> { get }
+    var selectedItem: BehaviorRelay<CellViewModelElement?> { get }
+    var selectedIndex: BehaviorRelay<IndexPath?> { get }
     
     func selectedItemDidChange(_ cellViewModel: CellViewModelElement)
 }

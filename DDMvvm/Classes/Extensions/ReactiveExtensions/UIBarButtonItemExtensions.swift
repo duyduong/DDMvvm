@@ -12,10 +12,9 @@ import RxCocoa
 
 extension Reactive where Base: UIBarButtonItem {
     
-    var image: Binder<UIImage?> {
+    public var image: Binder<UIImage?> {
         return Binder(self.base) { $0.image = $1 }
     }
-    
 }
 
 

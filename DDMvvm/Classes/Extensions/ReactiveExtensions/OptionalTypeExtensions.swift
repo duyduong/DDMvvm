@@ -10,24 +10,22 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol OptionalType {
+public protocol OptionalType {
     
     associatedtype Wrapped
     var value: Wrapped? { get }
-    
 }
 
 extension Optional: OptionalType {
     
-    var value: Wrapped? {
+    public var value: Wrapped? {
         return self
     }
-    
 }
 
 extension ObservableType where E: OptionalType {
     
-    func filterNil() -> Observable<E.Wrapped> {
+    public func filterNil() -> Observable<E.Wrapped> {
         return self.flatMap { element -> Observable<E.Wrapped> in
             return Observable.from(optional: element.value)
         }

@@ -9,14 +9,14 @@
 import Foundation
 import ObjectMapper
 
-public class Model: NSObject, Mappable {
+open class Model: NSObject, Mappable {
     
     required public init?(map: Map) {
         super.init()
         mapping(map: map)
     }
     
-    public func mapping(map: Map) {}
+    open func mapping(map: Map) {}
     
 }
 

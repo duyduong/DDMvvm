@@ -7,30 +7,37 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 import Alamofire
+import AlamofireImage
 
 public struct NetworkImage {
     
-    var placeholder: UIImage?
-    var url: URL?
-    var completion: ((DataResponse<UIImage>) -> Void)?
+    var url: URL? = nil
+    var placeholder: UIImage? = nil
+    var completion: ((DataResponse<UIImage>) -> Void)? = nil
     
-    init() {}
-    
-    init(withURL url: URL?) {
-        self.url = url
-    }
-    
-    init(withURL url: URL?, placeholder: UIImage?) {
+    init(withURL url: URL? = nil, placeholder: UIImage? = nil, completion: ((DataResponse<UIImage>) -> Void)? = nil) {
         self.url = url
         self.placeholder = placeholder
-    }
-    
-    init(withURL url: URL?, completion: ((DataResponse<UIImage>) -> Void)?) {
-        self.url = url
         self.completion = completion
     }
+}
+
+extension Reactive where Base: UIImageView {
     
+    public var networkImage: Binder<NetworkImage> {
+        return Binder(self.base) { view, image in
+            if let placeholder = image.placeholder {
+                view.image = placeholder
+            }
+            
+            if let url = image.url {
+                view.af_setImage(withURL: url, imageTransition: .crossDissolve(0.25), completion: image.completion)
+            }
+        }
+    }
 }
 
 

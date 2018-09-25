@@ -28,13 +28,13 @@ open class BaseView<VM: GenericViewModel>: UIView, GenericView {
         }
     }
     
-    init(viewModel: VM? = nil) {
+    public init(viewModel: VM? = nil) {
         self._viewModel = viewModel
         super.init(frame: .zero)
         setup()
     }
     
-    init(frame: CGRect, viewModel: VM? = nil) {
+    public init(frame: CGRect, viewModel: VM? = nil) {
         self._viewModel = viewModel
         super.init(frame: frame)
         setup()
@@ -85,7 +85,7 @@ open class BaseCollectionCell<VM: GenericCellViewModel>: UICollectionViewCell, G
         }
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
@@ -139,7 +139,7 @@ open class BaseTableCell<VM: GenericCellViewModel>: UITableViewCell, GenericView
         }
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }

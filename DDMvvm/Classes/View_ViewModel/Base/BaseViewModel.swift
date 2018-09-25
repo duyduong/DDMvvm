@@ -19,8 +19,8 @@ open class ViewModel<M: Model>: NSObject, GenericViewModel {
     public var model: M?
     public var disposeBag: DisposeBag? = DisposeBag()
     
-    public let varViewState = Variable<ViewState>(.none)
-    public let varLoading = Variable(false)
+    public let viewState = BehaviorRelay<ViewState>(value: .none)
+    public let showInlineLoader = BehaviorRelay(value: false)
     
     public let navigationService: INavigationService
     
@@ -44,9 +44,9 @@ open class ListViewModel<M: Model, CVM: GenericCellViewModel>: ViewModel<M>, Gen
     
     public typealias ItemsSourceType = [[CVM]]
     
-    public let itemsSource = SectionList<CVM>()
-    public let varSelectedItem = Variable<CVM?>(nil)
-    public let varSelectedIndex = Variable<IndexPath?>(nil)
+    public let itemsSource = ReactiveCollection<CVM>()
+    public let selectedItem = BehaviorRelay<CVM?>(value: nil)
+    public let selectedIndex = BehaviorRelay<IndexPath?>(value: nil)
     
     required public init(model: M? = nil, navigationService: INavigationService? = nil) {
         super.init(model: model)

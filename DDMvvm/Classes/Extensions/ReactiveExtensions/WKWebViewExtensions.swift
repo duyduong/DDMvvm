@@ -13,8 +13,8 @@ import RxCocoa
 
 extension Reactive where Base: WKWebView {
     
-    var url: Binder<URL?> {
-        return Binder(self.base) { view, url in
+    public var url: Binder<URL?> {
+        return Binder(base) { view, url in
             if let url = url {
                 view.stopLoading()
                 view.load(URLRequest(url: url))

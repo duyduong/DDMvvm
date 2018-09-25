@@ -12,11 +12,11 @@ import RxCocoa
 
 extension Reactive where Base: UITableViewCell {
     
-    var accessoryType: Binder<UITableViewCell.AccessoryType> {
+    public var accessoryType: Binder<UITableViewCell.AccessoryType> {
         return Binder(self.base) { $0.accessoryType = $1 }
     }
     
-    var selectionStyle: Binder<UITableViewCell.SelectionStyle> {
+    public var selectionStyle: Binder<UITableViewCell.SelectionStyle> {
         return Binder(self.base) { $0.selectionStyle = $1 }
     }
     

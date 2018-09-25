@@ -14,65 +14,50 @@ import RxCocoa
 
 infix operator <~> : DefaultPrecedence
 
-func <~><T>(property: ControlProperty<T>, variable: Variable<T>) -> Disposable {
-    let bindToUIDisposable = variable.asObservable().bind(to: property)
-    let bindToVariable = property.subscribe(
-        onNext: { value in variable.value = value },
-        onCompleted: { bindToUIDisposable.dispose() }
-    )
+public func <~><T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disposable {
+    let bindToUIDisposable = relay.bind(to: property)
+    let bindToRelay = property.bind(to: relay)
     
-    return Disposables.create(bindToUIDisposable, bindToVariable)
+    return Disposables.create(bindToUIDisposable, bindToRelay)
 }
 
-func <~><T>(variable: Variable<T>, property: ControlProperty<T>) -> Disposable {
-    let bindToUIDisposable = variable.asObservable().bind(to: property)
-    let bindToVariable = property.bind(to: variable)
+public func <~><T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Disposable {
+    let bindToUIDisposable = relay.bind(to: property)
+    let bindToRelay = property.bind(to: relay)
     
-    return Disposables.create(bindToUIDisposable, bindToVariable)
+    return Disposables.create(bindToUIDisposable, bindToRelay)
 }
 
 // MARK: - One way binding shorthand
 
 infix operator ~>: DefaultPrecedence
 
-func ~><T>(source: Observable<T>, observer: AnyObserver<T>) -> Disposable {
-    return source.bind(to: observer)
-}
-
-func ~><T, R>(source: Observable<T>, binder: (Observable<T>) -> R) -> R {
+public func ~><T, R>(source: Observable<T>, binder: (Observable<T>) -> R) -> R {
     return source.bind(to: binder)
 }
 
-func ~><T>(source: Observable<T>, observer: Binder<T>) -> Disposable {
-    return source.bind(to: observer.asObserver())
+public func ~><T>(source: Observable<T>, binder: Binder<T>) -> Disposable {
+    return source.bind(to: binder)
 }
 
-func ~><T>(source: Observable<T>, variable: Variable<T>) -> Disposable {
-    return source.bind(to: variable)
+public func ~><T>(source: Observable<T>, relay: BehaviorRelay<T>) -> Disposable {
+    return source.bind(to: relay)
 }
 
-func ~><T>(source: Observable<T>, variable: Variable<T?>) -> Disposable {
-    return source.bind(to: variable)
+public func ~><T>(source: Observable<T>, relay: BehaviorRelay<T?>) -> Disposable {
+    return source.bind(to: relay)
 }
 
-func ~><T>(source: Observable<T>, binder: ControlProperty<T>) -> Disposable {
-    return source.subscribe(onNext: { binder.onNext($0) })
+public func ~><T>(source: Observable<T>, property: ControlProperty<T>) -> Disposable {
+    return source.bind(to: property)
 }
 
-func ~><T>(source: Observable<T>, binder: PublishSubject<T>) -> Disposable {
-    return source.bind(to: binder.asObserver())
+public func ~><T>(replay: BehaviorRelay<T>, observer: Binder<T>) -> Disposable {
+    return replay.bind(to: observer)
 }
 
-func ~><T>(variable: Variable<T>, observer: AnyObserver<T>) -> Disposable {
-    return variable.asObservable().bind(to: observer)
-}
-
-func ~><T>(variable: Variable<T>, observer: Binder<T>) -> Disposable {
-    return variable.asObservable().bind(to: observer.asObserver())
-}
-
-func ~><T>(event: ControlEvent<T>, variable: Variable<T>) -> Disposable {
-    return event.bind(to: variable)
+public func ~><T>(event: ControlEvent<T>, relay: BehaviorRelay<T>) -> Disposable {
+    return event.bind(to: relay)
 }
 
 // MARK: - Add to dispose bag shorthand
@@ -83,7 +68,7 @@ precedencegroup DisposablePrecedence {
 
 infix operator =>: DisposablePrecedence
 
-func =>(disposable: Disposable?, bag: DisposeBag?) {
+public func =>(disposable: Disposable?, bag: DisposeBag?) {
     if let d = disposable, let b = bag {
         d.disposed(by: b)
     }

@@ -9,12 +9,12 @@
 import Foundation
 import RxSwift
 
-class Scheduler {
+public class Scheduler {
     
-    static let shared = Scheduler()
+    public static let shared = Scheduler()
     
-    let backgroundScheduler: ImmediateSchedulerType
-    let mainScheduler: SerialDispatchQueueScheduler
+    public let backgroundScheduler: ImmediateSchedulerType
+    public let mainScheduler: SerialDispatchQueueScheduler
     
     init() {
         let operationQueue = OperationQueue()

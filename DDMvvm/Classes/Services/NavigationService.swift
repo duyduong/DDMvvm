@@ -17,6 +17,8 @@ public enum PopType {
 }
 
 public protocol INavigationService {
+    func replaceRootPage(_ page: UIViewController)
+    
     func push(to page: UIViewController, type: PushType, animated: Bool)
     func push(to page: UIViewController, type: PushType)
     func push(to page: UIViewController)
@@ -32,33 +34,13 @@ public protocol INavigationService {
 public class NavigationService: INavigationService {
     
     private var keyWindow: UIWindow? {
-        return UIApplication.shared.keyWindow
-    }
-    
-    private var rootPage: UIViewController? {
-        get { return keyWindow?.rootViewController }
-        set { keyWindow?.rootViewController = newValue }
+        return UIApplication.shared.windows
+            .filter { !($0.rootViewController is UIAlertController) }
+            .first
     }
     
     private var topPage: UIViewController? {
-        guard let rootPage = rootPage else { return nil }
-        
-        var currPage: UIViewController? = rootPage.presentedViewController ?? rootPage
-        while currPage?.presentedViewController != nil {
-            currPage = currPage?.presentedViewController
-        }
-        
-        while currPage is UINavigationController || currPage is UITabBarController {
-            if let navPage = currPage as? UINavigationController {
-                currPage = navPage.viewControllers.last
-            }
-            
-            if let tabPage = currPage as? UITabBarController {
-                currPage = tabPage.selectedViewController
-            }
-        }
-        
-        return currPage
+        return topPageFindingBlock()
     }
     
     private func destroyPage(_ page: UIViewController?) {
@@ -74,6 +56,15 @@ public class NavigationService: INavigationService {
         viewControllers.forEach { destroyPage($0) }
         (page as? Destroyable)?.destroy()
     }
+    
+    public func replaceRootPage(_ page: UIViewController) {
+        if let myWindow = keyWindow {
+            destroyPage(myWindow.rootViewController)
+            myWindow.rootViewController = page
+        }
+    }
+    
+    // MARK: - Push functions
     
     public func push(to page: UIViewController, type: PushType, animated: Bool) {
         guard let topPage = topPage else { return }
@@ -106,6 +97,8 @@ public class NavigationService: INavigationService {
         push(to: page, type: .auto, animated: true)
     }
     
+    // MARK: - Push with custom animations
+    
     public func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController, navigationWrapper: Bool) {
         if navigationWrapper {
             let navPage = UINavigationController(rootViewController: page)
@@ -123,6 +116,8 @@ public class NavigationService: INavigationService {
     public func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController) {
         push(with: transitioningDelegate, to: page, navigationWrapper: true)
     }
+    
+    // MARK: - Pop functions
     
     public func pop(for type: PopType, animated: Bool) {
         guard let topPage = topPage else { return }

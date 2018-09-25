@@ -10,9 +10,11 @@ import UIKit
 
 public struct Font {
     
-    fileprivate static let standardScreenWidth: CGFloat = 375
-    
     private static var factoryMaps = [String: FontFactory]()
+    
+    // font size will use this screen width to calculate ratio
+    // for different screen size
+    public static let defaultScreenWidthForFontSize: CGFloat = 375
     
     public static let system = System()
     
@@ -58,12 +60,12 @@ extension FontFactory {
         return UIFont.boldSystemFont(ofSize:  shouldScale ? calculateFontSize(size) : size)
     }
     
-    fileprivate func calculateFontSize(_ standardSize: CGFloat) -> CGFloat {
+    private func calculateFontSize(_ standardSize: CGFloat) -> CGFloat {
         let maxSize = standardSize + (standardSize*0.15)
         let minSize = standardSize - (standardSize*0.15)
         
         let bounds = UIScreen.main.bounds
-        let ratio = bounds.width/Font.standardScreenWidth
+        let ratio = bounds.width/Font.defaultScreenWidthForFontSize
         
         var fontSize = standardSize*ratio
         

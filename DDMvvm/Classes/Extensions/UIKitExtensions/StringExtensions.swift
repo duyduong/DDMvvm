@@ -10,22 +10,22 @@ import UIKit
 
 extension String {
     
-    func toURL() -> URL? {
+    public func toURL() -> URL? {
         return URL(string: self)
     }
     
-    func toURLRequest() -> URLRequest? {
+    public func toURLRequest() -> URLRequest? {
         if let url = toURL() {
             return URLRequest(url: url)
         }
         return nil
     }
     
-    func toHex() -> Int? {
+    public func toHex() -> Int? {
         return Int(self, radix: 16)
     }
     
-    func trim() -> String {
+    public func trim() -> String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
     }
     

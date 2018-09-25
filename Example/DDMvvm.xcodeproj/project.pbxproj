@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3ABA4995C873C9ABC0316780 /* Pods_DDMvvm_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72D2AF4DF4F70422BCB33246 /* Pods_DDMvvm_Example.framework */; };
+		4E433555215A638000F08AEB /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E433554215A638000F08AEB /* ContactCell.swift */; };
+		4E43355A215AAB2000F08AEB /* ContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E433559215AAB2000F08AEB /* ContactModel.swift */; };
 		4E6753FF215A3572008EC54E /* ContactListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6753FE215A3572008EC54E /* ContactListPage.swift */; };
 		4E675401215A3620008EC54E /* ContactPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E675400215A3620008EC54E /* ContactPage.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -30,6 +32,8 @@
 
 /* Begin PBXFileReference section */
 		0F18E109F02CE1B34CAEAAB4 /* Pods-DDMvvm_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDMvvm_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DDMvvm_Tests/Pods-DDMvvm_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		4E433554215A638000F08AEB /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		4E433559215AAB2000F08AEB /* ContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactModel.swift; sourceTree = "<group>"; };
 		4E6753FE215A3572008EC54E /* ContactListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListPage.swift; sourceTree = "<group>"; };
 		4E675400215A3620008EC54E /* ContactPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPage.swift; sourceTree = "<group>"; };
 		52DA4DBDEC20931C169953E9 /* DDMvvm.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DDMvvm.podspec; path = ../DDMvvm.podspec; sourceTree = "<group>"; };
@@ -71,11 +75,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E433558215AAB1100F08AEB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4E433559215AAB2000F08AEB /* ContactModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		4E6753FD215A355D008EC54E /* ContactListPage */ = {
 			isa = PBXGroup;
 			children = (
 				4E6753FE215A3572008EC54E /* ContactListPage.swift */,
 				4E675400215A3620008EC54E /* ContactPage.swift */,
+				4E433554215A638000F08AEB /* ContactCell.swift */,
 			);
 			path = ContactListPage;
 			sourceTree = "<group>";
@@ -104,6 +117,7 @@
 		607FACD21AFB9204008FA782 /* Example for DDMvvm */ = {
 			isa = PBXGroup;
 			children = (
+				4E433558215AAB1100F08AEB /* Models */,
 				4E6753FD215A355D008EC54E /* ContactListPage */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
@@ -347,7 +361,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E433555215A638000F08AEB /* ContactCell.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				4E43355A215AAB2000F08AEB /* ContactModel.swift in Sources */,
 				4E675401215A3620008EC54E /* ContactPage.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				4E6753FF215A3572008EC54E /* ContactListPage.swift in Sources */,

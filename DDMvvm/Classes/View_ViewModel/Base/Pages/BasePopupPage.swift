@@ -8,40 +8,37 @@
 
 import UIKit
 import RxSwift
+import Action
 
-public enum PopupType {
-    case popup, picker
+class BasePopupPage: UIViewController, Destroyable {
     
-    var showDuration: Double {
-        switch self {
-        case .popup: return 0.7
-        case .picker: return 0.4
-        }
-    }
+    private var contentPage: UIViewController!
+    private var overlayView: OverlayView!
     
-    var dismissDuration: Double {
-        switch self {
-        case .popup: return 0.25
-        case .picker: return 0.4
-        }
-    }
-}
-
-class BasePopupPage: UIViewController {
+    var disposeBag: DisposeBag? = DisposeBag()
     
-    fileprivate var contentPage: UIViewController!
-    fileprivate var overlayView: OverlayView!
-    
-    fileprivate var disposeBag: DisposeBag! = DisposeBag()
-    
-    fileprivate var heightConstraint: NSLayoutConstraint!
-    fileprivate var widthConstraint: NSLayoutConstraint!
+    private var heightConstraint: NSLayoutConstraint!
+    private var widthConstraint: NSLayoutConstraint!
     
     var popupType: PopupType = .popup
+    var shouldDismissOnTapOutside: Bool = true
     
-    init(contentPage: UIViewController, popupType: PopupType = .popup) {
+    private let tapGesture = UITapGestureRecognizer()
+    private lazy var tapAction: Action<Void, Void> = {
+        return Action() {
+            if self.shouldDismissOnTapOutside {
+                self.dismiss(animated: false)
+            }
+            
+            return .just(())
+        }
+    }()
+    
+    init(contentPage: UIViewController, popupType: PopupType = .popup, shouldDismissOnTapOutside: Bool = true) {
         self.contentPage = contentPage
         self.popupType = popupType
+        self.shouldDismissOnTapOutside = shouldDismissOnTapOutside
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -68,19 +65,16 @@ class BasePopupPage: UIViewController {
             contentPage.view.cornerRadius = 7
             contentPage.view.autoCenterInSuperview()
             widthConstraint = contentPage.view.autoSetDimension(.width, toSize: 320)
-            heightConstraint = contentPage.view.autoSetDimension(.height, toSize: 480)
             
         case .picker:
-            contentPage.view.setShadow(offset: CGSize(width: 0, height: -5), color: .black, opacity: 0.3, blur: 5)
             contentPage.view.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
-            contentPage.view.transform = CGAffineTransform(translationX: 0, y: 600)
+            contentPage.view.setShadow(offset: CGSize(width: 0, height: -5), color: .black, opacity: 0.3, blur: 5)
         }
-        
+        heightConstraint = contentPage.view.autoSetDimension(.height, toSize: 480)
         contentPage.didMove(toParent: self)
         
-        overlayView.rx.tapGesture.subscribe(onNext: { _ in
-            self.dismiss(animated: false)
-        }) => disposeBag
+        overlayView.addGestureRecognizer(tapGesture)
+        tapGesture.bind(to: tapAction, input: ())
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -112,13 +106,18 @@ class BasePopupPage: UIViewController {
             }
             
         }) { _ in
-            super.dismiss(animated: false, completion: completion)
+            super.dismiss(animated: false) {
+                self.destroy()
+                completion?()
+            }
         }
     }
     
     func destroy() {
+        tapGesture.unbindAction()
+        
         (contentPage as? Destroyable)?.destroy()
-        disposeBag = nil
+        disposeBag = DisposeBag()
         
         contentPage.view.removeFromSuperview()
         contentPage.removeFromParent()
@@ -133,43 +132,42 @@ class BasePopupPage: UIViewController {
         case .popup:
             UIView.animate(withDuration: popupType.showDuration, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
                 self.overlayView.alpha = 1
-                self.contentPage.view.transform = CGAffineTransform.identity
+                self.contentPage.view.transform = .identity
             }, completion: nil)
             
         case .picker:
             UIView.animate(withDuration: popupType.showDuration) {
                 self.overlayView.alpha = 1
-                self.contentPage.view.transform = CGAffineTransform.identity
+                self.contentPage.view.transform = .identity
             }
         }
-        
     }
     
     private func adjustContainerSize() {
+        let contentSize = contentPage.preferredContentSize
+        
         switch popupType {
         case .popup:
-            let maxWidth = view.frame.size.width - 40
-            let maxHeight = view.frame.size.height - 80
+            let maxWidth = view.frame.width - 40
+            let maxHeight = view.frame.height - 80
             
-            let contentSize = contentPage.preferredContentSize
-            var width: CGFloat = maxWidth
-            var height: CGFloat = maxHeight
-            if contentSize.width > 0 && contentSize.width < width {
-                width = contentSize.width
-            }
-            if contentSize.height > 0 && contentSize.height < height {
-                height = contentSize.height
-            }
+            let width = contentSize.width > 0 && contentSize.width < maxWidth ? contentSize.width : maxWidth
+            let height = contentSize.height > 0 && contentSize.height < maxHeight ? contentSize.height : maxHeight
             
             widthConstraint.constant = width
             heightConstraint.constant = height
-            view.layoutIfNeeded()
             
         case .picker:
+            let maxHeight = view.frame.height / 2
+            let height = contentSize.height > 0 && contentSize.height < maxHeight ? contentSize.height : maxHeight
+            
+            heightConstraint.constant = height
+            
             if contentPage.view.isHidden {
-                contentPage.view.transform = CGAffineTransform(translationX: 0, y: contentPage.view.frame.size.height)
+                contentPage.view.transform = CGAffineTransform(translationX: 0, y: height)
             }
         }
+        
+        view.layoutIfNeeded()
     }
-    
 }

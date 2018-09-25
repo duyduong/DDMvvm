@@ -12,15 +12,15 @@ import RxCocoa
 
 extension Reactive where Base: UILabel {
     
-    var attributedText: Binder<NSAttributedString> {
+    public var attributedText: Binder<NSAttributedString> {
         return Binder(self.base) { $0.attributedText = $1 }
     }
     
-    var textColor: Binder<UIColor> {
+    public var textColor: Binder<UIColor> {
         return Binder(self.base) { $0.textColor = $1 }
     }
     
-    var numberOfLines: Binder<Int> {
+    public var numberOfLines: Binder<Int> {
         return Binder(self.base) { $0.numberOfLines = $1 }
     }
     

@@ -14,7 +14,7 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
     
     public typealias CVM = VM.CellViewModelElement
     
-    let tableView: UITableView
+    public let tableView: UITableView
     
     public init(viewModel: VM? = nil, style: UITableView.Style = .plain, navigationService: INavigationService? = nil) {
         tableView = UITableView(frame: .zero, style: style)
@@ -30,12 +30,9 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .clear
-        tableView.estimatedRowHeight = 500
         view.addSubview(tableView)
         
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
     }
     
     open override func initialize() {
@@ -51,7 +48,7 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
     open override func bindViewAndViewModel() {
         tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         
-        viewModel?.itemsSource.changesNotifier.subscribe(onNext: onDataSourceChanged) => disposeBag
+        viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
     
     open override func onLoading(_ value: Bool) {
@@ -62,8 +59,8 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
         guard let viewModel = self.viewModel else { return }
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
-        viewModel.varSelectedIndex.value = indexPath
-        viewModel.varSelectedItem.value = cellViewModel
+        viewModel.selectedItem.accept(cellViewModel)
+        viewModel.selectedIndex.accept(indexPath)
         
         viewModel.selectedItemDidChange(cellViewModel)
         
@@ -136,6 +133,14 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
     }
     
     // MARK: - Table view delegates
+    
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension

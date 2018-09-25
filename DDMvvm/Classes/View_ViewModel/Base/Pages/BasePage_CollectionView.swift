@@ -14,8 +14,8 @@ open class BasePage_CollectionView<VM: GenericListViewModel>: BasePage<VM>, UICo
 
     public typealias CVM = VM.CellViewModelElement
 
-    var collectionView: UICollectionView!
-    var layout: UICollectionViewLayout!
+    public var collectionView: UICollectionView!
+    public var layout: UICollectionViewLayout!
     
     private var counter = [0: 0]
 
@@ -31,11 +31,11 @@ open class BasePage_CollectionView<VM: GenericListViewModel>: BasePage<VM>, UICo
         setupLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
+        collectionView.dataSource = self
+        collectionView.delegate = self
         view.addSubview(collectionView)
 
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -70,22 +70,17 @@ open class BasePage_CollectionView<VM: GenericListViewModel>: BasePage<VM>, UICo
     // MARK: - Binding
 
     open override func bindViewAndViewModel() {
-        super.bindViewAndViewModel()
-
-        collectionView.rx.setDelegate(self) => disposeBag
-        collectionView.rx.setDataSource(self) => disposeBag
-        
         collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         
-        viewModel?.itemsSource.changesNotifier.subscribe(onNext: onDataSourceChanged) => disposeBag
+        viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
 
     private func onItemSelected(_ indexPath: IndexPath) {
         guard let viewModel = viewModel else { return }
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
-        viewModel.varSelectedIndex.value = indexPath
-        viewModel.varSelectedItem.value = cellViewModel
+        viewModel.selectedItem.accept(cellViewModel)
+        viewModel.selectedIndex.accept(indexPath)
         
         viewModel.selectedItemDidChange(cellViewModel)
         selectedItemDidChange(cellViewModel)

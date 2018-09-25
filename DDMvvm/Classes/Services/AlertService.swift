@@ -27,12 +27,15 @@ class AlertPage: UIAlertController {
         blankViewController.present(self, animated: true)
     }
     
+    fileprivate func hide() {
+        alertWindow?.isHidden = true
+        alertWindow = nil
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        // we only remove window when user clicked on button
-        alertWindow?.isHidden = true
-        alertWindow = nil
+        hide()
     }
     
 }
@@ -40,9 +43,9 @@ class AlertPage: UIAlertController {
 public protocol IAlertService {
     func presentOkayAlert(title: String?, message: String?)
     
-    func presentObservableOkayAlert(title: String?, message: String?) -> Observable<Void>
-    func presentObservableConfirmAlert(title: String?, message: String?, yesText: String, noText: String) -> Observable<Bool>
-    func presentObservaleActionSheet(title: String?, message: String?, actionTitles: [String], cancelTitle: String) -> Observable<String>
+    func presentObservableOkayAlert(title: String?, message: String?) -> Single<Void>
+    func presentObservableConfirmAlert(title: String?, message: String?, yesText: String, noText: String) -> Single<Bool>
+    func presentObservaleActionSheet(title: String?, message: String?, actionTitles: [String], cancelTitle: String) -> Single<String>
 }
 
 public class AlertService: IAlertService {
@@ -56,33 +59,30 @@ public class AlertService: IAlertService {
         alertPage.show()
     }
     
-    public func presentObservableOkayAlert(title: String?, message: String?) -> Observable<Void> {
-        return Observable.create { o in
+    public func presentObservableOkayAlert(title: String?, message: String?) -> Single<Void> {
+        return Single.create { single in
             let alertPage = AlertPage(title: title, message: message, preferredStyle: .alert)
             let okayAction = UIAlertAction(title: "OK", style: .cancel) { _ in
-                o.onNext(())
-                o.onCompleted()
+                single(.success(()))
             }
             
             alertPage.addAction(okayAction)
             
             alertPage.show()
             
-            return Disposables.create { }
+            return Disposables.create { alertPage.hide() }
         }
     }
     
-    public func presentObservableConfirmAlert(title: String?, message: String?, yesText: String = "Yes", noText: String = "No") -> Observable<Bool> {
-        return Observable.create { o in
+    public func presentObservableConfirmAlert(title: String?, message: String?, yesText: String = "Yes", noText: String = "No") -> Single<Bool> {
+        return Single.create { single in
             let alertPage = AlertPage(title: title, message: message, preferredStyle: .alert)
             
             let yesAction = UIAlertAction(title: yesText, style: .cancel) { _ in
-                o.onNext(true)
-                o.onCompleted()
+                single(.success(true))
             }
             let noAction = UIAlertAction(title: noText, style: .default) { _ in
-                o.onNext(false)
-                o.onCompleted()
+                single(.success(false))
             }
             
             alertPage.addAction(yesAction)
@@ -90,31 +90,29 @@ public class AlertService: IAlertService {
             
             alertPage.show()
             
-            return Disposables.create { }
+            return Disposables.create { alertPage.hide() }
         }
     }
     
-    public func presentObservaleActionSheet(title: String?, message: String?, actionTitles: [String] = ["OK"], cancelTitle: String = "Cancel") -> Observable<String> {
-        return Observable.create { o in
+    public func presentObservaleActionSheet(title: String?, message: String?, actionTitles: [String] = ["OK"], cancelTitle: String = "Cancel") -> Single<String> {
+        return Single.create { single in
             let alertPage = AlertPage(title: title, message: message, preferredStyle: .actionSheet)
             
             for title in actionTitles {
                 let action = UIAlertAction(title: title, style: .default) { _ in
-                    o.onNext(title)
-                    o.onCompleted()
+                    single(.success(title))
                 }
                 alertPage.addAction(action)
             }
             
             let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel) { _ in
-                o.onNext(cancelTitle)
-                o.onCompleted()
+                single(.success(cancelTitle))
             }
             alertPage.addAction(cancelAction)
             
             alertPage.show()
             
-            return Disposables.create { }
+            return Disposables.create { alertPage.hide() }
         }
     }
     
