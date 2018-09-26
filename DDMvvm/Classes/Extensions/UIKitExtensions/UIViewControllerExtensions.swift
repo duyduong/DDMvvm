@@ -1,6 +1,6 @@
 //
 //  UINavigationControllerExtensions.swift
-//  Snapshot
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 1/9/18.
 //  Copyright © 2018 Halliburton. All rights reserved.

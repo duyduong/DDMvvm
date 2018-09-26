@@ -1,6 +1,6 @@
 //
 //  NavigationService.swift
-//  eSportLive
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 9/23/18.
 //  Copyright © 2018 Nover. All rights reserved.
@@ -9,11 +9,30 @@
 import UIKit
 
 public enum PushType {
-    case auto, push, modally, popup(type: PopupType)
+    case auto, push, modally
 }
 
 public enum PopType {
     case auto, pop, dismiss
+}
+
+public struct PushOptions {
+    
+    let pushType: PushType
+    let animator: Animator?
+    let animated: Bool
+    
+    public static var defaultOptions: PushOptions {
+        return PushOptions(pushType: .auto, animator: nil, animated: true)
+    }
+    
+    public static func pushWithAnimator(_ animator: Animator) -> PushOptions {
+        return PushOptions(pushType: .push, animator: animator, animated: true)
+    }
+    
+    public static func modalWithAnimator(_ animator: Animator) -> PushOptions {
+        return PushOptions(pushType: .modally, animator: animator, animated: true)
+    }
 }
 
 public protocol INavigationService {
@@ -25,6 +44,8 @@ public protocol INavigationService {
     
     func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController, navigationWrapper: Bool)
     func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController)
+    
+    func push(to page: UIViewController, options: PushOptions)
     
     func pop(for type: PopType, animated: Bool)
     func pop(for type: PopType)
@@ -57,6 +78,8 @@ public class NavigationService: INavigationService {
         (page as? IDestroyable)?.destroy()
     }
     
+    private static var transitionings: [UIViewController: TransitioningDelegate] = [:]
+    
     public func replaceRootPage(_ page: UIViewController) {
         if let myWindow = keyWindow {
             destroyPage(myWindow.rootViewController)
@@ -65,6 +88,43 @@ public class NavigationService: INavigationService {
     }
     
     // MARK: - Push functions
+    
+    public func push(to page: UIViewController, options: PushOptions) {
+        guard let topPage = topPage else { return }
+        
+        let handlePush = {
+            if let navigationPage = topPage.navigationController as? DDNavigationPage {
+                navigationPage.animator = options.animator
+            }
+            
+            topPage.navigationController?.pushViewController(page, animated: options.animated)
+        }
+        
+        let handleModal = {
+            if let animator = options.animator {
+                let delegate = TransitioningDelegate(withAnimator: animator)
+                NavigationService.transitionings[page] = delegate
+                
+                page.transitioningDelegate = delegate
+                page.modalPresentationStyle = .custom
+            }
+            
+            topPage.present(page, animated: options.animated, completion: nil)
+        }
+        
+        switch options.pushType {
+        case .auto:
+            if topPage.navigationController != nil {
+                handlePush()
+            } else {
+                handleModal()
+            }
+            
+        case .push: handlePush()
+            
+        case .modally: handleModal()
+        }
+    }
     
     public func push(to page: UIViewController, type: PushType, animated: Bool) {
         guard let topPage = topPage else { return }
@@ -82,10 +142,10 @@ public class NavigationService: INavigationService {
         case .modally:
             topPage.present(page, animated: animated, completion: nil)
             
-        case .popup(let type):
-            let popupPage = DDPopupWrapperPage(contentPage: page, popupType: type)
-            popupPage.modalPresentationStyle = .overFullScreen
-            topPage.present(popupPage, animated: false)
+//        case .popup(let type):
+//            let popupPage = DDPopupWrapperPage(contentPage: page, popupType: type)
+//            popupPage.modalPresentationStyle = .overFullScreen
+//            topPage.present(popupPage, animated: false)
         }
     }
     

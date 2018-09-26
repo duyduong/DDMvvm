@@ -1,6 +1,6 @@
 //
 //  ViewModel.swift
-//  Daily Esport
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/7/15.
 //  Copyright © 2015 Nover. All rights reserved.

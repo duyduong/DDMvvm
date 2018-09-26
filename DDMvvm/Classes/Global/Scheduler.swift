@@ -1,6 +1,6 @@
 //
 //  Scheduler.swift
-//  HealthCare
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 11/5/15.
 //  Copyright © 2015 Nover. All rights reserved.

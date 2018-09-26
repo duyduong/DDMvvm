@@ -1,6 +1,6 @@
 //
 //  OverlayView.swift
-//  phimbo
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/22/16.
 //  Copyright © 2016 Nover. All rights reserved.

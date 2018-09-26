@@ -1,6 +1,6 @@
 //
 //  Model.swift
-//  dailydota2
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 6/4/15.
 //  Copyright (c) 2015 Nover. All rights reserved.

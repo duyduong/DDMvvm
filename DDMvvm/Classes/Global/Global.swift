@@ -1,6 +1,6 @@
 //
 //  Global.swift
-//  mvvm-scaffold
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 1/18/16.
 //  Copyright © 2016 Nover. All rights reserved.

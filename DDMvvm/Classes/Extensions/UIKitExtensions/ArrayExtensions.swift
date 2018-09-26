@@ -1,6 +1,6 @@
 //
 //  ArrayExtensions.swift
-//  Snapshot
+//  DDMvvm
 //
 //  Created by Lữ on 4/16/18.
 //  Copyright © 2018 Halliburton. All rights reserved.

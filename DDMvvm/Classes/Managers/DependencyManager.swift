@@ -1,6 +1,6 @@
 //
 //  DependencyManager.swift
-//  Snapshot
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 4/3/18.
 //  Copyright © 2018 Halliburton. All rights reserved.
@@ -12,6 +12,7 @@ typealias RegistrationBlock = (() -> Any)
 public typealias GenericRegistrationBlock<T> = (() -> T)
 
 protocol IMutableDependencyResolver {
+    
     func getService(_ type: Any) -> Any?
     func registerService(_ factory: @escaping RegistrationBlock, type: Any)
 }
@@ -25,7 +26,6 @@ extension IMutableDependencyResolver {
     func registerService<T>(_ factory: @escaping GenericRegistrationBlock<T>) {
         return registerService({ factory() }, type: T.self)
     }
-    
 }
 
 class DefaultDependencyResolver: IMutableDependencyResolver {
@@ -46,7 +46,6 @@ class DefaultDependencyResolver: IMutableDependencyResolver {
         let k = String(describing: type)
         registry[k] = factory
     }
-
 }
 
 public class DependencyManager {
@@ -61,10 +60,6 @@ public class DependencyManager {
         registerService { () -> IAlertService in AlertService() }
     }
     
-    public func registerUnitTestDefaults() {
-        
-    }
-    
     public func getService<T>() -> T {
         return resolver.getService()
     }
@@ -72,7 +67,6 @@ public class DependencyManager {
     public func registerService<T>(_ factory: @escaping GenericRegistrationBlock<T>) {
         resolver.registerService(factory)
     }
-    
 }
 
 

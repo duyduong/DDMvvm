@@ -1,6 +1,6 @@
 //
 //  UIScrollViewExtensions.swift
-//  DMT
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 6/15/18.
 //  Copyright © 2018 NGUYỄN THANH ÂN. All rights reserved.

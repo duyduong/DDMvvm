@@ -1,6 +1,6 @@
 //
 //  AlertService.swift
-//  eSportLive
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 9/23/18.
 //  Copyright © 2018 Nover. All rights reserved.
@@ -37,10 +37,10 @@ class AlertPage: UIAlertController {
         
         hide()
     }
-    
 }
 
 public protocol IAlertService {
+    
     func presentOkayAlert(title: String?, message: String?)
     
     func presentObservableOkayAlert(title: String?, message: String?) -> Single<Void>
@@ -115,10 +115,7 @@ public class AlertService: IAlertService {
             return Disposables.create { alertPage.hide() }
         }
     }
-    
 }
-
-
 
 
 

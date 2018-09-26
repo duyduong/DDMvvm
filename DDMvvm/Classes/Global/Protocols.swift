@@ -1,6 +1,6 @@
 //
 //  Protocols.swift
-//  phimbo
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 8/29/16.
 //  Copyright © 2016 Nover. All rights reserved.

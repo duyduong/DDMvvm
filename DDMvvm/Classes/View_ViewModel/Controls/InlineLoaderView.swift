@@ -1,6 +1,6 @@
 //
 //  InlineLoaderView.swift
-//  Snapshot
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 4/24/18.
 //  Copyright © 2018 Halliburton. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  DEViewController+UICollectionView.swift
-//  Daily Esport
+//  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/16/15.
 //  Copyright © 2015 Nover. All rights reserved.
