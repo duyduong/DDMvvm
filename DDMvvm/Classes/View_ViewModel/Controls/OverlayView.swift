@@ -8,22 +8,20 @@
 
 import UIKit
 
-class OverlayView: AbstractControlView {
+public class OverlayView: AbstractControlView {
     
     let tapGesture = UITapGestureRecognizer()
     
-    override func setupView() {
+    public override func setupView() {
         backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
-        
         addGestureRecognizer(tapGesture)
     }
     
-    static func addToPage(_ page: UIViewController) -> OverlayView {
+    public static func addToPage(_ page: UIViewController) -> OverlayView {
         let overlayView = OverlayView()
         page.view.addSubview(overlayView)
         overlayView.autoPinEdgesToSuperviewEdges()
         
         return overlayView
     }
-
 }

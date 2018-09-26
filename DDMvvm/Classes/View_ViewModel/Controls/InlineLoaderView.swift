@@ -23,15 +23,29 @@ extension Reactive where Base: InlineLoaderView {
             }
         }
     }
-    
 }
 
-class InlineLoaderView: AbstractControlView {
+public class InlineLoaderView: AbstractControlView {
     
-    let label = UILabel()
-    let indicatorView = UIActivityIndicatorView(style: .white)
+    public var textColor: UIColor {
+        get { return label.textColor }
+        set { label.textColor = newValue }
+    }
     
-    override func setupView() {
+    public var indicatorColor: UIColor {
+        get { return indicatorView.color }
+        set { indicatorView.color = newValue }
+    }
+    
+    public var loadingText: String? {
+        get { return label.text }
+        set { label.text = newValue }
+    }
+    
+    fileprivate let label = UILabel()
+    fileprivate let indicatorView = UIActivityIndicatorView(style: .white)
+    
+    public override func setupView() {
         indicatorView.hidesWhenStopped = true
         indicatorView.color = .white
         addSubview(indicatorView)
@@ -45,7 +59,6 @@ class InlineLoaderView: AbstractControlView {
         label.autoAlignAxis(toSuperviewAxis: .vertical)
         label.autoPinEdge(toSuperviewEdge: .bottom)
     }
-    
 }
 
 

@@ -48,13 +48,13 @@ extension UIView {
     public func clearAll() {
         if let stackView = self as? UIStackView {
             stackView.arrangedSubviews.forEach { view in
-                (view as? Destroyable)?.destroy()
+                (view as? IDestroyable)?.destroy()
                 stackView.removeArrangedSubview(view)
                 view.removeFromSuperview()
             }
         } else {
             subviews.forEach { view in
-                (view as? Destroyable)?.destroy()
+                (view as? IDestroyable)?.destroy()
                 view.removeFromSuperview()
             }
         }

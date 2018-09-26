@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableViewDataSource, UITableViewDelegate {
+open class DDListPage<VM: IListViewModel>: DDPage<VM>, UITableViewDataSource, UITableViewDelegate {
     
     public typealias CVM = VM.CellViewModelElement
     
@@ -123,7 +123,7 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         let identifier = cellIdentifier(cellViewModel)
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! BaseTableCell<CVM>
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DDTableCell<CVM>
         cell.viewModel = cellViewModel
         return cell
     }
@@ -149,7 +149,6 @@ open class BasePage_TableView<VM: GenericListViewModel>: BasePage<VM>, UITableVi
     open func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return nil
     }
-
 }
 
 

@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-open class BasePage_CollectionView<VM: GenericListViewModel>: BasePage<VM>, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+open class DDCollectionPage<VM: IListViewModel>: DDPage<VM>, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     public typealias CVM = VM.CellViewModelElement
 
@@ -150,7 +150,7 @@ open class BasePage_CollectionView<VM: GenericListViewModel>: BasePage<VM>, UICo
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         let identifier = cellIdentifier(cellViewModel)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! BaseCollectionCell<CVM>
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! DDCollectionCell<CVM>
         cell.viewModel = cellViewModel
         return cell
     }

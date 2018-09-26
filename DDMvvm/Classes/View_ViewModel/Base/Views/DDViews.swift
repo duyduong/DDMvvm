@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-open class BaseView<VM: GenericViewModel>: UIView, GenericView {
+open class DDView<VM: IViewModel>: UIView, IView {
     
     public typealias ViewModelElement = VM
     
@@ -63,10 +63,9 @@ open class BaseView<VM: GenericViewModel>: UIView, GenericView {
         disposeBag = DisposeBag()
         viewModel?.destroy()
     }
-
 }
 
-open class BaseCollectionCell<VM: GenericCellViewModel>: UICollectionViewCell, GenericView {
+open class DDCollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
     
     public typealias ViewModelElement = VM
     
@@ -117,10 +116,9 @@ open class BaseCollectionCell<VM: GenericCellViewModel>: UICollectionViewCell, G
     
     open func initialize() {}
     open func bindViewAndViewModel() {}
-    
 }
 
-open class BaseTableCell<VM: GenericCellViewModel>: UITableViewCell, GenericView {
+open class DDTableCell<VM: ICellViewModel>: UITableViewCell, IView {
     
     public typealias ViewModelElement = VM
     
@@ -175,7 +173,6 @@ open class BaseTableCell<VM: GenericCellViewModel>: UITableViewCell, GenericView
     
     open func initialize() {}
     open func bindViewAndViewModel() {}
-    
 }
 
 

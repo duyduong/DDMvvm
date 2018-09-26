@@ -26,7 +26,6 @@ public class AbstractView: UIView {
     }
     
     public func setupView() {}
-    
 }
 
 public class AbstractControlView: UIControl {
@@ -47,5 +46,4 @@ public class AbstractControlView: UIControl {
     }
     
     public func setupView() {}
-    
 }

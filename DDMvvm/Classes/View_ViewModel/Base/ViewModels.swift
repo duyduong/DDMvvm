@@ -12,7 +12,7 @@ import RxCocoa
 
 // MARK: - Base view model
 
-open class ViewModel<M: Model>: NSObject, GenericViewModel {
+open class ViewModel<M: Model>: NSObject, IViewModel {
     
     public typealias ModelElement = M
     
@@ -38,7 +38,7 @@ open class ViewModel<M: Model>: NSObject, GenericViewModel {
 
 // MARK: - list viewmodel, support multiple sections
 
-open class ListViewModel<M: Model, CVM: GenericCellViewModel>: ViewModel<M>, GenericListViewModel where CVM.ModelElement: Model {
+open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
     
     public typealias CellViewModelElement = CVM
     
@@ -71,7 +71,7 @@ open class ListViewModel<M: Model, CVM: GenericCellViewModel>: ViewModel<M>, Gen
 
 // MARK: - Cell viewmodel
 
-open class CellViewModel<M: Model>: GenericCellViewModel {
+open class CellViewModel<M: Model>: ICellViewModel {
     
     public typealias ModelElement = M
     

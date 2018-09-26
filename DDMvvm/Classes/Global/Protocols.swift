@@ -10,13 +10,13 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public protocol Destroyable: class {
+public protocol IDestroyable: class {
     
     var disposeBag: DisposeBag? { get set }
     func destroy()
 }
 
-public protocol GenericView: Destroyable {
+public protocol IView: IDestroyable {
     
     associatedtype ViewModelElement
     
@@ -28,7 +28,7 @@ public protocol GenericView: Destroyable {
 
 // MARK: - Viewmodel protocols
 
-public protocol IViewModel: Destroyable {
+public protocol IGenericViewModel: IDestroyable {
     
     associatedtype ModelElement
     
@@ -37,7 +37,7 @@ public protocol IViewModel: Destroyable {
     func react()
 }
 
-public protocol GenericViewModel: IViewModel {
+public protocol IViewModel: IGenericViewModel {
     
     var viewState: BehaviorRelay<ViewState> { get }
     var showInlineLoader: BehaviorRelay<Bool> { get }
@@ -47,9 +47,9 @@ public protocol GenericViewModel: IViewModel {
     init(model: ModelElement?, navigationService: INavigationService?)
 }
 
-public protocol GenericListViewModel: GenericViewModel {
+public protocol IListViewModel: IViewModel {
     
-    associatedtype CellViewModelElement: GenericCellViewModel
+    associatedtype CellViewModelElement: ICellViewModel
     
     var itemsSource: ReactiveCollection<CellViewModelElement> { get }
     var selectedItem: BehaviorRelay<CellViewModelElement?> { get }
@@ -58,7 +58,7 @@ public protocol GenericListViewModel: GenericViewModel {
     func selectedItemDidChange(_ cellViewModel: CellViewModelElement)
 }
 
-public protocol GenericCellViewModel: IViewModel {
+public protocol ICellViewModel: IGenericViewModel {
     
     init(model: ModelElement?)
 }

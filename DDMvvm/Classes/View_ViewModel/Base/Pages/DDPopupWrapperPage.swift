@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import Action
 
-class BasePopupPage: UIViewController, Destroyable {
+class DDPopupWrapperPage: UIViewController, IDestroyable {
     
     private var contentPage: UIViewController!
     private var overlayView: OverlayView!
@@ -114,7 +114,7 @@ class BasePopupPage: UIViewController, Destroyable {
     func destroy() {
         overlayView.tapGesture.unbindAction()
         
-        (contentPage as? Destroyable)?.destroy()
+        (contentPage as? IDestroyable)?.destroy()
         disposeBag = DisposeBag()
         
         contentPage.view.removeFromSuperview()

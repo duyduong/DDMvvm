@@ -19,7 +19,7 @@ extension Array {
 
 extension Array where Element: Model {
     
-    public func toCellViewModels<T: GenericCellViewModel>() -> [T] where T.ModelElement == Element {
+    public func toCellViewModels<T: ICellViewModel>() -> [T] where T.ModelElement == Element {
         return self.flatMap { [T(model: $0)] }
     }
 }

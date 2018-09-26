@@ -54,7 +54,7 @@ public class NavigationService: INavigationService {
         }
         
         viewControllers.forEach { destroyPage($0) }
-        (page as? Destroyable)?.destroy()
+        (page as? IDestroyable)?.destroy()
     }
     
     public func replaceRootPage(_ page: UIViewController) {
@@ -83,7 +83,7 @@ public class NavigationService: INavigationService {
             topPage.present(page, animated: animated, completion: nil)
             
         case .popup(let type):
-            let popupPage = BasePopupPage(contentPage: page, popupType: type)
+            let popupPage = DDPopupWrapperPage(contentPage: page, popupType: type)
             popupPage.modalPresentationStyle = .overFullScreen
             topPage.present(popupPage, animated: false)
         }

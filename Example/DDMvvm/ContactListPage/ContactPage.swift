@@ -9,7 +9,7 @@
 import UIKit
 import DDMvvm
 
-class ContactPage: BasePage<ContactPageViewModel> {
+class ContactPage: DDPage<ContactPageViewModel> {
 
     override func initialize() {
         enableBackButton = true

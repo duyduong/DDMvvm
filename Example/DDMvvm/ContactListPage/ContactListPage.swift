@@ -10,7 +10,7 @@ import UIKit
 import DDMvvm
 import Action
 
-class ContactListPage: BasePage_TableView<ContactListPageViewModel> {
+class ContactListPage: DDListPage<ContactListPageViewModel> {
     
     var addBtn: UIBarButtonItem!
     
