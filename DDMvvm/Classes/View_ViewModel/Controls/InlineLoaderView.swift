@@ -12,7 +12,7 @@ import RxCocoa
 
 extension Reactive where Base: InlineLoaderView {
     
-    var show: Binder<Bool> {
+    public var show: Binder<Bool> {
         return Binder(self.base) { view, value in
             if value {
                 view.isHidden = false

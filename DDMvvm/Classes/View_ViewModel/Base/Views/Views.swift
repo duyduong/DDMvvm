@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-open class DDView<VM: IViewModel>: UIView, IView {
+open class View<VM: IViewModel>: UIView, IView {
     
     public typealias ViewModelElement = VM
     
@@ -65,7 +65,7 @@ open class DDView<VM: IViewModel>: UIView, IView {
     }
 }
 
-open class DDCollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
+open class CollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
     
     public typealias ViewModelElement = VM
     
@@ -118,7 +118,7 @@ open class DDCollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
     open func bindViewAndViewModel() {}
 }
 
-open class DDTableCell<VM: ICellViewModel>: UITableViewCell, IView {
+open class TableCell<VM: ICellViewModel>: UITableViewCell, IView {
     
     public typealias ViewModelElement = VM
     

@@ -10,7 +10,6 @@ import UIKit
 open class Animator: NSObject, UIViewControllerAnimatedTransitioning  {
     
     public var isPresenting = false
-    public var operation: UINavigationController.Operation?
     
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 1

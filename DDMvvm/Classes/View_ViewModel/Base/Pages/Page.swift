@@ -12,7 +12,7 @@ import RxCocoa
 import Action
 import PureLayout
 
-open class DDPage<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDelegate {
+open class Page<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDelegate {
     
     public var disposeBag: DisposeBag? = DisposeBag()
     

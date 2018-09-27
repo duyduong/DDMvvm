@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         DependencyManager.shared.registerDefaults()
@@ -22,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         let page = ContactListPage(viewModel: ContactListPageViewModel())
-        let rootPage = UINavigationController(rootViewController: page)
+        let rootPage = NavigationPage(rootViewController: page)
         window?.rootViewController = rootPage
         window?.makeKeyAndVisible()
         
@@ -50,7 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
+
 

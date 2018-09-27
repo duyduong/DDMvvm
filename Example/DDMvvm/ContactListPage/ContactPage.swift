@@ -9,10 +9,15 @@
 import UIKit
 import DDMvvm
 
-class ContactPage: DDPage<ContactPageViewModel> {
+class ContactPage: Page<ContactPageViewModel> {
 
     override func initialize() {
+        view.backgroundColor = .red
         enableBackButton = true
+    }
+    
+    override func onBack() {
+        navigationService.pop(for: .dismiss)
     }
 }
 

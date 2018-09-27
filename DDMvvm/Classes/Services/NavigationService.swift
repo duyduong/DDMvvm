@@ -18,34 +18,35 @@ public enum PopType {
 
 public struct PushOptions {
     
-    let pushType: PushType
-    let animator: Animator?
-    let animated: Bool
+    public let pushType: PushType
+    public let animator: Animator?
+    public let animated: Bool
+    
+    public init(pushType: PushType = .auto, animator: Animator? = nil, animated: Bool = true) {
+        self.pushType = pushType
+        self.animator = animator
+        self.animated = animated
+    }
     
     public static var defaultOptions: PushOptions {
-        return PushOptions(pushType: .auto, animator: nil, animated: true)
+        return PushOptions()
     }
     
     public static func pushWithAnimator(_ animator: Animator) -> PushOptions {
-        return PushOptions(pushType: .push, animator: animator, animated: true)
+        return PushOptions(pushType: .push, animator: animator)
     }
     
     public static func modalWithAnimator(_ animator: Animator) -> PushOptions {
-        return PushOptions(pushType: .modally, animator: animator, animated: true)
+        return PushOptions(pushType: .modally, animator: animator)
     }
 }
 
 public protocol INavigationService {
+    
     func replaceRootPage(_ page: UIViewController)
     
-    func push(to page: UIViewController, type: PushType, animated: Bool)
-    func push(to page: UIViewController, type: PushType)
-    func push(to page: UIViewController)
-    
-    func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController, navigationWrapper: Bool)
-    func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController)
-    
     func push(to page: UIViewController, options: PushOptions)
+    func push(to page: UIViewController)
     
     func pop(for type: PopType, animated: Bool)
     func pop(for type: PopType)
@@ -61,28 +62,12 @@ public class NavigationService: INavigationService {
     }
     
     private var topPage: UIViewController? {
-        return topPageFindingBlock()
+        return DDMvvm.topPageFindingBlock()
     }
-    
-    private func destroyPage(_ page: UIViewController?) {
-        var viewControllers = [UIViewController]()
-        if let navPage = page as? UINavigationController {
-            viewControllers = navPage.viewControllers
-        }
-        
-        if let tabPage = page as? UITabBarController {
-            viewControllers = tabPage.viewControllers ?? []
-        }
-        
-        viewControllers.forEach { destroyPage($0) }
-        (page as? IDestroyable)?.destroy()
-    }
-    
-    private static var transitionings: [UIViewController: TransitioningDelegate] = [:]
     
     public func replaceRootPage(_ page: UIViewController) {
         if let myWindow = keyWindow {
-            destroyPage(myWindow.rootViewController)
+            DDMvvm.destroyPageBlock(myWindow.rootViewController)
             myWindow.rootViewController = page
         }
     }
@@ -93,7 +78,7 @@ public class NavigationService: INavigationService {
         guard let topPage = topPage else { return }
         
         let handlePush = {
-            if let navigationPage = topPage.navigationController as? DDNavigationPage {
+            if let navigationPage = topPage.navigationController as? NavigationPage {
                 navigationPage.animator = options.animator
             }
             
@@ -103,7 +88,7 @@ public class NavigationService: INavigationService {
         let handleModal = {
             if let animator = options.animator {
                 let delegate = TransitioningDelegate(withAnimator: animator)
-                NavigationService.transitionings[page] = delegate
+                transitioningMap[page.description] = delegate
                 
                 page.transitioningDelegate = delegate
                 page.modalPresentationStyle = .custom
@@ -126,86 +111,36 @@ public class NavigationService: INavigationService {
         }
     }
     
-    public func push(to page: UIViewController, type: PushType, animated: Bool) {
-        guard let topPage = topPage else { return }
-        switch type {
-        case .auto:
-            if let navPage = topPage.navigationController {
-                navPage.pushViewController(page, animated: animated)
-            } else {
-                topPage.present(page, animated: animated, completion: nil)
-            }
-            
-        case .push:
-            topPage.navigationController?.pushViewController(page, animated: animated)
-            
-        case .modally:
-            topPage.present(page, animated: animated, completion: nil)
-            
-//        case .popup(let type):
-//            let popupPage = DDPopupWrapperPage(contentPage: page, popupType: type)
-//            popupPage.modalPresentationStyle = .overFullScreen
-//            topPage.present(popupPage, animated: false)
-        }
-    }
-    
-    public func push(to page: UIViewController, type: PushType) {
-        push(to: page, type: type, animated: true)
-    }
-    
     public func push(to page: UIViewController) {
-        push(to: page, type: .auto, animated: true)
-    }
-    
-    // MARK: - Push with custom animations
-    
-    public func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController, navigationWrapper: Bool) {
-        if navigationWrapper {
-            let navPage = UINavigationController(rootViewController: page)
-            navPage.transitioningDelegate = transitioningDelegate
-            navPage.modalPresentationStyle = .custom
-            
-            push(to: navPage, type: .modally)
-        } else {
-            page.transitioningDelegate = transitioningDelegate
-            page.modalPresentationStyle = .custom
-            push(to: page, type: .modally)
-        }
-    }
-    
-    public func push(with transitioningDelegate: TransitioningDelegate, to page: UIViewController) {
-        push(with: transitioningDelegate, to: page, navigationWrapper: true)
+        push(to: page, options: .defaultOptions)
     }
     
     // MARK: - Pop functions
     
     public func pop(for type: PopType, animated: Bool) {
         guard let topPage = topPage else { return }
+        
+        let handleDismiss = {
+            topPage.dismiss(animated: animated) {
+                DDMvvm.destroyPageBlock(topPage)
+                DDMvvm.destroyPageBlock(topPage.navigationController)
+                DDMvvm.destroyPageBlock(topPage.tabBarController)
+            }
+        }
+        
         switch type {
         case .auto:
             if let navPage = topPage.navigationController {
-                navPage.popViewController(animated: true) { poppedPage in
-                    self.destroyPage(poppedPage)
-                }
+                navPage.popViewController(animated: animated) { DDMvvm.destroyPageBlock($0) }
             } else {
-                if let navPage = topPage.navigationController {
-                    navPage.dismiss(animated: animated) { self.destroyPage(topPage) }
-                } else {
-                    topPage.dismiss(animated: animated) { self.destroyPage(topPage) }
-                }
+                handleDismiss()
             }
             
         case .pop:
-            topPage.navigationController?.popViewController(animated: true) { poppedPage in
-                self.destroyPage(poppedPage)
-            }
+            topPage.navigationController?.popViewController(animated: animated) { DDMvvm.destroyPageBlock($0) }
             
         case .dismiss:
-            if let navPage = topPage.navigationController {
-                navPage.dismiss(animated: animated) { self.destroyPage(topPage) }
-            } else {
-                topPage.dismiss(animated: animated) { self.destroyPage(topPage) }
-            }
+            handleDismiss()
         }
     }
     

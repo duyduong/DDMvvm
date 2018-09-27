@@ -13,9 +13,12 @@ extension NSError {
         return Bundle.main.bundleIdentifier ?? "dd.mvvm.error"
     }
     
-    public static var unknown: NSError {
+    static var unknown: NSError {
         return NSError(domain: domain, code: 1000, userInfo: [NSLocalizedDescriptionKey : "Unknown error occurrs."])
     }
     
+    static var mappingError: NSError {
+        return NSError(domain: domain, code: 1001, userInfo: [NSLocalizedDescriptionKey : "Failed to transform from json to Model."])
+    }
 }
 

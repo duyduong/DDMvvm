@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-open class DDListPage<VM: IListViewModel>: DDPage<VM>, UITableViewDataSource, UITableViewDelegate {
+open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITableViewDelegate {
     
     public typealias CVM = VM.CellViewModelElement
     
@@ -123,7 +123,7 @@ open class DDListPage<VM: IListViewModel>: DDPage<VM>, UITableViewDataSource, UI
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         let identifier = cellIdentifier(cellViewModel)
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DDTableCell<CVM>
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TableCell<CVM>
         cell.viewModel = cellViewModel
         return cell
     }

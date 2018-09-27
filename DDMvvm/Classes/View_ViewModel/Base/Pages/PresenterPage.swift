@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import Action
 
-class DDPopupWrapperPage: UIViewController, IDestroyable {
+class PresenterPage: UIViewController, IDestroyable {
     
     private var contentPage: UIViewController!
     private var overlayView: OverlayView!

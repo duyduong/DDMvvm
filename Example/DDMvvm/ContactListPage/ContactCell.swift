@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import DDMvvm
 
-class ContactCell: DDTableCell<ContactCellViewModel> {
+class ContactCell: TableCell<ContactCellViewModel> {
 
     static let identifier = "ContactCell"
     

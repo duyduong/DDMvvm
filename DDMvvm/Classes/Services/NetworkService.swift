@@ -18,25 +18,32 @@ extension String: ParameterEncoding {
         request.httpBody = data(using: .utf8, allowLossyConversion: false)
         return request
     }
-    
 }
 
 open class NetworkService {
     
     let sessionManager: SessionManager
+    private let sessionConfiguration: URLSessionConfiguration = .default
     
-    init() {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = httpSettings.requestTimeout
-        
-        sessionManager = Alamofire.SessionManager(configuration: config)
+    public var timeout: TimeInterval = 30 {
+        didSet { sessionConfiguration.timeoutIntervalForRequest = timeout }
     }
     
-    public func callRequest(_ url: String, _ method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Observable<String> {
-        return Observable.create { observer in
+    let baseUrl: String
+    var defaultHeaders: HTTPHeaders = [:]
+    
+    public init(baseUrl: String) {
+        assert(baseUrl.isEmpty, "baseUrl should not be empty.")
+        self.baseUrl = baseUrl
+        
+        sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
+    }
+    
+    public func callRequest(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<String> {
+        return Single.create { single in
             let headers = self.makeHeaders(additionalHeaders)
             let request = self.sessionManager.request(
-                url,
+                "\(self.baseUrl)/\(path)",
                 method: method,
                 parameters: params,
                 encoding: JSONEncoding.default,
@@ -44,14 +51,12 @@ open class NetworkService {
             
             request.responseString { response in
                 if let error = response.result.error {
-                    observer.onError(error)
+                    single(.error(error))
                 } else if let body = response.result.value {
-                    observer.onNext(body)
+                    single(.success(body))
                 } else {
-                    observer.onError(NSError.unknown)
+                    single(.error(NSError.unknown))
                 }
-                
-                observer.onCompleted()
             }
             
             return Disposables.create { request.cancel() }
@@ -59,7 +64,7 @@ open class NetworkService {
     }
     
     private func makeHeaders(_ additionalHeaders: HTTPHeaders?) -> HTTPHeaders {
-        var headers: HTTPHeaders = ["Content-Type": httpSettings.httpContentType.rawValue]
+        var headers = defaultHeaders
         
         if let additionalHeaders = additionalHeaders {
             additionalHeaders.forEach { pair in
@@ -69,10 +74,41 @@ open class NetworkService {
         
         return headers
     }
-    
 }
 
 public class JsonService: NetworkService {
     
+    public override init(baseUrl: String) {
+        super.init(baseUrl: baseUrl)
+        
+        defaultHeaders["Content-Type"] = "application/json"
+    }
     
+    public func get<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return requestSingle(path, method: .get, params: params, additionalHeaders: additionalHeaders)
+    }
+    
+    public func post<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return requestSingle(path, method: .post, params: params, additionalHeaders: additionalHeaders)
+    }
+    
+    private func requestSingle<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return callRequest(path, method: method, params: params, additionalHeaders: additionalHeaders)
+            .map { responseString in
+                if let model = Mapper<T>().map(JSONString: responseString) {
+                    return model
+                }
+                
+                throw NSError.mappingError
+            }
+    }
+}
+
+public class XmlService: NetworkService {
+    
+    public override init(baseUrl: String) {
+        super.init(baseUrl: baseUrl)
+        
+        defaultHeaders["Content-Type"] = "text/xml"
+    }
 }
