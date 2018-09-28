@@ -111,7 +111,6 @@
 		4A411E4B1F64F53B4472F71D7E2FB5E4 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32EB90C5D9183F12784FC91C6DA3FD7 /* Event.swift */; };
 		4B1BA6CC4888B899622393F24D633B9C /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12165B5B2D084A5CDAF4688E23D35EF /* Cancelable.swift */; };
 		4D2C27A8EB2285432CDD4F0B11C9B81B /* BinaryDisposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAD67559503BD2B55309B0F5574AAD4 /* BinaryDisposable.swift */; };
-		4E433557215A67B300F08AEB /* UIGestureRecognizerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E433556215A67B300F08AEB /* UIGestureRecognizerExtensions.swift */; };
 		4E43355F215ABF6900F08AEB /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E43355C215ABF6900F08AEB /* OverlayView.swift */; };
 		4E433560215ABF6900F08AEB /* InlineLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E43355D215ABF6900F08AEB /* InlineLoaderView.swift */; };
 		4E433561215ABF6900F08AEB /* AbstractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E43355E215ABF6900F08AEB /* AbstractView.swift */; };
@@ -119,6 +118,7 @@
 		4E6E02F7215B791B001FAEB7 /* NavigationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E02F6215B791B001FAEB7 /* NavigationPage.swift */; };
 		4EA836056DB06461A03CDADC9C7DCE91 /* OptionalTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76C8BF1053503435BE39707A762069 /* OptionalTypeExtensions.swift */; };
 		4EBFB423DCBAD948D286D7B98F76F5E9 /* Using.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9052F05CA0B6A694CCEC63FA207D92 /* Using.swift */; };
+		4EE61E98215E326400119B8E /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE61E97215E326400119B8E /* UIGestureRecognizer.swift */; };
 		504C17FE56510CE9075E81632BC3FD8F /* ItemEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD19B93413E978210F6071E067EDF0 /* ItemEvents.swift */; };
 		50ED4A5FBAC13359ABA08E2A0830D098 /* InfiniteSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E85D6232EB54053FB33D397426DC60 /* InfiniteSequence.swift */; };
 		513CF94B7AC32D8FEBB1B356769394F1 /* RxCollectionViewDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A3A0A0148433B442842B5C56B2944C /* RxCollectionViewDataSourceType.swift */; };
@@ -719,7 +719,6 @@
 		4DACB352E12BD8E93901F2182550DF8E /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DD4F6DB47BCED107AD97A727E6BD1D0 /* IntegerOperators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntegerOperators.swift; path = Sources/IntegerOperators.swift; sourceTree = "<group>"; };
 		4DEC7144D632BC17EAAC0CF3936C7780 /* UIStepper+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIStepper+Rx.swift"; path = "RxCocoa/iOS/UIStepper+Rx.swift"; sourceTree = "<group>"; };
-		4E433556215A67B300F08AEB /* UIGestureRecognizerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizerExtensions.swift; sourceTree = "<group>"; };
 		4E43355C215ABF6900F08AEB /* OverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		4E43355D215ABF6900F08AEB /* InlineLoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InlineLoaderView.swift; sourceTree = "<group>"; };
 		4E43355E215ABF6900F08AEB /* AbstractView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractView.swift; sourceTree = "<group>"; };
@@ -727,6 +726,7 @@
 		4E6E02F6215B791B001FAEB7 /* NavigationPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPage.swift; sourceTree = "<group>"; };
 		4E76C8BF1053503435BE39707A762069 /* OptionalTypeExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionalTypeExtensions.swift; sourceTree = "<group>"; };
 		4E795E162A634EAD14FA6964086CA672 /* UISearchController+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UISearchController+Rx.swift"; path = "RxCocoa/iOS/UISearchController+Rx.swift"; sourceTree = "<group>"; };
+		4EE61E97215E326400119B8E /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
 		4F4604E5C5FA24AEB6F8C0839C4A1954 /* StringExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		4F517DE194467B44DD5B9BC88D91F7B2 /* BehaviorSubject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BehaviorSubject.swift; path = RxSwift/Subjects/BehaviorSubject.swift; sourceTree = "<group>"; };
 		4FB8D990A443F3B98E99A7C3A0C99588 /* Pods-DDMvvm_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DDMvvm_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -1175,7 +1175,7 @@
 				C14F126548E59679CB5111A868A7E7A1 /* UITableViewCellExtensions.swift */,
 				ACE3E37B6D8FD05D56EDEEFAB931988E /* UIViewExtensions.swift */,
 				E0827668289E5E72A5055070294B1EAB /* WKWebViewExtensions.swift */,
-				4E433556215A67B300F08AEB /* UIGestureRecognizerExtensions.swift */,
+				4EE61E97215E326400119B8E /* UIGestureRecognizer.swift */,
 			);
 			path = ReactiveExtensions;
 			sourceTree = "<group>";
@@ -2350,7 +2350,6 @@
 				7D0940E33BB54D7106B55AF469FF6406 /* UIAlertAction+Action.swift in Sources */,
 				FBD952BD8C92F6FD67E8AD8F0DAC12AA /* UIBarButtonItem+Action.swift in Sources */,
 				F460481413207D4C4DCBB5B97D4CB9E3 /* UIRefreshControl+Action.swift in Sources */,
-				4E433557215A67B300F08AEB /* UIGestureRecognizerExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2645,6 +2644,7 @@
 				4E433561215ABF6900F08AEB /* AbstractView.swift in Sources */,
 				01471676031CEA038050AABBF018CDFD /* Views.swift in Sources */,
 				4A2E645BABBC57235229A18FB8220E61 /* ViewModels.swift in Sources */,
+				4EE61E98215E326400119B8E /* UIGestureRecognizer.swift in Sources */,
 				739A2AC4C587EE3EFCF2DA976D48C5ED /* BindingOperators.swift in Sources */,
 				6C51422069E5ADD664ECE41A35C513BC /* DDMvvm-dummy.m in Sources */,
 				F73217350D0596371E5DC3DCE1ABA8C5 /* DependencyManager.swift in Sources */,
