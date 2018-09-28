@@ -16,6 +16,11 @@ public protocol IDestroyable: class {
     func destroy()
 }
 
+public protocol ITransionView: class {
+    
+    var animatorDelegate: AnimatorDelegate? { get set }
+}
+
 public protocol IView: IDestroyable {
     
     associatedtype ViewModelElement
@@ -32,7 +37,7 @@ public protocol IGenericViewModel: IDestroyable {
     
     associatedtype ModelElement
     
-    var model: ModelElement? { get }
+    var model: ModelElement? { get set }
     
     func react()
 }
@@ -44,7 +49,7 @@ public protocol IViewModel: IGenericViewModel {
     
     var navigationService: INavigationService { get }
     
-    init(model: ModelElement?, navigationService: INavigationService?)
+    init(model: ModelElement?)
 }
 
 public protocol IListViewModel: IViewModel {
@@ -58,7 +63,7 @@ public protocol IListViewModel: IViewModel {
     func selectedItemDidChange(_ cellViewModel: CellViewModelElement)
 }
 
-public protocol ICellViewModel: IGenericViewModel {
+public protocol ICellViewModel: IGenericViewModel, Equatable {
     
     init(model: ModelElement?)
 }

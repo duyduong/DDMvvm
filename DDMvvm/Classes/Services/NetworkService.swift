@@ -1,5 +1,5 @@
 //
-//  Requester.swift
+//  NetworkService.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/7/15.
@@ -36,6 +36,7 @@ open class NetworkService {
         assert(baseUrl.isEmpty, "baseUrl should not be empty.")
         self.baseUrl = baseUrl
         
+        sessionConfiguration.timeoutIntervalForRequest = timeout
         sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
     }
     
@@ -76,7 +77,31 @@ open class NetworkService {
     }
 }
 
-public class JsonService: NetworkService {
+public protocol IJsonService {
+    
+    func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]?, additionalHeaders: HTTPHeaders?) -> Single<T>
+}
+
+extension IJsonService {
+    
+    public func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return request(path, method: method, params: params, additionalHeaders: additionalHeaders)
+    }
+}
+
+/// Extensions for JsonService
+extension IJsonService {
+    
+    public func get<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return request(path, method: .get, params: params, additionalHeaders: additionalHeaders)
+    }
+    
+    public func post<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return request(path, method: .post, params: params, additionalHeaders: additionalHeaders)
+    }
+}
+
+public class JsonService: NetworkService, IJsonService {
     
     public override init(baseUrl: String) {
         super.init(baseUrl: baseUrl)
@@ -84,15 +109,7 @@ public class JsonService: NetworkService {
         defaultHeaders["Content-Type"] = "application/json"
     }
     
-    public func get<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return requestSingle(path, method: .get, params: params, additionalHeaders: additionalHeaders)
-    }
-    
-    public func post<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return requestSingle(path, method: .post, params: params, additionalHeaders: additionalHeaders)
-    }
-    
-    private func requestSingle<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+    public func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
         return callRequest(path, method: method, params: params, additionalHeaders: additionalHeaders)
             .map { responseString in
                 if let model = Mapper<T>().map(JSONString: responseString) {

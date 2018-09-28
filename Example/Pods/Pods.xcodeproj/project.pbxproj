@@ -265,7 +265,7 @@
 		9D7AC2E5CDD7C06102E1DA9A9FAFA90B /* NSObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FAC9AFF281996CF525FDB160E3D898 /* NSObjectExtensions.swift */; };
 		9D9847FA1E9AEF95ED8E8059002594D4 /* Action-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 17AEB3C0A4114B52BF4BBE4AA05338AF /* Action-dummy.m */; };
 		9E34768042F2009F437FDC465D30FA58 /* ImmediateSchedulerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C05AC6BA563562B5E8E45011FB0087 /* ImmediateSchedulerType.swift */; };
-		9ECE2E05D6EAD3F5A92D1243F66DCDC5 /* TransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FA977769C9B4A30A22DA224CF46231 /* TransitioningDelegate.swift */; };
+		9ECE2E05D6EAD3F5A92D1243F66DCDC5 /* AnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FA977769C9B4A30A22DA224CF46231 /* AnimatorDelegate.swift */; };
 		9ED2BB2981896E0A39EFA365503F58CE /* AFError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08B67F903DC4E220E4CCAF2C0230628 /* AFError.swift */; };
 		9F7DACAB83EF609D1BA8F26D1A046633 /* ConcurrentDispatchQueueScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C5457197C01EE6D4BA9531ED6F6697 /* ConcurrentDispatchQueueScheduler.swift */; };
 		9FEA4E3C0FCC437CAD2017A1B466CB0F /* ALView+PureLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = DAC670F003CABC884938BBAAED846944 /* ALView+PureLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -809,7 +809,7 @@
 		79597D3D4C3739C7D1ED7F42F835A4EB /* DelaySubscription.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DelaySubscription.swift; path = RxSwift/Observables/DelaySubscription.swift; sourceTree = "<group>"; };
 		79BA651F7C9D7136340D2D1A21C842BB /* WithLatestFrom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WithLatestFrom.swift; path = RxSwift/Observables/WithLatestFrom.swift; sourceTree = "<group>"; };
 		79E7D002332DA55A3E9A486756B0DD33 /* PureLayoutDefines.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PureLayoutDefines.h; path = PureLayout/PureLayout/PureLayoutDefines.h; sourceTree = "<group>"; };
-		79FA977769C9B4A30A22DA224CF46231 /* TransitioningDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TransitioningDelegate.swift; sourceTree = "<group>"; };
+		79FA977769C9B4A30A22DA224CF46231 /* AnimatorDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AnimatorDelegate.swift; sourceTree = "<group>"; };
 		7A532FFAFE468AEB40D9064A990F8BDC /* UIImageView+AlamofireImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImageView+AlamofireImage.swift"; path = "Source/UIImageView+AlamofireImage.swift"; sourceTree = "<group>"; };
 		7B85EAAA451FAB213A2CBE6DD1910103 /* PublishSubject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PublishSubject.swift; path = RxSwift/Subjects/PublishSubject.swift; sourceTree = "<group>"; };
 		7C974D769BFE35C5CA6196B5ED590B50 /* SynchronizedUnsubscribeType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynchronizedUnsubscribeType.swift; path = RxSwift/Concurrency/SynchronizedUnsubscribeType.swift; sourceTree = "<group>"; };
@@ -1184,8 +1184,8 @@
 			isa = PBXGroup;
 			children = (
 				09DCB816A48B62F8525B888A609F8B46 /* Page.swift */,
-				B203CA01FF5DD44BA7FEC69CF749C5B1 /* CollectionPage.swift */,
 				67562B0703182B65DF36F4E01095CADA /* ListPage.swift */,
+				B203CA01FF5DD44BA7FEC69CF749C5B1 /* CollectionPage.swift */,
 				77439BC7C57430ABF1DDAB087F55A6DB /* PresenterPage.swift */,
 				4E6E02F6215B791B001FAEB7 /* NavigationPage.swift */,
 			);
@@ -1768,7 +1768,7 @@
 		CC58CDD45C603DA8A6A66F866C30F05D /* Animators */ = {
 			isa = PBXGroup;
 			children = (
-				79FA977769C9B4A30A22DA224CF46231 /* TransitioningDelegate.swift */,
+				79FA977769C9B4A30A22DA224CF46231 /* AnimatorDelegate.swift */,
 				4E6E02F4215B78BE001FAEB7 /* Animator.swift */,
 			);
 			name = Animators;
@@ -2663,7 +2663,7 @@
 				B57251F4CC3D7ED0999E33AFFCC420CD /* SectionList.swift in Sources */,
 				2C2B536BC0E02EB1ACE14B96769FB884 /* StorageService.swift in Sources */,
 				B9CD4B368EF77484DD12CE782193B1AB /* StringExtensions.swift in Sources */,
-				9ECE2E05D6EAD3F5A92D1243F66DCDC5 /* TransitioningDelegate.swift in Sources */,
+				9ECE2E05D6EAD3F5A92D1243F66DCDC5 /* AnimatorDelegate.swift in Sources */,
 				CC691CFE77CDA306ECCB525C0480F310 /* UIBarButtonItemExtensions.swift in Sources */,
 				B6C0C873FD7BEDCAD90DA9581437CB21 /* UIColorExtensions.swift in Sources */,
 				093E4DFDD4D335C578D1C526B81BEE05 /* UIControlExtensions.swift in Sources */,

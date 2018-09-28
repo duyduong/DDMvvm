@@ -14,7 +14,7 @@ public struct Font {
     
     // font size will use this screen width to calculate ratio
     // for different screen size
-    public static let defaultScreenWidthForFontSize: CGFloat = 375
+    public static var defaultScreenWidthForFontSize: CGFloat = 375
     
     public static let system = System()
     
@@ -25,7 +25,6 @@ public struct Font {
     public static func get(_ id: String) -> FontFactory {
         return factoryMaps[id] ?? system
     }
-    
 }
 
 public protocol FontFactory {
@@ -41,7 +40,7 @@ extension FontFactory {
             return font
         }
         
-        return UIFont.systemFont(ofSize:  shouldScale ? calculateFontSize(size) : size)
+        return UIFont.systemFont(ofSize: shouldScale ? calculateFontSize(size) : size)
     }
     
     public func light(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
@@ -49,7 +48,7 @@ extension FontFactory {
             return font
         }
         
-        return UIFont.systemFont(ofSize:  shouldScale ? calculateFontSize(size) : size, weight: .light)
+        return UIFont.systemFont(ofSize: shouldScale ? calculateFontSize(size) : size, weight: .light)
     }
     
     public func bold(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
@@ -57,7 +56,7 @@ extension FontFactory {
             return font
         }
         
-        return UIFont.boldSystemFont(ofSize:  shouldScale ? calculateFontSize(size) : size)
+        return UIFont.boldSystemFont(ofSize: shouldScale ? calculateFontSize(size) : size)
     }
     
     private func calculateFontSize(_ standardSize: CGFloat) -> CGFloat {

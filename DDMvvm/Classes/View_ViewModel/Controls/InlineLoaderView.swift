@@ -46,18 +46,49 @@ public class InlineLoaderView: AbstractControlView {
     fileprivate let indicatorView = UIActivityIndicatorView(style: .white)
     
     public override func setupView() {
+        let settings = DDConfigurations.inlineLoaderViewSettings
+        
         indicatorView.hidesWhenStopped = true
-        indicatorView.color = .white
+        indicatorView.color = settings.indicatorColor
         addSubview(indicatorView)
         indicatorView.autoAlignAxis(toSuperviewAxis: .vertical)
         indicatorView.autoPinEdge(toSuperviewEdge: .top)
         
-        label.textColor = .lightText
-        label.font = Font.system.normal(withSize: 15)
+        label.textColor = settings.textColor
+        label.font = settings.font
+        label.text = settings.loadingText
         addSubview(label)
         label.autoPinEdge(.top, to: .bottom, of: indicatorView, withOffset: 3)
         label.autoAlignAxis(toSuperviewAxis: .vertical)
         label.autoPinEdge(toSuperviewEdge: .bottom)
+    }
+    
+    public static func attach(to view: UIView, position: ComponentViewPosition = .center) -> InlineLoaderView {
+        let inlineLoaderView = InlineLoaderView()
+        view.addSubview(inlineLoaderView)
+        
+        switch position {
+        case .center:
+            inlineLoaderView.autoCenterInSuperview()
+            
+        case .top(let offset):
+            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .vertical)
+            inlineLoaderView.autoPinEdge(toSuperviewEdge: .top, withInset: offset)
+        
+        case .bottom(let offset):
+            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .vertical)
+            inlineLoaderView.autoPinEdge(toSuperviewEdge: .bottom, withInset: offset)
+            
+        case .left(let offset):
+            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .horizontal)
+            inlineLoaderView.autoPinEdge(toSuperviewEdge: .left, withInset: offset)
+            
+        case .right(let offset):
+            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .horizontal)
+            inlineLoaderView.autoPinEdge(toSuperviewEdge: .right, withInset: offset)
+        }
+        
+        return inlineLoaderView
     }
 }
 

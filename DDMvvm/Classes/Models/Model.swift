@@ -17,7 +17,6 @@ open class Model: NSObject, Mappable {
     }
     
     open func mapping(map: Map) {}
-    
 }
 
 

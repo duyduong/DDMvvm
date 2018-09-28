@@ -1,5 +1,5 @@
 //
-//  DEViewController+UITableView.swift
+//  ListPage.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/16/15.
@@ -16,9 +16,9 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     
     public let tableView: UITableView
     
-    public init(viewModel: VM? = nil, style: UITableView.Style = .plain, navigationService: INavigationService? = nil) {
+    public init(viewModel: VM? = nil, style: UITableView.Style = .plain) {
         tableView = UITableView(frame: .zero, style: style)
-        super.init(viewModel: viewModel, navigationService: navigationService)
+        super.init(viewModel: viewModel)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -51,7 +51,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
     
-    open override func onLoading(_ value: Bool) {
+    open override func inlineLoadingChanged(_ value: Bool) {
         tableView.isHidden = value
     }
     

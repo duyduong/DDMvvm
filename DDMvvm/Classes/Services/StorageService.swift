@@ -11,6 +11,7 @@ import RxSwift
 import ObjectMapper
 
 public protocol IStorageService {
+    
     func save<T>(_ value: T, forKey key: String)
     func get<T>(forKey key: String) -> T?
     
@@ -62,7 +63,6 @@ public class StorageService: IStorageService {
         
         return nil
     }
-    
 }
 
 

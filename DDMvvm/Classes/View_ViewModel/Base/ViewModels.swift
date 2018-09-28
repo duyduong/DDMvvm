@@ -1,5 +1,5 @@
 //
-//  ViewModel.swift
+//  ViewModels.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/7/15.
@@ -10,13 +10,22 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-// MARK: - Base view model
-
+/// A master based ViewModel for all
 open class ViewModel<M: Model>: NSObject, IViewModel {
     
     public typealias ModelElement = M
     
-    public var model: M?
+    private var _model: M?
+    public var model: M? {
+        get { return _model }
+        set {
+            if _model != newValue {
+                _model = newValue
+                modelChanged()
+            }
+        }
+    }
+    
     public var disposeBag: DisposeBag? = DisposeBag()
     
     public let viewState = BehaviorRelay<ViewState>(value: .none)
@@ -24,20 +33,23 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
     
     public let navigationService: INavigationService
     
-    required public init(model: M? = nil, navigationService: INavigationService? = nil) {
-        self.model = model
-        self.navigationService = navigationService ?? DependencyManager.shared.getService()
+    required public init(model: M? = nil) {
+        _model = model
+        navigationService = DependencyManager.shared.getService()
     }
     
     open func destroy() {
         disposeBag = DisposeBag()
     }
     
+    open func modelChanged() {}
     open func react() {}
 }
 
-// MARK: - list viewmodel, support multiple sections
-
+/**
+ A based ViewModel for ListPage. The idea for ListViewModel is that it will contain a list of CellViewModels
+ By using this list, ListPage will render the cell and assign ViewModel to it respectively
+ */
 open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
     
     public typealias CellViewModelElement = CVM
@@ -48,11 +60,9 @@ open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListView
     public let selectedItem = BehaviorRelay<CVM?>(value: nil)
     public let selectedIndex = BehaviorRelay<IndexPath?>(value: nil)
     
-    required public init(model: M? = nil, navigationService: INavigationService? = nil) {
+    required public init(model: M? = nil) {
         super.init(model: model)
     }
-    
-    // MARK: - Sources manipulating
     
     public func makeSources(_ items: [[CVM.ModelElement]]) -> ItemsSourceType {
         return items.map { sections in
@@ -69,17 +79,29 @@ open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListView
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
 }
 
-// MARK: - Cell viewmodel
-
-open class CellViewModel<M: Model>: ICellViewModel {
+/**
+ A based ViewModel for TableCell and CollectionCell
+ The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService
+ */
+open class CellViewModel<M: Model>: NSObject, ICellViewModel {
     
     public typealias ModelElement = M
     
-    public var model: M?
+    private var _model: M?
+    public var model: M? {
+        get { return _model }
+        set {
+            if _model != newValue {
+                _model = newValue
+                modelChanged()
+            }
+        }
+    }
+    
     public var disposeBag: DisposeBag? = DisposeBag()
     
     required public init(model: M? = nil) {
-        self.model = model
+        _model = model
     }
     
     open func destroy() {
@@ -87,8 +109,10 @@ open class CellViewModel<M: Model>: ICellViewModel {
     }
     
     open func react() {}
+    open func modelChanged() {}
 }
 
+/// A usefull CellViewModel based class to support ListPage and CollectionPage that have more than one cell identifier
 open class SuperCellViewModel: CellViewModel<Model> {
     
     required public init(model: Model? = nil) {

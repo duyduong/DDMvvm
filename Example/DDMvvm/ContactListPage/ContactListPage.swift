@@ -49,8 +49,7 @@ class ContactListPageViewModel: ListViewModel<Model, ContactCellViewModel> {
 //            self.count += 1
             
             let page = ContactPage(viewModel: ContactPageViewModel())
-            let navPage = NavigationPage(rootViewController: page)
-            self.navigationService.push(to: navPage, options: PushOptions(pushType: .modally, animator: TestAnimator(), animated: true))
+            self.navigationService.push(to: page, options: PushOptions.pushWithAnimator(TestAnimator()))
             
             return .just(())
         }

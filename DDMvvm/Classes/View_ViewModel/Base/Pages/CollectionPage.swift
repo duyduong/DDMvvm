@@ -1,5 +1,5 @@
 //
-//  DEViewController+UICollectionView.swift
+//  CollectionPage.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/16/15.
@@ -19,8 +19,8 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     
     private var counter = [0: 0]
 
-    public override init(viewModel: VM? = nil, navigationService: INavigationService? = nil) {
-        super.init(viewModel: viewModel, navigationService: navigationService)
+    public override init(viewModel: VM? = nil) {
+        super.init(viewModel: viewModel)
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -46,8 +46,6 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         }, completion: nil)
     }
 
-    // MARK: - Collection view setup
-
     open override func initialize() {
         super.initialize()
 
@@ -59,15 +57,13 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         collectionView.removeFromSuperview()
     }
 
-    open override func onLoading(_ value: Bool) {
+    open override func inlineLoadingChanged(_ value: Bool) {
         collectionView.isHidden = value
     }
 
     open func setupLayout() {
         layout = UICollectionViewFlowLayout()
     }
-
-    // MARK: - Binding
 
     open override func bindViewAndViewModel() {
         collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag

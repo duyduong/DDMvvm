@@ -1,5 +1,5 @@
 //
-//  DEViewController.swift
+//  Page.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/6/15.
@@ -12,9 +12,12 @@ import RxCocoa
 import Action
 import PureLayout
 
-open class Page<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDelegate {
+open class Page<VM: IViewModel>: UIViewController, IView, ITransionView {
     
     public var disposeBag: DisposeBag? = DisposeBag()
+    private var loadingBag: DisposeBag? = DisposeBag()
+    
+    public var animatorDelegate: AnimatorDelegate?
     
     private var _viewModel: VM?
     public var viewModel: VM? {
@@ -29,9 +32,8 @@ open class Page<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDel
         }
     }
     
-    var backButton: UIBarButtonItem?
-    
-    var loaderView: InlineLoaderView!
+    public var backButton: UIBarButtonItem?
+    public var loaderView: InlineLoaderView?
     
     private lazy var backAction: Action<Void, Void> = {
         return Action() {
@@ -55,28 +57,24 @@ open class Page<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDel
     
     public let navigationService: INavigationService
     
-    public init(viewModel: VM? = nil, navigationService: INavigationService? = nil) {
-        self._viewModel = viewModel
-        self.navigationService = navigationService ?? DependencyManager.shared.getService()
+    public init(viewModel: VM? = nil) {
+        _viewModel = viewModel
+        navigationService = DependencyManager.shared.getService()
         
         super.init(nibName: nil, bundle: nil)
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        self.navigationService = DependencyManager.shared.getService()
+    public required init?(coder aDecoder: NSCoder) {
+        navigationService = DependencyManager.shared.getService()
         super.init(coder: aDecoder)
     }
-    
-    // MARK: - Controller life cycle
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         
-        loaderView = InlineLoaderView()
-        view.addSubview(loaderView)
-        loaderView.autoCenterInSuperview()
+        attachInlineLoaderView()
         
         initialize()
         viewModelChanged()
@@ -102,20 +100,32 @@ open class Page<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDel
         viewModel?.viewState.accept(.didDisappear)
     }
     
-    // MARK: - For subclass to override
+    public func attachInlineLoaderView(at position: ComponentViewPosition = .center) {
+        // remove older loader view if have
+        loadingBag = DisposeBag()
+        self.loaderView?.removeFromSuperview()
+        
+        // attach new loader view
+        let loaderView = InlineLoaderView.attach(to: view, position: position)
+        self.loaderView = loaderView
+        
+        if let viewModel = viewModel {
+            viewModel.showInlineLoader ~> loaderView.rx.show => loadingBag
+            viewModel.showInlineLoader.subscribe(onNext: inlineLoadingChanged) => loadingBag
+        }
+    }
     
     open func initialize() {}
     
     open func bindViewAndViewModel() {}
     
-    open func onLoading(_ value: Bool) {}
+    open func inlineLoadingChanged(_ value: Bool) {}
     
     open func destroy() {
         disposeBag = DisposeBag()
+        loadingBag = DisposeBag()
         viewModel?.destroy()
     }
-    
-    // MARK: - Back button setup
     
     open func createBackButton() -> UIBarButtonItem {
         let button = UIBarButtonItem()
@@ -128,19 +138,10 @@ open class Page<VM: IViewModel>: UIViewController, IView, UIGestureRecognizerDel
         navigationService.pop()
     }
     
-    // MARK: - Private
-    
     private func viewModelChanged() {
         bindViewAndViewModel()
-        
-        // binding for loading
-        if let viewModel = viewModel {
-            viewModel.react()
-            viewModel.showInlineLoader ~> loaderView.rx.show => disposeBag
-            viewModel.showInlineLoader.subscribe(onNext: onLoading) => disposeBag
-        }
+        viewModel?.react()
     }
-    
 }
 
 

@@ -7,9 +7,9 @@
 
 import UIKit
 
-public class NavigationPage: UINavigationController {
+public class NavigationPage: UINavigationController, ITransionView {
     
-    public var animator: Animator?
+    public var animatorDelegate: AnimatorDelegate?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +25,7 @@ extension NavigationPage: UINavigationControllerDelegate {
             return nil
         }
         
-        animator?.isPresenting = operation == .push
-        return animator
+        animatorDelegate?.animator.isPresenting = operation == .push
+        return animatorDelegate?.animator
     }
 }

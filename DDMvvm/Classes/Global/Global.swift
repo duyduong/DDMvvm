@@ -8,8 +8,6 @@
 
 import UIKit
 
-// MARK: - Enums
-
 public enum ComponentViewPosition {
     case top(CGFloat), left(CGFloat), bottom(CGFloat), right(CGFloat), center
 }
@@ -40,17 +38,23 @@ public enum PopupType {
     }
 }
 
-public typealias TopPageFindingBlock = (() -> UIViewController?)
+public struct InlineLoaderViewSettings {
+    
+    let indicatorColor: UIColor
+    let textColor: UIColor
+    let loadingText: String
+    let font: UIFont
+}
+
+/// Block type for searching top page and destroy page
+public typealias SearchTopPageBlock = (() -> UIViewController?)
 public typealias DestroyPageBlock = ((UIViewController?) -> ())
 
-/// Dictionary to keep transitioning delegate alive
-var transitioningMap: [String: TransitioningDelegate] = [:]
-
 /// Some global settings for the whole framework
-public struct DDMvvm {
+public struct DDConfigurations {
     
-    // block to find top page in window
-    public static var topPageFindingBlock: TopPageFindingBlock = {
+    /// Block for searching top page in our main window
+    public static var topPageFindingBlock: SearchTopPageBlock = {
         let myWindow = UIApplication.shared.windows
             .filter { !($0.rootViewController is UIAlertController) }
             .first
@@ -77,6 +81,7 @@ public struct DDMvvm {
         return currPage
     }
     
+    /// Block for destroying a page, using for navigation service
     public static var destroyPageBlock: DestroyPageBlock = { page in
         var viewControllers = [UIViewController]()
         if let navPage = page as? UINavigationController {
@@ -89,19 +94,15 @@ public struct DDMvvm {
         
         viewControllers.forEach { destroyPage($0) }
         (page as? IDestroyable)?.destroy()
-        
-        // try to remove from transitioning dictionary
-        if let page = page, transitioningMap.count > 0 {
-            let transitioningPages = transitioningMap.keys
-            transitioningPages
-                .filter { $0 == page.description }
-                .forEach { transitioningMap.removeValue(forKey: $0) }
-        }
+        (page as? ITransionView)?.animatorDelegate = nil
     }
     
     private static func destroyPage(_ page: UIViewController?) {
         destroyPageBlock(page)
     }
+    
+    /// Settings for inline loader view
+    public static var inlineLoaderViewSettings = InlineLoaderViewSettings(indicatorColor: .black, textColor: .lightGray, loadingText: "LOADING", font: Font.system.normal(withSize: 15))
 }
 
 

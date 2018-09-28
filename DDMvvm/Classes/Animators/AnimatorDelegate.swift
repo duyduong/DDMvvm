@@ -1,5 +1,5 @@
 //
-//  TransitioningDelegate.swift
+//  AnimatorDelegate.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 8/7/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+public class AnimatorDelegate: NSObject {
     
     let animator: Animator
     
@@ -16,6 +16,9 @@ public class TransitioningDelegate: NSObject, UIViewControllerTransitioningDeleg
         self.animator = animator
         super.init()
     }
+}
+
+extension AnimatorDelegate: UIViewControllerTransitioningDelegate {
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         animator.isPresenting = true

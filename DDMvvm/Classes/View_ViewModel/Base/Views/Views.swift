@@ -1,5 +1,5 @@
 //
-//  BaseView.swift
+//  Views.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 10/7/15.
@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 
+/// Based UIView that support ViewModel
 open class View<VM: IViewModel>: UIView, IView {
     
     public typealias ViewModelElement = VM
@@ -65,6 +66,7 @@ open class View<VM: IViewModel>: UIView, IView {
     }
 }
 
+/// Master based cell for CollectionPage
 open class CollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
     
     public typealias ViewModelElement = VM
@@ -75,12 +77,14 @@ open class CollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            disposeBag = DisposeBag()
-            _viewModel?.destroy()
-            
-            _viewModel = newValue
-            
-            viewModelChanged()
+            if newValue != _viewModel {
+                disposeBag = DisposeBag()
+                _viewModel?.destroy()
+                
+                _viewModel = newValue
+                
+                viewModelChanged()
+            }
         }
     }
     
@@ -118,6 +122,7 @@ open class CollectionCell<VM: ICellViewModel>: UICollectionViewCell, IView {
     open func bindViewAndViewModel() {}
 }
 
+/// Master cell for ListPage
 open class TableCell<VM: ICellViewModel>: UITableViewCell, IView {
     
     public typealias ViewModelElement = VM
@@ -128,12 +133,14 @@ open class TableCell<VM: ICellViewModel>: UITableViewCell, IView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            disposeBag = DisposeBag()
-            _viewModel?.destroy()
-            
-            _viewModel = newValue
-            
-            viewModelChanged()
+            if newValue != _viewModel {
+                disposeBag = DisposeBag()
+                _viewModel?.destroy()
+                
+                _viewModel = newValue
+                
+                viewModelChanged()
+            }
         }
     }
     
