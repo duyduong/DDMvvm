@@ -13,5 +13,4 @@ extension Optional where Wrapped == String {
     public var isNilOrEmpty: Bool {
         return self == nil || self!.isEmpty
     }
-    
 }
