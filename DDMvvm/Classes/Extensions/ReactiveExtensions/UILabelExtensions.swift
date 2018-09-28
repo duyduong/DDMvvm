@@ -23,7 +23,6 @@ extension Reactive where Base: UILabel {
     public var numberOfLines: Binder<Int> {
         return Binder(self.base) { $0.numberOfLines = $1 }
     }
-    
 }
 
 

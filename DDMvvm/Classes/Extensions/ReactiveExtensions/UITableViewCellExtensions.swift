@@ -19,7 +19,6 @@ extension Reactive where Base: UITableViewCell {
     public var selectionStyle: Binder<UITableViewCell.SelectionStyle> {
         return Binder(self.base) { $0.selectionStyle = $1 }
     }
-    
 }
 
 

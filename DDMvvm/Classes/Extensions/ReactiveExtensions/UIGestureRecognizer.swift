@@ -15,7 +15,6 @@ extension Reactive where Base: UIGestureRecognizer {
     public var isEnabled: Binder<Bool> {
         return Binder(base) { $0.isEnabled = $1 }
     }
-    
 }
 
 extension UIGestureRecognizer {
@@ -47,5 +46,4 @@ extension UIGestureRecognizer {
     public func unbindAction() {
         resetActionDisposeBag()
     }
-    
 }

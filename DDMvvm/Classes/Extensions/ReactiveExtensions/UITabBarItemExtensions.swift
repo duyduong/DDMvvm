@@ -29,7 +29,6 @@ extension Reactive where Base: UITabBarItem {
             }
         }
     }
-    
 }
 
 

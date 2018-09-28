@@ -21,5 +21,4 @@ extension Reactive where Base: WKWebView {
             }
         }
     }
-    
 }
