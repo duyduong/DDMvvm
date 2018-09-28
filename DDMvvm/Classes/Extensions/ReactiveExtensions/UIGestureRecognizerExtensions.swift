@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Action
 
 extension Reactive where Base: UIGestureRecognizer {
     

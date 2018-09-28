@@ -1,5 +1,5 @@
 //
-//  UIBarButtonItemExtensions.swift
+//  UITabBarItemExtensions.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 12/4/17.
