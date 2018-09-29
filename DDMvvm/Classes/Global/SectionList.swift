@@ -23,6 +23,7 @@ public struct ChangeEvent {
     public let data: ChangeData
 }
 
+/// Section list data sources
 public class SectionList<T> where T: Equatable {
     
     public let key: Any
@@ -57,20 +58,14 @@ public class SectionList<T> where T: Equatable {
         }
     }
     
-    public func removeAll() {
-        innerSources.removeAll()
-    }
-    
     public func insert(_ element: T, at index: Int) {
-        if index >= 0 && index < innerSources.count {
-            innerSources.insert(element, at: index)
-        }
+        guard index >= 0 && index < innerSources.count else { return }
+        innerSources.insert(element, at: index)
     }
     
     public func insert(_ elements: [T], at index: Int) {
-        if index >= 0 && index < innerSources.count {
-            innerSources.insert(contentsOf: elements, at: index)
-        }
+        guard index >= 0 && index < innerSources.count else { return }
+        innerSources.insert(contentsOf: elements, at: index)
     }
     
     public func append(_ element: T) {
@@ -83,17 +78,40 @@ public class SectionList<T> where T: Equatable {
     
     @discardableResult
     public func remove(at index: Int) -> T? {
-        if index >= 0 && index < innerSources.count {
-            let element = innerSources.remove(at: index)
-            
-            return element
-        }
-        
-        return nil
+        guard index >= 0 && index < innerSources.count else { return nil }
+        return innerSources.remove(at: index)
     }
     
-    public func index(of element: T) -> Int? {
+    public func removeAll() {
+        innerSources.removeAll()
+    }
+    
+    @discardableResult
+    public func firstIndex(of element: T) -> Int? {
         return innerSources.firstIndex(of: element)
+    }
+    
+    @discardableResult
+    public func lastIndex(of element: T) -> Int? {
+        return innerSources.lastIndex(of: element)
+    }
+    
+    @discardableResult
+    public func firstIndex(where predicate: (T) throws -> Bool) rethrows -> Int? {
+        return try innerSources.firstIndex(where: predicate)
+    }
+    
+    @discardableResult
+    public func lastIndex(where predicate: (T) throws -> Bool) rethrows -> Int? {
+        return try innerSources.lastIndex(where: predicate)
+    }
+    
+    public func map<U>(_ transform: (T) throws -> U) rethrows -> [U] {
+        return try innerSources.map(transform)
+    }
+    
+    public func compactMap<U>(_ transform: (T) throws -> U?) rethrows -> [U] {
+        return try innerSources.compactMap(transform)
     }
 }
 
@@ -139,13 +157,14 @@ public class ReactiveCollection<T> where T: Equatable {
         }
     }
     
-    public func countElements(on section: Int = 0) -> Int {
+    public func countElements(at section: Int = 0) -> Int {
+        guard section >= 0 && section < innerSources.count else { return 0 }
         return innerSources[section].count
     }
     
     // MARK: - section manipulations
     
-    public func setSections(_ sources: [[T]]) {
+    public func reset(_ sources: [[T]]) {
         removeAll()
         
         for sectionList in sources {
@@ -154,16 +173,11 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func insertSection(_ elements: [T], at index: Int) {
-        guard elements.count > 0 else { return }
-        
-        let sectionList = SectionList<T>(elements)
-        innerSources.insert(sectionList, at: index)
-        rxInnerSources.accept(innerSources)
-        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
+        insertSection(SectionList<T>(elements), at: index)
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
-        guard sectionList.count > 0 else { return }
+        guard index >= 0 && index < innerSources.count else { return }
         
         innerSources.insert(sectionList, at: index)
         rxInnerSources.accept(innerSources)
@@ -177,18 +191,21 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func appendSection(_ elements: [T]) {
-        guard elements.count > 0 else { return }
+        appendSection(SectionList<T>(elements))
+    }
+    
+    public func appendSection(_ sectionList: SectionList<T>) {
+        let section = innerSources.count == 0 ? 0 : innerSources.count
         
-        let sectionIndex = innerSources.count == 0 ? 0 : innerSources.count
-        
-        let sectionList = SectionList<T>(elements)
         innerSources.append(sectionList)
         rxInnerSources.accept(innerSources)
-        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: sectionIndex, indice: [])))
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [])))
     }
     
     @discardableResult
-    public func removeSection(at index: Int) -> SectionList<T> {
+    public func removeSection(at index: Int) -> SectionList<T>? {
+        guard index >= 0 && index < innerSources.count else { return nil }
+        
         let element = innerSources.remove(at: index)
         rxInnerSources.accept(innerSources)
         publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: index, indice: [])))
@@ -205,90 +222,96 @@ public class ReactiveCollection<T> where T: Equatable {
     // MARK: - section elements manipulations
     
     public func insert(_ element: T, at index: Int, of section: Int = 0) {
-        if section >= 0 && section < innerSources.count {
-            if index >= 0 {
-                if innerSources[section].count == 0 {
-                    innerSources[section].append(element)
-                    rxInnerSources.accept(innerSources)
-                    
-                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: [index])))
-                } else if index < innerSources[section].count {
-                    innerSources[section].insert(element, at: index)
-                    rxInnerSources.accept(innerSources)
-                    
-                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
-                }
-            }
-        }
-    }
-    
-    public func insert(_ elements: [T], at index: Int, of section: Int = 0) {
-        guard elements.count > 0 else { return }
+        guard section >= 0 && section < innerSources.count else { return }
+        guard index >= 0 && index < innerSources[section].count else { return }
         
-        if section >= 0 && section < innerSources.count {
-            if index >= 0 {
-                if innerSources[section].count == 0 {
-                    innerSources[section].append(elements)
-                    rxInnerSources.accept(innerSources)
-                    
-                    let indice = Array(0...elements.count - 1)
-                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: indice)))
-                } else if index < innerSources[section].count {
-                    innerSources[section].insert(elements, at: index)
-                    rxInnerSources.accept(innerSources)
-                    
-                    let indice = Array(0...elements.count - 1)
-                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
-                }
-            }
-        }
-    }
-    
-    public func append(_ element: T, to section: Int = 0) {
-        if section >= 0 && section < innerSources.count {
-            let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
+        if innerSources[section].count == 0 {
             innerSources[section].append(element)
             rxInnerSources.accept(innerSources)
+            
+            publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: [index])))
+        } else if index < innerSources[section].count {
+            innerSources[section].insert(element, at: index)
+            rxInnerSources.accept(innerSources)
+            
             publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
         }
     }
     
-    public func append(_ elements: [T], to section: Int = 0) {
-        guard elements.count > 0 else { return }
+    public func insert(_ elements: [T], at index: Int, of section: Int = 0) {
+        guard section >= 0 && section < innerSources.count else { return }
+        guard index >= 0 && index < innerSources[section].count else { return }
         
-        if section >= 0 && section < innerSources.count {
+        innerSources[section].insert(elements, at: index)
+        rxInnerSources.accept(innerSources)
+        
+        let indice = elements.count == 0 ? [] : Array(0..<elements.count)
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
+    }
+    
+    public func append(_ element: T, to section: Int = 0) {
+        guard section >= 0 && section < innerSources.count else { return }
+        
+        let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
+        innerSources[section].append(element)
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
+    }
+    
+    public func append(_ elements: [T], to section: Int = 0) {
+        guard section >= 0 && section < innerSources.count else { return }
+        
+        let indice: [Int]
+        if elements.count == 0 {
+            indice = []
+        } else {
             let startIndex = innerSources[section].count == 0 ? 0 : innerSources[section].count
             let endIndex = (startIndex + (elements.count - 1))
-            let indice = Array(startIndex...endIndex)
-            
-            innerSources[section].append(elements)
-            rxInnerSources.accept(innerSources)
-            publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
+            indice = Array(startIndex...endIndex)
         }
+        
+        innerSources[section].append(elements)
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
     }
     
     @discardableResult
     public func remove(at index: Int, of section: Int = 0) -> T? {
-        if section >= 0 && section < innerSources.count {
-            if index >= 0 && index < innerSources[section].count {
-                let element = innerSources[section].remove(at: index)
-                rxInnerSources.accept(innerSources)
-                publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: section, indice: [index])))
-                
-                return element
-            }
-        }
+        guard section >= 0 && section < innerSources.count else { return nil }
+        guard index >= 0 && index < innerSources[section].count else { return nil }
         
-        return nil
-    }
-    
-    public func index(of element: T, at section: Int = 0) -> Int? {
-        let sectionList = innerSources[0]
-        return sectionList.index(of: element)
+        let element = innerSources[section].remove(at: index)
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: section, indice: [index])))
+        
+        return element
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {
         return rxInnerSources.asObservable()
     }
     
+    @discardableResult
+    public func firstIndex(of element: T, at section: Int = 0) -> Int? {
+        guard section >= 0 && section < innerSources.count else { return nil }
+        return innerSources[section].firstIndex(of: element)
+    }
+    
+    @discardableResult
+    public func lastIndex(of element: T, at section: Int) -> Int? {
+        guard section >= 0 && section < innerSources.count else { return nil }
+        return innerSources[section].lastIndex(of: element)
+    }
+    
+    @discardableResult
+    public func firstIndex(where predicate: (T) throws -> Bool, at section: Int) rethrows -> Int? {
+        guard section >= 0 && section < innerSources.count else { return nil }
+        return try innerSources[section].firstIndex(where: predicate)
+    }
+    
+    @discardableResult
+    public func lastIndex(where predicate: (T) throws -> Bool, at section: Int) rethrows -> Int? {
+        guard section >= 0 && section < innerSources.count else { return nil }
+        return try innerSources[0].lastIndex(where: predicate)
+    }
 }
