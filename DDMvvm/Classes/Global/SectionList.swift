@@ -9,16 +9,16 @@
 import UIKit
 import RxSwift
 
-enum ChangeType {
+public enum ChangeType {
     case deletion, insertion
 }
 
-struct ChangeData {
+public struct ChangeData {
     let section: Int
     let indice: [Int]
 }
 
-struct ChangeEvent {
+public struct ChangeEvent {
     let type: ChangeType
     let data: ChangeData
 }
@@ -100,7 +100,7 @@ public class ReactiveCollection<T> {
     private let subject = PublishSubject<ChangeEvent>()
     private let varInnerSources = Variable<[SectionList<T>]>([])
     
-    let collectionChanged: Observable<ChangeEvent>
+    public let collectionChanged: Observable<ChangeEvent>
     
     public subscript(index: Int, section: Int) -> T {
         get { return innerSources[section][index] }
