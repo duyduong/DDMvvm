@@ -17,7 +17,7 @@ public struct NetworkImage {
     var placeholder: UIImage? = nil
     var completion: ((DataResponse<UIImage>) -> Void)? = nil
     
-    init(withURL url: URL? = nil, placeholder: UIImage? = nil, completion: ((DataResponse<UIImage>) -> Void)? = nil) {
+    public init(withURL url: URL? = nil, placeholder: UIImage? = nil, completion: ((DataResponse<UIImage>) -> Void)? = nil) {
         self.url = url
         self.placeholder = placeholder
         self.completion = completion
