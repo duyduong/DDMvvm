@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class AbstractView: UIView {
+open class AbstractView: UIView {
     
     public init() {
         super.init(frame: .zero)
@@ -24,10 +24,10 @@ public class AbstractView: UIView {
         setupView()
     }
     
-    public func setupView() {}
+    open func setupView() {}
 }
 
-public class AbstractControlView: UIControl {
+open class AbstractControlView: UIControl {
     
     public init() {
         super.init(frame: .zero)
@@ -44,5 +44,5 @@ public class AbstractControlView: UIControl {
         setupView()
     }
     
-    public func setupView() {}
+    open func setupView() {}
 }

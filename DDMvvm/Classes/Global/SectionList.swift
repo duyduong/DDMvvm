@@ -125,9 +125,8 @@ public class ReactiveCollection<T> {
     }
     
     public init(initialSectionElements: [T] = []) {
-        let sectionList = SectionList<T>(initialSectionElements)
-        innerSources.append(sectionList)
         collectionChanged = publisher.asObservable()
+        appendSection(initialSectionElements)
     }
     
     public func forEach(_ body: ((Int, SectionList<T>) -> ())) {
@@ -146,7 +145,7 @@ public class ReactiveCollection<T> {
         removeAll()
         
         for sectionList in sources {
-            self.appendSection(sectionList)
+            appendSection(sectionList)
         }
     }
     
