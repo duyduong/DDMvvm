@@ -8,19 +8,20 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 public enum ChangeType {
     case deletion, insertion
 }
 
 public struct ChangeData {
-    let section: Int
-    let indice: [Int]
+    public let section: Int
+    public let indice: [Int]
 }
 
 public struct ChangeEvent {
-    let type: ChangeType
-    let data: ChangeData
+    public let type: ChangeType
+    public let data: ChangeData
 }
 
 public class SectionList<T> {
@@ -46,7 +47,7 @@ public class SectionList<T> {
         return innerSources.last
     }
     
-    init(_ key: Any, initialSectionElements: [T] = []) {
+    public init(_ key: Any, initialSectionElements: [T] = []) {
         self.key = key
         innerSources.append(contentsOf: initialSectionElements)
     }
@@ -97,8 +98,8 @@ public class ReactiveCollection<T> {
     
     private var innerSources: [SectionList<T>] = []
     
-    private let subject = PublishSubject<ChangeEvent>()
-    private let varInnerSources = Variable<[SectionList<T>]>([])
+    private let publisher = PublishRelay<ChangeEvent>()
+    private let rxInnerSources = BehaviorRelay<[SectionList<T>]>(value: [])
     
     public let collectionChanged: Observable<ChangeEvent>
     
@@ -124,10 +125,10 @@ public class ReactiveCollection<T> {
         return innerSources.last
     }
     
-    init(initialSectionElements: [T] = []) {
+    public init(initialSectionElements: [T] = []) {
         let sectionList = SectionList<T>(initialSectionElements)
         innerSources.append(sectionList)
-        collectionChanged = subject.asObservable()
+        collectionChanged = publisher.asObservable()
     }
     
     public func forEach(_ body: ((Int, SectionList<T>) -> ())) {
@@ -153,14 +154,14 @@ public class ReactiveCollection<T> {
     public func insertSection(_ elements: [T], at index: Int) {
         let sectionList = SectionList<T>(elements)
         innerSources.insert(sectionList, at: index)
-        varInnerSources.value = innerSources
-        subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
         innerSources.insert(sectionList, at: index)
-        varInnerSources.value = innerSources
-        subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
     }
     
     public func appendSections(_ sections: [[T]]) {
@@ -174,23 +175,23 @@ public class ReactiveCollection<T> {
         
         let sectionList = SectionList<T>(elements)
         innerSources.append(sectionList)
-        varInnerSources.value = innerSources
-        subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: sectionIndex, indice: [])))
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: sectionIndex, indice: [])))
     }
     
     @discardableResult
     public func removeSection(at index: Int) -> SectionList<T> {
         let element = innerSources.remove(at: index)
-        varInnerSources.value = innerSources
-        subject.onNext(ChangeEvent(type: .deletion, data: ChangeData(section: index, indice: [])))
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: index, indice: [])))
         
         return element
     }
     
     public func removeAll() {
         innerSources.removeAll()
-        varInnerSources.value = innerSources
-        subject.onNext(ChangeEvent(type: .deletion, data: ChangeData(section: -1, indice: [])))
+        rxInnerSources.accept(innerSources)
+        publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: -1, indice: [])))
     }
     
     // MARK: - section elements manipulations
@@ -200,14 +201,14 @@ public class ReactiveCollection<T> {
             if index >= 0 {
                 if innerSources[section].count == 0 {
                     innerSources[section].append(element)
-                    varInnerSources.value = innerSources
+                    rxInnerSources.accept(innerSources)
                     
-                    subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: [index])))
+                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: [index])))
                 } else if index < innerSources[section].count {
                     innerSources[section].insert(element, at: index)
-                    varInnerSources.value = innerSources
+                    rxInnerSources.accept(innerSources)
                     
-                    subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
+                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
                 }
             }
         }
@@ -218,16 +219,16 @@ public class ReactiveCollection<T> {
             if index >= 0 {
                 if innerSources[section].count == 0 {
                     innerSources[section].append(elements)
-                    varInnerSources.value = innerSources
+                    rxInnerSources.accept(innerSources)
                     
                     let indice = Array(0...elements.count - 1)
-                    subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: indice)))
+                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: 0, indice: indice)))
                 } else if index < innerSources[section].count {
                     innerSources[section].insert(elements, at: index)
-                    varInnerSources.value = innerSources
+                    rxInnerSources.accept(innerSources)
                     
                     let indice = Array(0...elements.count - 1)
-                    subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
+                    publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
                 }
             }
         }
@@ -237,8 +238,8 @@ public class ReactiveCollection<T> {
         if section >= 0 && section < innerSources.count {
             let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
             innerSources[section].append(element)
-            varInnerSources.value = innerSources
-            subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
+            rxInnerSources.accept(innerSources)
+            publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: [index])))
         }
     }
     
@@ -249,8 +250,8 @@ public class ReactiveCollection<T> {
             let indice = Array(startIndex...endIndex)
             
             innerSources[section].append(elements)
-            varInnerSources.value = innerSources
-            subject.onNext(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
+            rxInnerSources.accept(innerSources)
+            publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: section, indice: indice)))
         }
     }
     
@@ -259,8 +260,8 @@ public class ReactiveCollection<T> {
         if section >= 0 && section < innerSources.count {
             if index >= 0 && index < innerSources[section].count {
                 let element = innerSources[section].remove(at: index)
-                varInnerSources.value = innerSources
-                subject.onNext(ChangeEvent(type: .deletion, data: ChangeData(section: section, indice: [index])))
+                rxInnerSources.accept(innerSources)
+                publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: section, indice: [index])))
                 
                 return element
             }
@@ -270,7 +271,7 @@ public class ReactiveCollection<T> {
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {
-        return varInnerSources.asObservable()
+        return rxInnerSources.asObservable()
     }
     
 }

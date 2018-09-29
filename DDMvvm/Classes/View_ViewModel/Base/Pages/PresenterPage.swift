@@ -94,15 +94,15 @@ class PresenterPage: UIViewController, IDestroyable {
         UIView.animate(withDuration: popupType.dismissDuration, animations: {
             self.overlayView.alpha = 0
             
+            let view = self.contentPage.view!
             switch self.popupType {
             case .popup:
-                self.contentPage.view.alpha = 0
-                self.contentPage.view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+                view.alpha = 0
+                view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
                 
             case .picker:
-                self.contentPage.view.transform = CGAffineTransform(translationX: 0, y: self.contentPage.view.frame.size.height)
+                view.transform = CGAffineTransform(translationX: 0, y: view.frame.size.height)
             }
-            
         }) { _ in
             super.dismiss(animated: false) {
                 self.destroy()

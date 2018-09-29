@@ -43,6 +43,7 @@ open class View<VM: IViewModel>: UIView, IView {
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        setup()
     }
     
     private func setup() {
