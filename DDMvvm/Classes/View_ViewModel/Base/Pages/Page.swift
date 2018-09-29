@@ -35,10 +35,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransionView {
     public var loaderView: InlineLoaderView?
     
     private lazy var backAction: Action<Void, Void> = {
-        return Action() {
-            self.onBack()
-            return .just(())
-        }
+        return Action() { .just(self.onBack()) }
     }()
     
     public var enableBackButton: Bool = false {
@@ -81,22 +78,22 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransionView {
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel?.viewState.accept(.willAppear)
+        viewModel?.rxViewState.accept(.willAppear)
     }
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel?.viewState.accept(.didAppear)
+        viewModel?.rxViewState.accept(.didAppear)
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        viewModel?.viewState.accept(.willDisappear)
+        viewModel?.rxViewState.accept(.willDisappear)
     }
     
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        viewModel?.viewState.accept(.didDisappear)
+        viewModel?.rxViewState.accept(.didDisappear)
     }
     
     public func attachInlineLoaderView(at position: ComponentViewPosition = .center) {
@@ -109,8 +106,8 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransionView {
         self.loaderView = loaderView
         
         if let viewModel = viewModel {
-            viewModel.showInlineLoader ~> loaderView.rx.show => loadingBag
-            viewModel.showInlineLoader.subscribe(onNext: inlineLoadingChanged) => loadingBag
+            viewModel.rxShowInlineLoader ~> loaderView.rx.show => loadingBag
+            viewModel.rxShowInlineLoader.subscribe(onNext: inlineLoadingChanged) => loadingBag
         }
     }
     

@@ -74,8 +74,8 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         guard let viewModel = viewModel else { return }
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
-        viewModel.selectedItem.accept(cellViewModel)
-        viewModel.selectedIndex.accept(indexPath)
+        viewModel.rxSelectedItem.accept(cellViewModel)
+        viewModel.rxSelectedIndex.accept(indexPath)
         
         viewModel.selectedItemDidChange(cellViewModel)
         selectedItemDidChange(cellViewModel)

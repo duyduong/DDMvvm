@@ -58,8 +58,8 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         guard let viewModel = self.viewModel else { return }
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
-        viewModel.selectedItem.accept(cellViewModel)
-        viewModel.selectedIndex.accept(indexPath)
+        viewModel.rxSelectedItem.accept(cellViewModel)
+        viewModel.rxSelectedIndex.accept(indexPath)
         
         viewModel.selectedItemDidChange(cellViewModel)
         

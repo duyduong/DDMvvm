@@ -1521,10 +1521,10 @@
 		9DEF1D161431E96E8073EEEFA5789F1B /* Pages */ = {
 			isa = PBXGroup;
 			children = (
+				A16F9AB1FAEA2530FDCE1F2C9656BECB /* Page.swift */,
 				AA55F8BE0B267A43CC960B287A7DCF03 /* CollectionPage.swift */,
 				EA8226DE4656C0F658BF2B9E3ED6715B /* ListPage.swift */,
 				A2CBF1C0F874C24B5A669BB6EEDE24DE /* NavigationPage.swift */,
-				A16F9AB1FAEA2530FDCE1F2C9656BECB /* Page.swift */,
 				1F53947BC6005F032D73B722A40FF00B /* PresenterPage.swift */,
 			);
 			path = Pages;

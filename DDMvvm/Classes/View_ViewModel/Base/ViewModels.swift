@@ -27,8 +27,8 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
     
     public var disposeBag: DisposeBag? = DisposeBag()
     
-    public let viewState = BehaviorRelay<ViewState>(value: .none)
-    public let showInlineLoader = BehaviorRelay(value: false)
+    public let rxViewState = BehaviorRelay<ViewState>(value: .none)
+    public let rxShowInlineLoader = BehaviorRelay(value: false)
     
     public let navigationService: INavigationService
     
@@ -56,8 +56,8 @@ open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListV
     public typealias ItemsSourceType = [[CVM]]
     
     public let itemsSource = ReactiveCollection<CVM>()
-    public let selectedItem = BehaviorRelay<CVM?>(value: nil)
-    public let selectedIndex = BehaviorRelay<IndexPath?>(value: nil)
+    public let rxSelectedItem = BehaviorRelay<CVM?>(value: nil)
+    public let rxSelectedIndex = BehaviorRelay<IndexPath?>(value: nil)
     
     required public init(model: M? = nil) {
         super.init(model: model)
@@ -65,13 +65,13 @@ open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListV
     
     public func makeSources(_ items: [[CVM.ModelElement]]) -> ItemsSourceType {
         return items.map { sections in
-            let cvms = sections.toCellViewModels() as [CVM]
+            let cvms: [CVM] = sections.toCellViewModels()
             return cvms
         }
     }
     
     public func makeSources(_ items: [CVM.ModelElement]) -> ItemsSourceType {
-        let cvms = items.toCellViewModels() as [CVM]
+        let cvms: [CVM] = items.toCellViewModels()
         return [cvms]
     }
     

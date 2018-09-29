@@ -44,8 +44,8 @@ public protocol IGenericViewModel: IDestroyable, Equatable {
 
 public protocol IViewModel: IGenericViewModel {
     
-    var viewState: BehaviorRelay<ViewState> { get }
-    var showInlineLoader: BehaviorRelay<Bool> { get }
+    var rxViewState: BehaviorRelay<ViewState> { get }
+    var rxShowInlineLoader: BehaviorRelay<Bool> { get }
     
     var navigationService: INavigationService { get }
 }
@@ -55,8 +55,8 @@ public protocol IListViewModel: IViewModel {
     associatedtype CellViewModelElement: IGenericViewModel
     
     var itemsSource: ReactiveCollection<CellViewModelElement> { get }
-    var selectedItem: BehaviorRelay<CellViewModelElement?> { get }
-    var selectedIndex: BehaviorRelay<IndexPath?> { get }
+    var rxSelectedItem: BehaviorRelay<CellViewModelElement?> { get }
+    var rxSelectedIndex: BehaviorRelay<IndexPath?> { get }
     
     func selectedItemDidChange(_ cellViewModel: CellViewModelElement)
 }

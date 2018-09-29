@@ -23,7 +23,7 @@ public struct ChangeEvent {
     public let data: ChangeData
 }
 
-public class SectionList<T> {
+public class SectionList<T> where T: Equatable {
     
     public let key: Any
     
@@ -91,9 +91,13 @@ public class SectionList<T> {
         
         return nil
     }
+    
+    public func index(of element: T) -> Int? {
+        return innerSources.firstIndex(of: element)
+    }
 }
 
-public class ReactiveCollection<T> {
+public class ReactiveCollection<T> where T: Equatable {
     
     private var innerSources: [SectionList<T>] = []
     
@@ -150,6 +154,8 @@ public class ReactiveCollection<T> {
     }
     
     public func insertSection(_ elements: [T], at index: Int) {
+        guard elements.count > 0 else { return }
+        
         let sectionList = SectionList<T>(elements)
         innerSources.insert(sectionList, at: index)
         rxInnerSources.accept(innerSources)
@@ -157,6 +163,8 @@ public class ReactiveCollection<T> {
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
+        guard sectionList.count > 0 else { return }
+        
         innerSources.insert(sectionList, at: index)
         rxInnerSources.accept(innerSources)
         publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
@@ -164,11 +172,13 @@ public class ReactiveCollection<T> {
     
     public func appendSections(_ sections: [[T]]) {
         for section in sections {
-            self.appendSection(section)
+            appendSection(section)
         }
     }
     
     public func appendSection(_ elements: [T]) {
+        guard elements.count > 0 else { return }
+        
         let sectionIndex = innerSources.count == 0 ? 0 : innerSources.count
         
         let sectionList = SectionList<T>(elements)
@@ -213,6 +223,8 @@ public class ReactiveCollection<T> {
     }
     
     public func insert(_ elements: [T], at index: Int, of section: Int = 0) {
+        guard elements.count > 0 else { return }
+        
         if section >= 0 && section < innerSources.count {
             if index >= 0 {
                 if innerSources[section].count == 0 {
@@ -242,6 +254,8 @@ public class ReactiveCollection<T> {
     }
     
     public func append(_ elements: [T], to section: Int = 0) {
+        guard elements.count > 0 else { return }
+        
         if section >= 0 && section < innerSources.count {
             let startIndex = innerSources[section].count == 0 ? 0 : innerSources[section].count
             let endIndex = (startIndex + (elements.count - 1))
@@ -266,6 +280,11 @@ public class ReactiveCollection<T> {
         }
         
         return nil
+    }
+    
+    public func index(of element: T, at section: Int = 0) -> Int? {
+        let sectionList = innerSources[0]
+        return sectionList.index(of: element)
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {
