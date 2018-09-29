@@ -32,12 +32,13 @@ public protocol IView: IDestroyable {
 
 // MARK: - Viewmodel protocols
 
-public protocol IGenericViewModel: IDestroyable {
+public protocol IGenericViewModel: IDestroyable, Equatable {
     
     associatedtype ModelElement
     
     var model: ModelElement? { get set }
     
+    init(model: ModelElement?)
     func react()
 }
 
@@ -47,13 +48,11 @@ public protocol IViewModel: IGenericViewModel {
     var showInlineLoader: BehaviorRelay<Bool> { get }
     
     var navigationService: INavigationService { get }
-    
-    init(model: ModelElement?)
 }
 
 public protocol IListViewModel: IViewModel {
     
-    associatedtype CellViewModelElement: ICellViewModel
+    associatedtype CellViewModelElement: IGenericViewModel
     
     var itemsSource: ReactiveCollection<CellViewModelElement> { get }
     var selectedItem: BehaviorRelay<CellViewModelElement?> { get }
@@ -62,10 +61,6 @@ public protocol IListViewModel: IViewModel {
     func selectedItemDidChange(_ cellViewModel: CellViewModelElement)
 }
 
-public protocol ICellViewModel: IGenericViewModel, Equatable {
-    
-    init(model: ModelElement?)
-}
 
 
 

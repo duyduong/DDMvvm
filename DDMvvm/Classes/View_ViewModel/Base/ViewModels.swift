@@ -49,7 +49,7 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
  A based ViewModel for ListPage. The idea for ListViewModel is that it will contain a list of CellViewModels
  By using this list, ListPage will render the cell and assign ViewModel to it respectively
  */
-open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
+open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
     
     public typealias CellViewModelElement = CVM
     
@@ -82,7 +82,7 @@ open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListView
  A based ViewModel for TableCell and CollectionCell
  The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService
  */
-open class CellViewModel<M: Model>: NSObject, ICellViewModel {
+open class CellViewModel<M: Model>: NSObject, IGenericViewModel {
     
     public typealias ModelElement = M
     
@@ -99,7 +99,7 @@ open class CellViewModel<M: Model>: NSObject, ICellViewModel {
     
     public var disposeBag: DisposeBag? = DisposeBag()
     
-    required public init(model: M? = nil) {
+    public required init(model: M? = nil) {
         _model = model
     }
     
