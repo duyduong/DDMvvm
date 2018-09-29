@@ -2,8 +2,7 @@
 //  DependencyManager.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 4/3/18.
-//  Copyright © 2018 Halliburton. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import Foundation

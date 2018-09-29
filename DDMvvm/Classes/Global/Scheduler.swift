@@ -2,8 +2,7 @@
 //  Scheduler.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 11/5/15.
-//  Copyright © 2015 Nover. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import Foundation

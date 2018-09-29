@@ -2,8 +2,7 @@
 //  Protocols.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 8/29/16.
-//  Copyright © 2016 Nover. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import Foundation

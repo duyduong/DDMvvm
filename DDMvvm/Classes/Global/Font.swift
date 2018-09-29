@@ -2,8 +2,7 @@
 //  Font.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 10/23/16.
-//  Copyright © 2016 Nover. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import UIKit

@@ -2,8 +2,7 @@
 //  AnimatorDelegate.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 8/7/17.
-//  Copyright © 2017 Nover, Inc. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import UIKit

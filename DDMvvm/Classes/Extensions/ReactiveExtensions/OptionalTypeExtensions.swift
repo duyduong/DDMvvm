@@ -2,8 +2,7 @@
 //  OptionalType.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 12/4/17.
-//  Copyright © 2017 Halliburton. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import UIKit

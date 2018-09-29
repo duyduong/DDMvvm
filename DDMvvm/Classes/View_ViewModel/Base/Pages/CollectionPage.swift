@@ -2,8 +2,7 @@
 //  CollectionPage.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 10/16/15.
-//  Copyright © 2015 Nover. All rights reserved.
+//  Created by Dao Duy Duong on 9/26/18.
 //
 
 import UIKit
