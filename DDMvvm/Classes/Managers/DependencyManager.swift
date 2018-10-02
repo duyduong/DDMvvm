@@ -14,6 +14,7 @@ protocol IMutableDependencyResolver {
     
     func getService(_ type: Any) -> Any?
     func registerService(_ factory: @escaping RegistrationBlock, type: Any)
+    func removeService(_ type: Any)
 }
 
 extension IMutableDependencyResolver {
@@ -45,6 +46,11 @@ class DefaultDependencyResolver: IMutableDependencyResolver {
         let k = String(describing: type)
         registry[k] = factory
     }
+    
+    func removeService(_ type: Any) {
+        let k = String(describing: type)
+        registry.removeValue(forKey: k)
+    }
 }
 
 public class DependencyManager {
@@ -65,6 +71,10 @@ public class DependencyManager {
     
     public func registerService<T>(_ factory: @escaping GenericRegistrationBlock<T>) {
         resolver.registerService(factory)
+    }
+    
+    public func removeService<T>(_ type: T.Type) {
+        resolver.removeService(type)
     }
 }
 

@@ -11,7 +11,7 @@ import RxCocoa
 import Action
 import PureLayout
 
-open class Page<VM: IViewModel>: UIViewController, IView, ITransionView {
+open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
     public var disposeBag: DisposeBag? = DisposeBag()
     private var loadingBag: DisposeBag? = DisposeBag()

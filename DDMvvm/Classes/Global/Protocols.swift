@@ -15,7 +15,7 @@ public protocol IDestroyable: class {
     func destroy()
 }
 
-public protocol ITransionView: class {
+public protocol ITransitionView: class {
     
     var animatorDelegate: AnimatorDelegate? { get set }
 }

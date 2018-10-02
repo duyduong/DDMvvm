@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let page = ContactListPage(viewModel: ContactListPageViewModel())
+        let page = ExampleMenuPage(viewModel: HomeMenuPageViewModel())
         let rootPage = NavigationPage(rootViewController: page)
         window?.rootViewController = rootPage
         window?.makeKeyAndVisible()

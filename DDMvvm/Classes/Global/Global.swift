@@ -93,7 +93,7 @@ public struct DDConfigurations {
         
         viewControllers.forEach { destroyPage($0) }
         (page as? IDestroyable)?.destroy()
-        (page as? ITransionView)?.animatorDelegate = nil
+        (page as? ITransitionView)?.animatorDelegate = nil
     }
     
     private static func destroyPage(_ page: UIViewController?) {

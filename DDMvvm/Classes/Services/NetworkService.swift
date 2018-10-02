@@ -19,6 +19,7 @@ extension String: ParameterEncoding {
     }
 }
 
+/// Base network service, using SessionManager from Alamofire
 open class NetworkService {
     
     let sessionManager: SessionManager
@@ -76,6 +77,8 @@ open class NetworkService {
     }
 }
 
+// MARK: - Json service, service for calling API
+
 public protocol IJsonService {
     
     func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]?, additionalHeaders: HTTPHeaders?) -> Single<T>
@@ -88,7 +91,6 @@ extension IJsonService {
     }
 }
 
-/// Extensions for JsonService
 extension IJsonService {
     
     public func get<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
@@ -100,6 +102,7 @@ extension IJsonService {
     }
 }
 
+/// Json API service
 public class JsonService: NetworkService, IJsonService {
     
     public override init(baseUrl: String) {
@@ -120,11 +123,3 @@ public class JsonService: NetworkService, IJsonService {
     }
 }
 
-public class XmlService: NetworkService {
-    
-    public override init(baseUrl: String) {
-        super.init(baseUrl: baseUrl)
-        
-        defaultHeaders["Content-Type"] = "text/xml"
-    }
-}

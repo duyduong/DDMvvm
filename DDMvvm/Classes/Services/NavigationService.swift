@@ -9,7 +9,7 @@
 import UIKit
 
 public enum PushType {
-    case auto, push, modally
+    case auto, push, modally(UIModalPresentationStyle)
 }
 
 public enum PopType {
@@ -36,8 +36,8 @@ public struct PushOptions {
         return PushOptions(pushType: .push, animator: animator)
     }
     
-    public static func modalWithAnimator(_ animator: Animator) -> PushOptions {
-        return PushOptions(pushType: .modally, animator: animator)
+    public static func modalWithAnimator(_ animator: Animator, presentationStyle: UIModalPresentationStyle = .custom) -> PushOptions {
+        return PushOptions(pushType: .modally(presentationStyle), animator: animator)
     }
 }
 
@@ -99,20 +99,20 @@ public class NavigationService: INavigationService {
         guard let topPage = topPage else { return }
         
         let handlePush = {
-            if let navigationPage = topPage.navigationController as? NavigationPage,
-                let animator = options.animator {
-                navigationPage.animatorDelegate = AnimatorDelegate(withAnimator: animator)
+            if let animator = options.animator {
+                // attach animtor to destination page
+                (page as? ITransitionView)?.animatorDelegate = AnimatorDelegate(withAnimator: animator)
             }
             
             topPage.navigationController?.pushViewController(page, animated: options.animated)
         }
         
-        let handleModal = {
+        let handleModal = { (presentationStyle: UIModalPresentationStyle) in
             if let animator = options.animator {
                 let delegate = AnimatorDelegate(withAnimator: animator)
-                (page as? ITransionView)?.animatorDelegate = delegate
+                (page as? ITransitionView)?.animatorDelegate = delegate
                 page.transitioningDelegate = delegate
-                page.modalPresentationStyle = .custom
+                page.modalPresentationStyle = presentationStyle
             }
             
             topPage.present(page, animated: options.animated, completion: nil)
@@ -123,12 +123,12 @@ public class NavigationService: INavigationService {
             if topPage.navigationController != nil {
                 handlePush()
             } else {
-                handleModal()
+                handleModal(.custom)
             }
             
         case .push: handlePush()
             
-        case .modally: handleModal()
+        case .modally(let presentationStyle): handleModal(presentationStyle)
         }
     }
     

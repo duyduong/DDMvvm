@@ -7,11 +7,11 @@
 
 import UIKit
 
-public class NavigationPage: UINavigationController, ITransionView {
+open class NavigationPage: UINavigationController, ITransitionView {
     
     public var animatorDelegate: AnimatorDelegate?
     
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
     }
@@ -21,8 +21,11 @@ extension NavigationPage: UINavigationControllerDelegate {
     
     public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
-        if operation == .none {
-            return nil
+        var animatorDelegate: AnimatorDelegate?
+        switch operation {
+        case .none: animatorDelegate = nil
+        case .push: animatorDelegate = (toVC as? ITransitionView)?.animatorDelegate
+        case .pop: animatorDelegate = (fromVC as? ITransitionView)?.animatorDelegate
         }
         
         animatorDelegate?.animator.isPresenting = operation == .push
