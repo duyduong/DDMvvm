@@ -94,7 +94,8 @@ class HomeMenuPageViewModel: ExampleMenuPageViewModel {
         
         var page: UIViewController?
         switch indexPath.row {
-        case 0: ()
+        case 0:
+            page = ExampleMenuPage(viewModel: MvvmMenuPageViewModel(model: cellViewModel.model))
             
         case 1:
             page = ExampleMenuPage(viewModel: DataBindingMenuPageViewModel(model: cellViewModel.model))
@@ -169,7 +170,50 @@ class TransitionMenuPageViewModel: ExampleMenuPageViewModel {
     }
 }
 
-
+class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
+    
+    override func getMenuModels() -> [MenuModel] {
+        return [
+            MenuModel(withTitle: "ListPage Examples", desc: "Demostration on how to use ListPage"),
+            MenuModel(withTitle: "CollectionPage Examples", desc: "Demostration on how to use CollectionPage"),
+            MenuModel(withTitle: "Multiple Cells Examples", desc: "Demostration on how to use multiple cell identifier on ListPage or CollectionPage"),
+            MenuModel(withTitle: "Searching Images", desc: "An advanced example on using Search Bar to search images on Flickr."),
+        ]
+    }
+    
+    override func pageToNavigate(_ cellViewModel: ExampleMenuCellViewModel) -> UIViewController? {
+        guard let indexPath = rxSelectedIndex.value else { return nil }
+        
+        var page: UIViewController?
+        switch indexPath.row {
+        case 0:
+            let vm = NavigationTransitionExamplePageViewModel(model: cellViewModel.model)
+            page = NavigationTransitionExamplePage(viewModel: vm)
+            
+        case 1:
+            let vm = NavigationTransitionExamplePageViewModel(model: cellViewModel.model, usingModal: true)
+            page = NavigationTransitionExamplePage(viewModel: vm)
+            
+        case 2: ()
+        case 3:
+            /*
+             Register for JsonService injection
+             For real project, this should be call on AppDelegate. For now, as an example project,
+             I may want to use different base url for different examples
+             */
+            DependencyManager.shared.registerService { () -> IJsonService in
+                return JsonService(baseUrl: "https://api.flickr.com/services/rest/")
+            }
+            
+            let vm = FlickrSearchPageViewModel(model: cellViewModel.model)
+            page = FlickrSearchPage(viewModel: vm)
+            
+        default: ()
+        }
+        
+        return page
+    }
+}
 
 
 

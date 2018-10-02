@@ -33,21 +33,21 @@ open class NetworkService {
     var defaultHeaders: HTTPHeaders = [:]
     
     public init(baseUrl: String) {
-        assert(baseUrl.isEmpty, "baseUrl should not be empty.")
+        assert(!baseUrl.isEmpty, "baseUrl should not be empty.")
         self.baseUrl = baseUrl
         
         sessionConfiguration.timeoutIntervalForRequest = timeout
         sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
     }
     
-    public func callRequest(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<String> {
+    public func callRequest(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, parameterEncoding encoding: ParameterEncoding = URLEncoding.default, additionalHeaders: HTTPHeaders? = nil) -> Single<String> {
         return Single.create { single in
             let headers = self.makeHeaders(additionalHeaders)
             let request = self.sessionManager.request(
                 "\(self.baseUrl)/\(path)",
                 method: method,
                 parameters: params,
-                encoding: JSONEncoding.default,
+                encoding: encoding,
                 headers: headers)
             
             request.responseString { response in
@@ -81,23 +81,65 @@ open class NetworkService {
 
 public protocol IJsonService {
     
-    func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]?, additionalHeaders: HTTPHeaders?) -> Single<T>
+    func request<T: Mappable>(_ path: String,
+                              method: HTTPMethod,
+                              params: [String: Any]?,
+                              parameterEncoding encoding: ParameterEncoding,
+                              additionalHeaders: HTTPHeaders?) -> Single<T>
+    
+    func request<T: Mappable>(_ path: String,
+                              method: HTTPMethod,
+                              params: [String: Any]?,
+                              parameterEncoding encoding: ParameterEncoding,
+                              additionalHeaders: HTTPHeaders?) -> Single<[T]>
 }
 
 extension IJsonService {
     
-    public func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return request(path, method: method, params: params, additionalHeaders: additionalHeaders)
+    public func request<T: Mappable>(_ path: String,
+                                     method: HTTPMethod,
+                                     params: [String: Any]? = nil,
+                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                     additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return request(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
+    }
+    
+    public func request<T: Mappable>(_ path: String,
+                                     method: HTTPMethod,
+                                     params: [String: Any]? = nil,
+                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                     additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
+        return request(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
     }
 }
 
 extension IJsonService {
     
-    public func get<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+    public func get<T: Mappable>(_ path: String,
+                                 params: [String: Any]? = nil,
+                                 parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                 additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
         return request(path, method: .get, params: params, additionalHeaders: additionalHeaders)
     }
     
-    public func post<T: Mappable>(_ path: String, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+    public func get<T: Mappable>(_ path: String,
+                                 params: [String: Any]? = nil,
+                                 parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                 additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
+        return request(path, method: .get, params: params, additionalHeaders: additionalHeaders)
+    }
+    
+    public func post<T: Mappable>(_ path: String,
+                                  params: [String: Any]? = nil,
+                                  parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                  additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return request(path, method: .post, params: params, additionalHeaders: additionalHeaders)
+    }
+    
+    public func post<T: Mappable>(_ path: String,
+                                  params: [String: Any]? = nil,
+                                  parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                  additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
         return request(path, method: .post, params: params, additionalHeaders: additionalHeaders)
     }
 }
@@ -111,11 +153,29 @@ public class JsonService: NetworkService, IJsonService {
         defaultHeaders["Content-Type"] = "application/json"
     }
     
-    public func request<T: Mappable>(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return callRequest(path, method: method, params: params, additionalHeaders: additionalHeaders)
+    public func request<T: Mappable>(_ path: String,
+                                     method: HTTPMethod,
+                                     params: [String: Any]? = nil,
+                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                     additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
+        return callRequest(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
             .map { responseString in
                 if let model = Mapper<T>().map(JSONString: responseString) {
                     return model
+                }
+                
+                throw NSError.mappingError
+            }
+    }
+    
+    public func request<T: Mappable>(_ path: String,
+                                     method: HTTPMethod, params: [String: Any]? = nil,
+                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                                     additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
+        return callRequest(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
+            .map { responseString in
+                if let models = Mapper<T>().mapArray(JSONString: responseString) {
+                    return models
                 }
                 
                 throw NSError.mappingError

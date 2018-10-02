@@ -113,7 +113,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
             }
             
             // update counter
-            counter.removeAll()
+             counter.removeAll()
             viewModel?.itemsSource.forEach { (i, section) in
                 counter[i] = section.count
             }

@@ -173,7 +173,7 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func insertSection(_ elements: [T], at index: Int) {
-        insertSection(SectionList<T>(elements), at: index)
+        insertSection(SectionList<T>("", initialSectionElements: elements), at: index)
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
@@ -191,7 +191,7 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func appendSection(_ elements: [T]) {
-        appendSection(SectionList<T>(elements))
+        appendSection(SectionList<T>("", initialSectionElements: elements))
     }
     
     public func appendSection(_ sectionList: SectionList<T>) {

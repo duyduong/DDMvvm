@@ -9,3 +9,23 @@
 import Foundation
 import ObjectMapper
 
+class IntToBoolTransform: TransformType {
+    typealias Object = Bool
+    typealias JSON = Int
+    
+    func transformFromJSON(_ value: Any?) -> Object? {
+        if let type = value as? Int {
+            return type != 0
+        }
+        return nil
+    }
+    
+    func transformToJSON(_ value: Object?) -> JSON? {
+        if let value = value {
+            return value ? 1 : 0
+        }
+        return nil
+    }
+}
+
+
