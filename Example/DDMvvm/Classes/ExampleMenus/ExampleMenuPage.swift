@@ -202,7 +202,7 @@ class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
              I may want to use different base url for different examples
              */
             DependencyManager.shared.registerService { () -> IJsonService in
-                return JsonService(baseUrl: "https://api.flickr.com/services/rest/")
+                return JsonService(baseUrl: "https://api.flickr.com/services/rest")
             }
             
             let vm = FlickrSearchPageViewModel(model: cellViewModel.model)

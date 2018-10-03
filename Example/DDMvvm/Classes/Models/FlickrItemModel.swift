@@ -40,6 +40,8 @@ import DDMvvm
 
 class FlickrSearchResponse: Model {
     
+    var page = 1
+    var pages = 1
     var photos = [FlickrItemModel]()
     
     convenience init() {
@@ -47,6 +49,8 @@ class FlickrSearchResponse: Model {
     }
     
     override func mapping(map: Map) {
+        page <- map["photos.page"]
+        pages <- map["photos.pages"]
         photos <- map["photos.photo"]
     }
 }
