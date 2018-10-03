@@ -28,4 +28,20 @@ class IntToBoolTransform: TransformType {
     }
 }
 
+class FlickrStatusTransform: TransformType {
+    typealias Object = FlickrStatus
+    typealias JSON = String
+    
+    func transformFromJSON(_ value: Any?) -> Object? {
+        if let type = value as? String {
+            return FlickrStatus(rawValue: type)
+        }
+        return nil
+    }
+    
+    func transformToJSON(_ value: Object?) -> JSON? {
+        return value?.rawValue
+    }
+}
+
 

@@ -137,6 +137,9 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
     // Json service injection
     let jsonService: IJsonService = DependencyManager.shared.getService()
     
+    // Alert service injection
+    let alertService: IAlertService = DependencyManager.shared.getService()
+    
     let rxSearchText = BehaviorRelay<String?>(value: nil)
     let rxIsSearching = BehaviorRelay<Bool>(value: false)
     let rxIsLoadingMore = BehaviorRelay<Bool>(value: false)
@@ -211,6 +214,10 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
     }
     
     private func prepareSources(_ response: FlickrSearchResponse) -> [FlickrImageCellViewModel] {
+        if response.stat == .fail {
+            alertService.presentOkayAlert(title: "Error", message: "\(response.message)\nPlease be sure to provide your own API key from Flickr.")
+        }
+        
         if response.page >= response.pages {
             done = true
         }

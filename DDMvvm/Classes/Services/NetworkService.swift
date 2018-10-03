@@ -40,7 +40,11 @@ open class NetworkService {
         sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
     }
     
-    public func callRequest(_ path: String, method: HTTPMethod, params: [String: Any]? = nil, parameterEncoding encoding: ParameterEncoding = URLEncoding.default, additionalHeaders: HTTPHeaders? = nil) -> Single<String> {
+    public func callRequest(_ path: String,
+                            method: HTTPMethod,
+                            params: [String: Any]? = nil,
+                            parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+                            additionalHeaders: HTTPHeaders? = nil) -> Single<String> {
         return Single.create { single in
             let headers = self.makeHeaders(additionalHeaders)
             let request = self.sessionManager.request(
