@@ -16,7 +16,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     public var collectionView: UICollectionView!
     public var layout: UICollectionViewLayout!
     
-    private var counter = [0: 0]
+    private var counter = [Int: Int]()
 
     public override init(viewModel: VM? = nil) {
         super.init(viewModel: viewModel)

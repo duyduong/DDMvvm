@@ -130,7 +130,7 @@ class SectionListPageViewModel: ListViewModel<Model, SuperCellViewModel> {
     
     // add section
     private func add() {
-        let vm = SectionHeaderViewViewModel(model: SimpleModel(withTitle: "Section title #\(itemsSource.sectionCount + 1)"))
+        let vm = SectionHeaderViewViewModel(model: SimpleModel(withTitle: "Section title #\(itemsSource.count + 1)"))
         itemsSource.appendSection(SectionList<SuperCellViewModel>(vm))
     }
 }

@@ -108,7 +108,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     // MARK: - Table view datasources
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel?.itemsSource.sectionCount ?? 0
+        return viewModel?.itemsSource.count ?? 0
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
