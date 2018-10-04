@@ -123,7 +123,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     // MARK: - Abstract for subclasses
     
     open func cellIdentifier(_ cellViewModel: CVM) -> String {
-        return "Cell"
+        fatalError("Subclasses have to implemented this method")
     }
     
     open func selectedItemDidChange(_ cellViewModel: CVM) { }

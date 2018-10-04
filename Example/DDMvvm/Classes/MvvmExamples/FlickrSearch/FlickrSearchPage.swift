@@ -95,6 +95,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
         }) => disposeBag
     }
     
+    // this method is required
     override func cellIdentifier(_ cellViewModel: FlickrImageCellViewModel) -> String {
         return FlickrImageCell.identifier
     }

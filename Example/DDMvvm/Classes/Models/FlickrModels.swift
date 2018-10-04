@@ -47,7 +47,7 @@ class FlickrSearchResponse: Model {
     var stat: FlickrStatus = .ok
     var page = 1
     var pages = 1
-    var photos = [FlickrItemModel]()
+    var photos = [FlickrPhotoModel]()
     var message = ""
     
     convenience init() {
@@ -63,7 +63,7 @@ class FlickrSearchResponse: Model {
     }
 }
 
-class FlickrItemModel: Model {
+class FlickrPhotoModel: Model {
     
     var imageUrl: URL {
         let url = "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_q.jpg"

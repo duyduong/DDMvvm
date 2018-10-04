@@ -53,7 +53,7 @@ open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListV
     
     public typealias CellViewModelElement = CVM
     
-    public typealias ItemsSourceType = [[CVM]]
+    public typealias ItemsSourceType = [SectionList<CVM>]
     
     public let itemsSource = ReactiveCollection<CVM>()
     public let rxSelectedItem = BehaviorRelay<CVM?>(value: nil)
@@ -61,18 +61,6 @@ open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListV
     
     required public init(model: M? = nil) {
         super.init(model: model)
-    }
-    
-    public func makeSources(_ items: [[CVM.ModelElement]]) -> ItemsSourceType {
-        return items.map { sections in
-            let cvms: [CVM] = sections.toCellViewModels()
-            return cvms
-        }
-    }
-    
-    public func makeSources(_ items: [CVM.ModelElement]) -> ItemsSourceType {
-        let cvms: [CVM] = items.toCellViewModels()
-        return [cvms]
     }
     
     open func selectedItemDidChange(_ cellViewModel: CVM) { }

@@ -47,6 +47,10 @@ public class SectionList<T> where T: Equatable {
         return innerSources.last
     }
     
+    public var allElements: [T] {
+        return innerSources
+    }
+    
     public init(_ key: Any, initialSectionElements: [T] = []) {
         self.key = key
         innerSources.append(contentsOf: initialSectionElements)
@@ -59,12 +63,10 @@ public class SectionList<T> where T: Equatable {
     }
     
     public func insert(_ element: T, at index: Int) {
-        guard index >= 0 && index < innerSources.count else { return }
         innerSources.insert(element, at: index)
     }
     
     public func insert(_ elements: [T], at index: Int) {
-        guard index >= 0 && index < innerSources.count else { return }
         innerSources.insert(contentsOf: elements, at: index)
     }
     
@@ -78,7 +80,6 @@ public class SectionList<T> where T: Equatable {
     
     @discardableResult
     public func remove(at index: Int) -> T? {
-        guard index >= 0 && index < innerSources.count else { return nil }
         return innerSources.remove(at: index)
     }
     
@@ -134,7 +135,7 @@ public class ReactiveCollection<T> where T: Equatable {
         set(newValue) { insertSection(newValue, at: index) }
     }
     
-    public var sectionCount: Int {
+    public var count: Int {
         return innerSources.count
     }
     
@@ -146,9 +147,8 @@ public class ReactiveCollection<T> where T: Equatable {
         return innerSources.last
     }
     
-    public init(initialSectionElements: [T] = []) {
+    public init() {
         collectionChanged = publisher.asObservable()
-        appendSection(initialSectionElements)
     }
     
     public func forEach(_ body: ((Int, SectionList<T>) -> ())) {
@@ -168,30 +168,36 @@ public class ReactiveCollection<T> where T: Equatable {
         removeAll()
         
         for sectionList in sources {
+            appendSection("", elements: sectionList)
+        }
+    }
+    
+    public func reset(_ sources: [SectionList<T>]) {
+        removeAll()
+        
+        for sectionList in sources {
             appendSection(sectionList)
         }
     }
     
-    public func insertSection(_ elements: [T], at index: Int) {
-        insertSection(SectionList<T>("", initialSectionElements: elements), at: index)
+    public func insertSection(_ key: Any, elements: [T], at index: Int) {
+        insertSection(SectionList<T>(key, initialSectionElements: elements), at: index)
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
-        guard index >= 0 && index < innerSources.count else { return }
-        
         innerSources.insert(sectionList, at: index)
         rxInnerSources.accept(innerSources)
         publisher.accept(ChangeEvent(type: .insertion, data: ChangeData(section: index, indice: [])))
     }
     
-    public func appendSections(_ sections: [[T]]) {
-        for section in sections {
-            appendSection(section)
+    public func appendSections(_ sectionLists: [SectionList<T>]) {
+        for sectionList in sectionLists {
+            appendSection(sectionList)
         }
     }
     
-    public func appendSection(_ elements: [T]) {
-        appendSection(SectionList<T>("", initialSectionElements: elements))
+    public func appendSection(_ key: Any, elements: [T]) {
+        appendSection(SectionList<T>(key, initialSectionElements: elements))
     }
     
     public func appendSection(_ sectionList: SectionList<T>) {
@@ -203,9 +209,7 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     @discardableResult
-    public func removeSection(at index: Int) -> SectionList<T>? {
-        guard index >= 0 && index < innerSources.count else { return nil }
-        
+    public func removeSection(at index: Int) -> SectionList<T> {
         let element = innerSources.remove(at: index)
         rxInnerSources.accept(innerSources)
         publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: index, indice: [])))
@@ -222,9 +226,6 @@ public class ReactiveCollection<T> where T: Equatable {
     // MARK: - section elements manipulations
     
     public func insert(_ element: T, at index: Int, of section: Int = 0) {
-        guard section >= 0 && section < innerSources.count else { return }
-        guard index >= 0 && index < innerSources[section].count else { return }
-        
         if innerSources[section].count == 0 {
             innerSources[section].append(element)
             rxInnerSources.accept(innerSources)
@@ -239,9 +240,6 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func insert(_ elements: [T], at index: Int, of section: Int = 0) {
-        guard section >= 0 && section < innerSources.count else { return }
-        guard index >= 0 && index < innerSources[section].count else { return }
-        
         innerSources[section].insert(elements, at: index)
         rxInnerSources.accept(innerSources)
         
@@ -250,7 +248,10 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func append(_ element: T, to section: Int = 0) {
-        guard section >= 0 && section < innerSources.count else { return }
+        if innerSources.count == 0 {
+            appendSection(SectionList<T>("", initialSectionElements: [element]))
+            return
+        }
         
         let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
         innerSources[section].append(element)
@@ -259,7 +260,10 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func append(_ elements: [T], to section: Int = 0) {
-        guard section >= 0 && section < innerSources.count else { return }
+        if innerSources.count == 0 {
+            appendSection("", elements: elements)
+            return
+        }
         
         let indice: [Int]
         if elements.count == 0 {
@@ -277,9 +281,6 @@ public class ReactiveCollection<T> where T: Equatable {
     
     @discardableResult
     public func remove(at index: Int, of section: Int = 0) -> T? {
-        guard section >= 0 && section < innerSources.count else { return nil }
-        guard index >= 0 && index < innerSources[section].count else { return nil }
-        
         let element = innerSources[section].remove(at: index)
         rxInnerSources.accept(innerSources)
         publisher.accept(ChangeEvent(type: .deletion, data: ChangeData(section: section, indice: [index])))
@@ -291,27 +292,27 @@ public class ReactiveCollection<T> where T: Equatable {
         return rxInnerSources.asObservable()
     }
     
+    public func indexForSection(withKey key: AnyObject) -> Int? {
+        return innerSources.firstIndex(where: { key.isEqual($0.key) })
+    }
+    
     @discardableResult
     public func firstIndex(of element: T, at section: Int = 0) -> Int? {
-        guard section >= 0 && section < innerSources.count else { return nil }
         return innerSources[section].firstIndex(of: element)
     }
     
     @discardableResult
     public func lastIndex(of element: T, at section: Int) -> Int? {
-        guard section >= 0 && section < innerSources.count else { return nil }
         return innerSources[section].lastIndex(of: element)
     }
     
     @discardableResult
     public func firstIndex(where predicate: (T) throws -> Bool, at section: Int) rethrows -> Int? {
-        guard section >= 0 && section < innerSources.count else { return nil }
         return try innerSources[section].firstIndex(where: predicate)
     }
     
     @discardableResult
     public func lastIndex(where predicate: (T) throws -> Bool, at section: Int) rethrows -> Int? {
-        guard section >= 0 && section < innerSources.count else { return nil }
         return try innerSources[0].lastIndex(where: predicate)
     }
 }

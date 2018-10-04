@@ -72,6 +72,7 @@ class ExampleMenuPageViewModel: ListViewModel<MenuModel, ExampleMenuCellViewMode
     }
 }
 
+/// Menu for home page
 class HomeMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func react() {
@@ -112,6 +113,7 @@ class HomeMenuPageViewModel: ExampleMenuPageViewModel {
     }
 }
 
+/// Menu for data binding examples
 class DataBindingMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
@@ -141,6 +143,7 @@ class DataBindingMenuPageViewModel: ExampleMenuPageViewModel {
     }
 }
 
+/// Menu for transition examples
 class TransitionMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
@@ -170,14 +173,15 @@ class TransitionMenuPageViewModel: ExampleMenuPageViewModel {
     }
 }
 
+/// Menu for MVVM examples
 class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
             MenuModel(withTitle: "ListPage Examples", desc: "Demostration on how to use ListPage"),
             MenuModel(withTitle: "CollectionPage Examples", desc: "Demostration on how to use CollectionPage"),
-            MenuModel(withTitle: "Multiple Cells Examples", desc: "Demostration on how to use multiple cell identifier on ListPage or CollectionPage"),
-            MenuModel(withTitle: "Searching Images", desc: "An advanced example on using Search Bar to search images on Flickr."),
+            MenuModel(withTitle: "Advanced Example 1", desc: "When using MVVM, we should forget about Delegate as it is against to MVVM rule.\nThis example is to demostrate how to get result from other page without using Delegate"),
+            MenuModel(withTitle: "Advanced Example 2", desc: "An advanced example on using Search Bar to search images on Flickr."),
         ]
     }
     
@@ -187,8 +191,8 @@ class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
         var page: UIViewController?
         switch indexPath.row {
         case 0:
-            let vm = NavigationTransitionExamplePageViewModel(model: cellViewModel.model)
-            page = NavigationTransitionExamplePage(viewModel: vm)
+            let vm = TPExampleMenuPageViewModel(model: cellViewModel.model)
+            page = ExampleMenuPage(viewModel: vm)
             
         case 1:
             let vm = NavigationTransitionExamplePageViewModel(model: cellViewModel.model, usingModal: true)
@@ -215,7 +219,35 @@ class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
     }
 }
 
-
+/// Menu for demostration of list page
+class TPExampleMenuPageViewModel: ExampleMenuPageViewModel {
+    
+    override func getMenuModels() -> [MenuModel] {
+        return [
+            MenuModel(withTitle: "Simple ListPage", desc: "A simple ListPage which has one cell identifier."),
+            MenuModel(withTitle: "ListPage with section", desc: "A simple ListPage with section header and multiple cell identifiers."),
+        ]
+    }
+    
+    override func pageToNavigate(_ cellViewModel: ExampleMenuCellViewModel) -> UIViewController? {
+        guard let indexPath = rxSelectedIndex.value else { return nil }
+        
+        var page: UIViewController?
+        switch indexPath.row {
+        case 0:
+            let vm = SimpleListPageViewModel(model: cellViewModel.model)
+            page = SimpleListPage(viewModel: vm)
+            
+        case 1:
+            let vm = SectionListPageViewModel(model: cellViewModel.model)
+            page = SectionListPage(viewModel: vm)
+            
+        default: ()
+        }
+        
+        return page
+    }
+}
 
 
 
