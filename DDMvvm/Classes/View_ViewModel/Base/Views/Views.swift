@@ -29,6 +29,15 @@ open class View<VM: IGenericViewModel>: UIView, IView {
         }
     }
     
+    public var anyViewModel: Any? {
+        get { return _viewModel }
+        set {
+            if let vm = newValue as? VM {
+                viewModel = vm
+            }
+        }
+    }
+    
     public init(viewModel: VM? = nil) {
         self._viewModel = viewModel
         super.init(frame: .zero)
@@ -89,6 +98,15 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
         }
     }
     
+    public var anyViewModel: Any? {
+        get { return _viewModel }
+        set {
+            if let vm = newValue as? VM {
+                viewModel = vm
+            }
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -141,6 +159,15 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
                 _viewModel = newValue
                 
                 viewModelChanged()
+            }
+        }
+    }
+    
+    public var anyViewModel: Any? {
+        get { return _viewModel }
+        set {
+            if let vm = newValue as? VM {
+                viewModel = vm
             }
         }
     }

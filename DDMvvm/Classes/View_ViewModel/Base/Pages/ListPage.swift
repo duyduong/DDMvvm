@@ -100,7 +100,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     // MARK: - Abstract for subclasses
     
     open func cellIdentifier(_ cellViewModel: CVM) -> String {
-        return "Cell"
+        fatalError("Subclasses have to implement this method.")
     }
     
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
@@ -122,8 +122,10 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         let identifier = cellIdentifier(cellViewModel)
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TableCell<CVM>
-        cell.viewModel = cellViewModel
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        if let cell = cell as? IAnyView {
+            cell.anyViewModel = cellViewModel
+        }
         return cell
     }
     

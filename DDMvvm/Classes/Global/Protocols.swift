@@ -20,7 +20,12 @@ public protocol ITransitionView: class {
     var animatorDelegate: AnimatorDelegate? { get set }
 }
 
-public protocol IView: IDestroyable {
+public protocol IAnyView: class {
+    
+    var anyViewModel: Any? { get set }
+}
+
+public protocol IView: IAnyView, IDestroyable {
     
     associatedtype ViewModelElement
     

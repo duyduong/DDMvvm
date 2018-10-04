@@ -31,6 +31,15 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         }
     }
     
+    public var anyViewModel: Any? {
+        get { return _viewModel }
+        set {
+            if let vm = newValue as? VM {
+                viewModel = vm
+            }
+        }
+    }
+    
     public var backButton: UIBarButtonItem?
     public var loaderView: InlineLoaderView?
     

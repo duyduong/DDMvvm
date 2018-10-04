@@ -43,27 +43,6 @@ class SectionListPage: ListPage<SectionListPageViewModel> {
         return SectionTextCell.identifier
     }
     
-    // As we have multiple cell identifiers, we need to set viewModel correct base on cell type
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let viewModel = viewModel else {
-            return UITableViewCell(style: .default, reuseIdentifier: "Cell")
-        }
-        
-        let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
-        let identifier = cellIdentifier(cellViewModel)
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-        
-        if let cell = cell as? SectionTextCell {
-            cell.viewModel = cellViewModel as? SectionTextCellViewModel
-        }
-        
-        if let cell = cell as? SectionImageCell {
-            cell.viewModel = cellViewModel as? SectionImageCellViewModel
-        }
-        
-        return cell
-    }
-    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let vm = viewModel?.itemsSource[section].key as? SectionHeaderViewViewModel {
             let headerView = SectionHeaderView(viewModel: vm)

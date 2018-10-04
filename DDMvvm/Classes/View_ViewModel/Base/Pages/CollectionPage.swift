@@ -123,7 +123,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     // MARK: - Abstract for subclasses
     
     open func cellIdentifier(_ cellViewModel: CVM) -> String {
-        fatalError("Subclasses have to implemented this method")
+        fatalError("Subclasses have to implemented this method.")
     }
     
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
@@ -145,8 +145,10 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         let identifier = cellIdentifier(cellViewModel)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! CollectionCell<CVM>
-        cell.viewModel = cellViewModel
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+        if let cell = cell as? IAnyView {
+            cell.anyViewModel = cellViewModel
+        }
         return cell
     }
     
