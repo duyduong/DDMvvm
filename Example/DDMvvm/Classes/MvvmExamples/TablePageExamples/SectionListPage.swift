@@ -95,7 +95,10 @@ class SectionListPageViewModel: ListViewModel<Model, SuperCellViewModel> {
     private func addCell(_ vm: SectionHeaderViewViewModel) {
         if let sectionIndex = itemsSource.indexForSection(withKey: vm) {
             let randomIndex = Int.random(in: 0...1)
+            
+            // randomly show text cell or image cell
             if randomIndex == 0 {
+                // ramdom image from imageUrls
                 let index = Int.random(in: 0..<imageUrls.count)
                 let url = imageUrls[index]
                 let model = SectionImageModel(withUrl: url)

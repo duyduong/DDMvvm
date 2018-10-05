@@ -1,21 +1,21 @@
 //
-//  SectionHeaderView.swift
+//  SectionHeaderCell.swift
 //  DDMvvm_Example
 //
-//  Created by Dao Duy Duong on 10/4/18.
+//  Created by Dao Duy Duong on 10/5/18.
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
 import UIKit
-import Action
-import RxCocoa
 import DDMvvm
 
-class SectionHeaderView: View<SectionHeaderViewViewModel> {
+class SectionHeaderCell: CollectionCell<SectionHeaderViewViewModel> {
+    
+    static let identifier = "SectionHeaderCell"
     
     let titleLbl = UILabel()
     let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
-
+    
     override func initialize() {
         let toolbar = UIToolbar()
         addSubview(toolbar)
@@ -34,22 +34,3 @@ class SectionHeaderView: View<SectionHeaderViewViewModel> {
         addBtn.rx.bind(to: viewModel.addAction, input: ())
     }
 }
-
-class SectionHeaderViewViewModel: CellViewModel<SimpleModel> {
-    
-    lazy var addAction: Action<Void, SectionHeaderViewViewModel> = {
-        return Action() { .just(self) }
-    }()
-    
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        rxTitle.accept(model?.title)
-    }
-}
-
-
-
-
-
-

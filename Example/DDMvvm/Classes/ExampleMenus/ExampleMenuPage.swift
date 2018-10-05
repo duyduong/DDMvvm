@@ -195,10 +195,13 @@ class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
             page = ExampleMenuPage(viewModel: vm)
             
         case 1:
-            let vm = NavigationTransitionExamplePageViewModel(model: cellViewModel.model, usingModal: true)
-            page = NavigationTransitionExamplePage(viewModel: vm)
+            let vm = CPExampleMenuPageViewModel(model: cellViewModel.model)
+            page = ExampleMenuPage(viewModel: vm)
             
-        case 2: ()
+        case 2:
+            let vm = ContactListPageViewModel(model: cellViewModel.model)
+            page = ContactListPage(viewModel: vm)
+            
         case 3:
             /*
              Register for JsonService injection
@@ -241,6 +244,36 @@ class TPExampleMenuPageViewModel: ExampleMenuPageViewModel {
         case 1:
             let vm = SectionListPageViewModel(model: cellViewModel.model)
             page = SectionListPage(viewModel: vm)
+            
+        default: ()
+        }
+        
+        return page
+    }
+}
+
+/// Menu for demostration of collection page
+class CPExampleMenuPageViewModel: ExampleMenuPageViewModel {
+    
+    override func getMenuModels() -> [MenuModel] {
+        return [
+            MenuModel(withTitle: "Simple CollectionPage", desc: "A simple CollectionPage which has one cell identifier."),
+            MenuModel(withTitle: "CollectionPage with section", desc: "A simple CollectionPage with section header and multiple cell identifiers."),
+        ]
+    }
+    
+    override func pageToNavigate(_ cellViewModel: ExampleMenuCellViewModel) -> UIViewController? {
+        guard let indexPath = rxSelectedIndex.value else { return nil }
+        
+        var page: UIViewController?
+        switch indexPath.row {
+        case 0:
+            let vm = SimpleListPageViewModel(model: cellViewModel.model)
+            page = SimpleCollectionPage(viewModel: vm)
+            
+        case 1:
+            let vm = SectionListPageViewModel(model: cellViewModel.model)
+            page = SectionCollectionPage(viewModel: vm)
             
         default: ()
         }

@@ -1,16 +1,15 @@
 //
-//  SectionListPageCells.swift
+//  SimpleCollectionPageCells.swift
 //  DDMvvm_Example
 //
-//  Created by Dao Duy Duong on 10/4/18.
+//  Created by Dao Duy Duong on 10/5/18.
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
 import UIKit
-import RxCocoa
 import DDMvvm
 
-class SectionTextCell: TableCell<SectionTextCellViewModel> {
+class CPTextCell: CollectionCell<SectionTextCellViewModel> {
     
     static let identifier = "SectionTextCell"
     
@@ -18,15 +17,20 @@ class SectionTextCell: TableCell<SectionTextCellViewModel> {
     let descLbl = UILabel()
     
     override func initialize() {
+        cornerRadius = 5
+        backgroundColor = .black
+        
         let paddingView = UIView()
         contentView.addSubview(paddingView)
         paddingView.autoPinEdgesToSuperviewEdges(with: .equally(5))
         
+        titleLbl.textColor = .white
         titleLbl.numberOfLines = 0
         titleLbl.font = Font.system.bold(withSize: 17)
         paddingView.addSubview(titleLbl)
         titleLbl.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         
+        descLbl.textColor = .white
         descLbl.numberOfLines = 0
         descLbl.font = Font.system.normal(withSize: 15)
         paddingView.addSubview(descLbl)
@@ -42,31 +46,19 @@ class SectionTextCell: TableCell<SectionTextCellViewModel> {
     }
 }
 
-class SectionTextCellViewModel: SuperCellViewModel {
-    
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    let rxDesc = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        guard let model = model as? SectionTextModel else { return }
-        
-        rxTitle.accept(model.title)
-        rxDesc.accept(model.desc)
-    }
-}
-
-class SectionImageCell: TableCell<SectionImageCellViewModel> {
+class CPImageCell: CollectionCell<SectionImageCellViewModel> {
     
     static let identifier = "SectionImageCell"
     
     let netImageView = UIImageView()
     
     override func initialize() {
+        cornerRadius = 5
+        
         netImageView.contentMode = .scaleAspectFill
         netImageView.clipsToBounds = true
         contentView.addSubview(netImageView)
-        netImageView.autoMatch(.height, to: .width, of: netImageView, withMultiplier: 9/16.0)
-        netImageView.autoPinEdgesToSuperviewEdges(with: .topBottom(10, leftRight: 15))
+        netImageView.autoPinEdgesToSuperviewEdges()
     }
     
     override func bindViewAndViewModel() {
@@ -75,21 +67,3 @@ class SectionImageCell: TableCell<SectionImageCellViewModel> {
         viewModel.rxImage ~> netImageView.rx.networkImage => disposeBag
     }
 }
-
-class SectionImageCellViewModel: SuperCellViewModel {
-    
-    let rxImage = BehaviorRelay(value: NetworkImage())
-    
-    override func react() {
-        guard let model = model as? SectionImageModel else { return }
-        
-        rxImage.accept(NetworkImage(withURL: model.imageUrl, placeholder: UIImage.from(color: .lightGray)))
-    }
-}
-
-
-
-
-
-
-

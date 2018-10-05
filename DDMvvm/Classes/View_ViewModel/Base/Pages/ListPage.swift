@@ -115,7 +115,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         return viewModel?.itemsSource.countElements(at: section) ?? 0
     }
     
-    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let viewModel = viewModel else {
             return UITableViewCell(style: .default, reuseIdentifier: "Cell")
         }

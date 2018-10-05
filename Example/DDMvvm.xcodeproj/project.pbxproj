@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		008C58148448149CBFDE95F7 /* Pods_DDMvvm_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA1ECCD294B0189C67B698E /* Pods_DDMvvm_Example.framework */; };
+		4E2AD47B216707FF0016BFCF /* SimpleCollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD47A216707FF0016BFCF /* SimpleCollectionPage.swift */; };
+		4E2AD47D216709A60016BFCF /* SimpleCollectionPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD47C216709A60016BFCF /* SimpleCollectionPageCell.swift */; };
+		4E2AD47F21670C740016BFCF /* SectionCollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD47E21670C740016BFCF /* SectionCollectionPage.swift */; };
+		4E2AD48121670ECA0016BFCF /* SectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD48021670ECA0016BFCF /* SectionHeaderCell.swift */; };
+		4E2AD4832167113B0016BFCF /* SimpleCollectionPageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD4822167113B0016BFCF /* SimpleCollectionPageCells.swift */; };
+		4E2AD486216715DB0016BFCF /* ContactListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD485216715DB0016BFCF /* ContactListPage.swift */; };
+		4E2AD488216718200016BFCF /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD487216718200016BFCF /* ContactCell.swift */; };
+		4E2AD48A2167184D0016BFCF /* ContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD4892167184D0016BFCF /* ContactModel.swift */; };
+		4E2AD48C2167195C0016BFCF /* ContactEditPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD48B2167195C0016BFCF /* ContactEditPage.swift */; };
 		4E48B73621657CF800EF8CED /* SimpleListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73521657CF800EF8CED /* SimpleListPage.swift */; };
 		4E48B73821657DA900EF8CED /* SimpleListPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73721657DA900EF8CED /* SimpleListPageCell.swift */; };
 		4E48B73A21657FD500EF8CED /* ListPageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73921657FD500EF8CED /* ListPageModels.swift */; };
@@ -45,6 +54,15 @@
 
 /* Begin PBXFileReference section */
 		1FA1ECCD294B0189C67B698E /* Pods_DDMvvm_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DDMvvm_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E2AD47A216707FF0016BFCF /* SimpleCollectionPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCollectionPage.swift; sourceTree = "<group>"; };
+		4E2AD47C216709A60016BFCF /* SimpleCollectionPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCollectionPageCell.swift; sourceTree = "<group>"; };
+		4E2AD47E21670C740016BFCF /* SectionCollectionPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCollectionPage.swift; sourceTree = "<group>"; };
+		4E2AD48021670ECA0016BFCF /* SectionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderCell.swift; sourceTree = "<group>"; };
+		4E2AD4822167113B0016BFCF /* SimpleCollectionPageCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCollectionPageCells.swift; sourceTree = "<group>"; };
+		4E2AD485216715DB0016BFCF /* ContactListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListPage.swift; sourceTree = "<group>"; };
+		4E2AD487216718200016BFCF /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		4E2AD4892167184D0016BFCF /* ContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactModel.swift; sourceTree = "<group>"; };
+		4E2AD48B2167195C0016BFCF /* ContactEditPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEditPage.swift; sourceTree = "<group>"; };
 		4E48B73521657CF800EF8CED /* SimpleListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleListPage.swift; sourceTree = "<group>"; };
 		4E48B73721657DA900EF8CED /* SimpleListPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleListPageCell.swift; sourceTree = "<group>"; };
 		4E48B73921657FD500EF8CED /* ListPageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPageModels.swift; sourceTree = "<group>"; };
@@ -112,6 +130,28 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		4E2AD479216707E20016BFCF /* CollectionPageExamples */ = {
+			isa = PBXGroup;
+			children = (
+				4E2AD47A216707FF0016BFCF /* SimpleCollectionPage.swift */,
+				4E2AD47C216709A60016BFCF /* SimpleCollectionPageCell.swift */,
+				4E2AD47E21670C740016BFCF /* SectionCollectionPage.swift */,
+				4E2AD48021670ECA0016BFCF /* SectionHeaderCell.swift */,
+				4E2AD4822167113B0016BFCF /* SimpleCollectionPageCells.swift */,
+			);
+			path = CollectionPageExamples;
+			sourceTree = "<group>";
+		};
+		4E2AD484216715AD0016BFCF /* ContactExample */ = {
+			isa = PBXGroup;
+			children = (
+				4E2AD485216715DB0016BFCF /* ContactListPage.swift */,
+				4E2AD487216718200016BFCF /* ContactCell.swift */,
+				4E2AD48B2167195C0016BFCF /* ContactEditPage.swift */,
+			);
+			path = ContactExample;
+			sourceTree = "<group>";
+		};
 		4E48B73421657A4C00EF8CED /* TablePageExamples */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,8 +180,10 @@
 		4EE544922161CE90000E7B15 /* MvvmExamples */ = {
 			isa = PBXGroup;
 			children = (
+				4E2AD479216707E20016BFCF /* CollectionPageExamples */,
 				4E48B73421657A4C00EF8CED /* TablePageExamples */,
 				4EEA34712163CFF800033616 /* FlickrSearch */,
+				4E2AD484216715AD0016BFCF /* ContactExample */,
 			);
 			path = MvvmExamples;
 			sourceTree = "<group>";
@@ -188,6 +230,7 @@
 				4EE5449C2161CF7B000E7B15 /* MenuModel.swift */,
 				4EEA34762163D17500033616 /* FlickrModels.swift */,
 				4E48B73921657FD500EF8CED /* ListPageModels.swift */,
+				4E2AD4892167184D0016BFCF /* ContactModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -461,19 +504,28 @@
 			files = (
 				4EEA34752163D0AD00033616 /* FlickrImageCell.swift in Sources */,
 				4ED4076B2162016200987322 /* DataBindingExamplePage.swift in Sources */,
+				4E2AD48A2167184D0016BFCF /* ContactModel.swift in Sources */,
+				4E2AD47F21670C740016BFCF /* SectionCollectionPage.swift in Sources */,
 				4EE5449D2161CF7B000E7B15 /* MenuModel.swift in Sources */,
 				4ED407712162184600987322 /* CustomControlExamplePage.swift in Sources */,
 				4EE544982161CEFF000E7B15 /* ExampleMenuPage.swift in Sources */,
 				4ED4077521621FB500987322 /* NavigationTransitionExamplePage.swift in Sources */,
 				4E48B73C216584A800EF8CED /* SectionListPage.swift in Sources */,
+				4E2AD4832167113B0016BFCF /* SimpleCollectionPageCells.swift in Sources */,
+				4E2AD48121670ECA0016BFCF /* SectionHeaderCell.swift in Sources */,
+				4E2AD486216715DB0016BFCF /* ContactListPage.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				4E2AD47B216707FF0016BFCF /* SimpleCollectionPage.swift in Sources */,
 				4ED407732162193200987322 /* SegmentedView.swift in Sources */,
 				4E48B73621657CF800EF8CED /* SimpleListPage.swift in Sources */,
 				4EEA34732163CFF800033616 /* FlickrSearchPage.swift in Sources */,
+				4E2AD488216718200016BFCF /* ContactCell.swift in Sources */,
+				4E2AD47D216709A60016BFCF /* SimpleCollectionPageCell.swift in Sources */,
 				4E48B73821657DA900EF8CED /* SimpleListPageCell.swift in Sources */,
 				4EE5449F2161D803000E7B15 /* DataTransformations.swift in Sources */,
 				4E48B73E2165853700EF8CED /* SectionHeaderView.swift in Sources */,
 				4E48B7402165881500EF8CED /* SectionListPageCells.swift in Sources */,
+				4E2AD48C2167195C0016BFCF /* ContactEditPage.swift in Sources */,
 				4E48B73A21657FD500EF8CED /* ListPageModels.swift in Sources */,
 				4EE5449A2161CF3D000E7B15 /* ExampleMenuCell.swift in Sources */,
 				4EEA34772163D17500033616 /* FlickrModels.swift in Sources */,

@@ -113,10 +113,8 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
             }
             
             // update counter
-             counter.removeAll()
-            viewModel?.itemsSource.forEach { (i, section) in
-                counter[i] = section.count
-            }
+            counter.removeAll()
+            viewModel?.itemsSource.forEach { counter[$0] = $1.count }
         }, completion: nil)
     }
     
@@ -138,7 +136,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         return counter[section] ?? 0
     }
     
-    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let viewModel = viewModel else {
             return UICollectionViewCell(frame: .zero)
         }

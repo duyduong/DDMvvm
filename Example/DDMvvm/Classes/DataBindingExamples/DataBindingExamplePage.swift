@@ -101,7 +101,7 @@ class DataBindingExamplePageViewModel: ViewModel<MenuModel> {
     override func react() {
         rxPageTitle.accept(model?.title ?? "")
         
-        Observable.combineLatest(rxEmail.asObservable(), rxPass.asObservable()) { e, p -> Bool in
+        Observable.combineLatest(rxEmail, rxPass) { e, p -> Bool in
             return !e.isNilOrEmpty && !p.isNilOrEmpty
         } ~> rxSubmitButtonEnabled => disposeBag // One-way binding is donated by ~>
         
