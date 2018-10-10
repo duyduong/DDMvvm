@@ -9,85 +9,65 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension Reactive where Base: InlineLoaderView {
+extension Reactive where Base: LocalHud {
     
     public var show: Binder<Bool> {
-        return Binder(self.base) { view, value in
+        return Binder(base) { view, value in
             if value {
-                view.isHidden = false
-                view.indicatorView.startAnimating()
+                view.show()
             } else {
-                view.isHidden = true
-                view.indicatorView.stopAnimating()
+                view.hide()
             }
         }
     }
 }
 
-public class InlineLoaderView: AbstractControlView {
-    
-    public var textColor: UIColor {
-        get { return label.textColor }
-        set { label.textColor = newValue }
-    }
-    
-    public var indicatorColor: UIColor {
-        get { return indicatorView.color }
-        set { indicatorView.color = newValue }
-    }
-    
-    public var loadingText: String? {
-        get { return label.text }
-        set { label.text = newValue }
-    }
+open class LocalHud: UIView {
     
     fileprivate let label = UILabel()
     fileprivate let indicatorView = UIActivityIndicatorView(style: .white)
     
-    public override func setupView() {
-        let settings = DDConfigurations.inlineLoaderViewSettings
+    public init(addedToView view: UIView) {
+        super.init(frame: .zero)
         
+        view.addSubview(self)
+        setupView()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// Subclasses override this method to style and re-layout components
+    open func setupView() {
         indicatorView.hidesWhenStopped = true
-        indicatorView.color = settings.indicatorColor
+        indicatorView.color = .black
         addSubview(indicatorView)
         indicatorView.autoAlignAxis(toSuperviewAxis: .vertical)
         indicatorView.autoPinEdge(toSuperviewEdge: .top)
         
-        label.textColor = settings.textColor
-        label.font = settings.font
-        label.text = settings.loadingText
+        label.textColor = .lightGray
+        label.font = Font.system.normal(withSize: 15)
+        label.text = "LOADING"
         addSubview(label)
         label.autoPinEdge(.top, to: .bottom, of: indicatorView, withOffset: 3)
         label.autoAlignAxis(toSuperviewAxis: .vertical)
         label.autoPinEdge(toSuperviewEdge: .bottom)
+        
+        // layout self
+        autoCenterInSuperview()
     }
     
-    public static func attach(to view: UIView, position: ComponentViewPosition = .center) -> InlineLoaderView {
-        let inlineLoaderView = InlineLoaderView()
-        view.addSubview(inlineLoaderView)
-        
-        switch position {
-        case .center:
-            inlineLoaderView.autoCenterInSuperview()
-            
-        case .top(let offset):
-            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .vertical)
-            inlineLoaderView.autoPinEdge(toSuperviewEdge: .top, withInset: offset)
-        
-        case .bottom(let offset):
-            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .vertical)
-            inlineLoaderView.autoPinEdge(toSuperviewEdge: .bottom, withInset: offset)
-            
-        case .left(let offset):
-            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .horizontal)
-            inlineLoaderView.autoPinEdge(toSuperviewEdge: .left, withInset: offset)
-            
-        case .right(let offset):
-            inlineLoaderView.autoAlignAxis(toSuperviewAxis: .horizontal)
-            inlineLoaderView.autoPinEdge(toSuperviewEdge: .right, withInset: offset)
-        }
-        
-        return inlineLoaderView
+    /// Subclasses override this method to setup a custom show animation if needed
+    open func show() {
+        isHidden = false
+        indicatorView.startAnimating()
+    }
+    
+    /// Subclasses override this method to setup a custom hide animation if needed
+    open func hide() {
+        isHidden = true
+        indicatorView.stopAnimating()
     }
 }
 

@@ -58,7 +58,6 @@ public struct PopOptions {
 
 public protocol INavigationService {
     
-    func replaceRootPage(_ page: UIViewController)
     func push(to page: UIViewController, options: PushOptions)
     func pop(with options: PopOptions)
 }
@@ -76,21 +75,8 @@ extension INavigationService {
 
 public class NavigationService: INavigationService {
     
-    private var keyWindow: UIWindow? {
-        return UIApplication.shared.windows
-            .filter { !($0.rootViewController is UIAlertController) }
-            .first
-    }
-    
     private var topPage: UIViewController? {
         return DDConfigurations.topPageFindingBlock()
-    }
-    
-    public func replaceRootPage(_ page: UIViewController) {
-        if let myWindow = keyWindow {
-            DDConfigurations.destroyPageBlock(myWindow.rootViewController)
-            myWindow.rootViewController = page
-        }
     }
     
     // MARK: - Push functions

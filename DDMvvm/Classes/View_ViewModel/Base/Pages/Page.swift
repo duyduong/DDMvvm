@@ -14,7 +14,7 @@ import PureLayout
 open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
     public var disposeBag: DisposeBag? = DisposeBag()
-    private var loadingBag: DisposeBag? = DisposeBag()
+    private var hudBag: DisposeBag? = DisposeBag()
     
     public var animatorDelegate: AnimatorDelegate?
     
@@ -22,12 +22,12 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            disposeBag = DisposeBag()
-            _viewModel?.destroy()
-            
-            _viewModel = newValue
-            
-            viewModelChanged()
+            if _viewModel != newValue {
+                destroy()
+                
+                _viewModel = newValue
+                viewModelChanged()
+            }
         }
     }
     
@@ -41,7 +41,9 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     }
     
     public var backButton: UIBarButtonItem?
-    public var loaderView: InlineLoaderView?
+    public var localHud: LocalHud? {
+        didSet { bindLocalHud() }
+    }
     
     private lazy var backAction: Action<Void, Void> = {
         return Action() { .just(self.onBack()) }
@@ -79,7 +81,8 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         
         view.backgroundColor = .white
         
-        attachInlineLoaderView()
+        // setup default local hud
+        localHud = LocalHud(addedToView: view)
         
         initialize()
         viewModelChanged()
@@ -105,30 +108,15 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         viewModel?.rxViewState.accept(.didDisappear)
     }
     
-    public func attachInlineLoaderView(at position: ComponentViewPosition = .center) {
-        // remove older loader view if have
-        loadingBag = DisposeBag()
-        self.loaderView?.removeFromSuperview()
-        
-        // attach new loader view
-        let loaderView = InlineLoaderView.attach(to: view, position: position)
-        self.loaderView = loaderView
-        
-        if let viewModel = viewModel {
-            viewModel.rxShowInlineLoader ~> loaderView.rx.show => loadingBag
-            viewModel.rxShowInlineLoader.subscribe(onNext: inlineLoadingChanged) => loadingBag
-        }
-    }
-    
     open func initialize() {}
     
     open func bindViewAndViewModel() {}
     
-    open func inlineLoadingChanged(_ value: Bool) {}
+    open func localHudToggled(_ value: Bool) {}
     
     open func destroy() {
         disposeBag = DisposeBag()
-        loadingBag = DisposeBag()
+        hudBag = DisposeBag()
         viewModel?.destroy()
     }
     
@@ -143,7 +131,17 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         navigationService.pop()
     }
     
+    private func bindLocalHud() {
+        hudBag = DisposeBag()
+        
+        if let viewModel = viewModel, let localHud = localHud {
+            viewModel.rxShowInlineLoader ~> localHud.rx.show => hudBag
+            viewModel.rxShowInlineLoader.subscribe(onNext: localHudToggled) => hudBag
+        }
+    }
+    
     private func viewModelChanged() {
+        bindLocalHud()
         bindViewAndViewModel()
         viewModel?.react()
     }

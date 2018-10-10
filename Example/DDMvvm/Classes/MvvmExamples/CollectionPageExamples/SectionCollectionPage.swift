@@ -42,7 +42,7 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
         addBtn.rx.bind(to: viewModel.addAction, input: ())
     }
     
-    // Based on type to return correct identifier for cells
+    // Based on cellViewModel type, we can return correct identifier for cells
     override func cellIdentifier(_ cellViewModel: SuperCellViewModel) -> String {
         if cellViewModel is SectionImageCellViewModel {
             return CPImageCell.identifier
@@ -55,10 +55,14 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
         return CGSize(width: collectionView.frame.width, height: 44)
     }
     
+    /// Setup section header cell, each header cell will map with key from itemsSource
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionElementKindSectionHeader {
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderCell.identifier, for: indexPath)
-            if let cell = cell as? IAnyView, let vm = viewModel?.itemsSource[indexPath.section].key as? SectionHeaderViewViewModel {
+            
+            // to set ViewModel for this cell, just casting to IAnyView and set anyViewModel property
+            if let cell = cell as? IAnyView,
+                let vm = viewModel?.itemsSource[indexPath.section].key as? SectionHeaderViewViewModel {
                 cell.anyViewModel = vm
             }
             

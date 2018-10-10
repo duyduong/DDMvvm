@@ -6,14 +6,21 @@
 //
 
 import UIKit
+import RxSwift
 
-open class NavigationPage: UINavigationController, ITransitionView {
+open class NavigationPage: UINavigationController, ITransitionView, IDestroyable {
     
     public var animatorDelegate: AnimatorDelegate?
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
+    }
+    
+    public var disposeBag: DisposeBag? = DisposeBag()
+    
+    public func destroy() {
+        viewControllers.forEach { ($0 as? IDestroyable)?.destroy() }
     }
 }
 

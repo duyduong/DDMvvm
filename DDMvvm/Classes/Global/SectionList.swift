@@ -51,9 +51,9 @@ public class SectionList<T> where T: Equatable {
         return innerSources
     }
     
-    public init(_ key: Any, initialSectionElements: [T] = []) {
+    public init(_ key: Any, initialElements: [T] = []) {
         self.key = key
-        innerSources.append(contentsOf: initialSectionElements)
+        innerSources.append(contentsOf: initialElements)
     }
     
     public func forEach(_ body: ((Int, T) -> ())) {
@@ -181,7 +181,7 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func insertSection(_ key: Any, elements: [T], at index: Int) {
-        insertSection(SectionList<T>(key, initialSectionElements: elements), at: index)
+        insertSection(SectionList<T>(key, initialElements: elements), at: index)
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
@@ -197,7 +197,7 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func appendSection(_ key: Any, elements: [T]) {
-        appendSection(SectionList<T>(key, initialSectionElements: elements))
+        appendSection(SectionList<T>(key, initialElements: elements))
     }
     
     public func appendSection(_ sectionList: SectionList<T>) {
@@ -249,7 +249,7 @@ public class ReactiveCollection<T> where T: Equatable {
     
     public func append(_ element: T, to section: Int = 0) {
         if innerSources.count == 0 {
-            appendSection(SectionList<T>("", initialSectionElements: [element]))
+            appendSection(SectionList<T>("", initialElements: [element]))
             return
         }
         

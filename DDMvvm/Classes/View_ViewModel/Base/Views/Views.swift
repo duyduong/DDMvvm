@@ -20,22 +20,18 @@ open class View<VM: IGenericViewModel>: UIView, IView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            disposeBag = DisposeBag()
-            _viewModel?.destroy()
-            
-            _viewModel = newValue
-            
-            viewModelChanged()
+            if newValue != _viewModel {
+                destroy()
+                
+                _viewModel = newValue
+                viewModelChanged()
+            }
         }
     }
     
     public var anyViewModel: Any? {
         get { return _viewModel }
-        set {
-            if let vm = newValue as? VM {
-                viewModel = vm
-            }
-        }
+        set { viewModel = newValue as? VM }
     }
     
     public init(viewModel: VM? = nil) {
@@ -88,11 +84,9 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
         get { return _viewModel }
         set {
             if newValue != _viewModel {
-                disposeBag = DisposeBag()
-                _viewModel?.destroy()
+                destroy()
                 
                 _viewModel = newValue
-                
                 viewModelChanged()
             }
         }
@@ -100,11 +94,7 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
     
     public var anyViewModel: Any? {
         get { return _viewModel }
-        set {
-            if let vm = newValue as? VM {
-                viewModel = vm
-            }
-        }
+        set { viewModel = newValue as? VM }
     }
     
     public override init(frame: CGRect) {
@@ -153,11 +143,9 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
         get { return _viewModel }
         set {
             if newValue != _viewModel {
-                disposeBag = DisposeBag()
-                _viewModel?.destroy()
+                destroy()
                 
                 _viewModel = newValue
-                
                 viewModelChanged()
             }
         }
@@ -165,11 +153,7 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
     
     public var anyViewModel: Any? {
         get { return _viewModel }
-        set {
-            if let vm = newValue as? VM {
-                viewModel = vm
-            }
-        }
+        set { viewModel = newValue as? VM }
     }
     
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

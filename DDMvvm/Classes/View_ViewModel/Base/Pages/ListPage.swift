@@ -50,7 +50,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
     
-    open override func inlineLoadingChanged(_ value: Bool) {
+    open override func localHudToggled(_ value: Bool) {
         tableView.isHidden = value
     }
     

@@ -11,10 +11,12 @@ public enum ComponentViewPosition {
     case top(CGFloat), left(CGFloat), bottom(CGFloat), right(CGFloat), center
 }
 
+/// ViewState for binding from ViewModel and View (Life cycle binding)
 public enum ViewState {
     case none, willAppear, didAppear, willDisappear, didDisappear
 }
 
+/// ApplicationState for anyone who wants to know the application state
 public enum ApplicationState {
     case none, resignActive, didEnterBackground, willEnterForeground, didBecomeActive, willTerminate
 }
@@ -37,22 +39,24 @@ public enum PopupType {
     }
 }
 
-public struct InlineLoaderViewSettings {
-    
-    let indicatorColor: UIColor
-    let textColor: UIColor
-    let loadingText: String
-    let font: UIFont
-}
-
-/// Block type for searching top page and destroy page
+/// Block type for searching top page
 public typealias SearchTopPageBlock = (() -> UIViewController?)
+
+/// Block type for destroy a page (mainly to clean up DisposeBag)
 public typealias DestroyPageBlock = ((UIViewController?) -> ())
 
-/// Some global settings for the whole framework
+/*
+ Global configurations
+ For some use cases, we have to setup these configurations to make our application work
+ correctly
+ */
 public struct DDConfigurations {
     
-    /// Block for searching top page in our main window
+    /*
+     Block for searching top page in our main window
+     If your rootViewController is a custom one (such as Drawer...)
+     then override this block to make navigation service can find the correct top page
+     */
     public static var topPageFindingBlock: SearchTopPageBlock = {
         let myWindow = UIApplication.shared.windows
             .filter { !($0.rootViewController is UIAlertController) }
@@ -80,7 +84,11 @@ public struct DDConfigurations {
         return currPage
     }
     
-    /// Block for destroying a page, using for navigation service
+    /*
+     Block for destroying a page (mainly clean up DisposeBag), using for navigation service
+     If you have a custom page more than UINavigationController and UITabBarController,
+     then override this block for your customs
+     */
     public static var destroyPageBlock: DestroyPageBlock = { page in
         var viewControllers = [UIViewController]()
         if let navPage = page as? UINavigationController {
@@ -91,17 +99,15 @@ public struct DDConfigurations {
             viewControllers = tabPage.viewControllers ?? []
         }
         
-        viewControllers.forEach { destroyPage($0) }
+        // recursively call destroy on child viewcontrollers
+        viewControllers.forEach { DDConfigurations.destroyPageBlock($0) }
+        
+        // destroy current page
         (page as? IDestroyable)?.destroy()
+        
+        // remove animator delegate
         (page as? ITransitionView)?.animatorDelegate = nil
     }
-    
-    private static func destroyPage(_ page: UIViewController?) {
-        destroyPageBlock(page)
-    }
-    
-    /// Settings for inline loader view
-    public static var inlineLoaderViewSettings = InlineLoaderViewSettings(indicatorColor: .black, textColor: .lightGray, loadingText: "LOADING", font: Font.system.normal(withSize: 15))
 }
 
 
