@@ -45,6 +45,9 @@ public typealias SearchTopPageBlock = (() -> UIViewController?)
 /// Block type for destroy a page (mainly to clean up DisposeBag)
 public typealias DestroyPageBlock = ((UIViewController?) -> ())
 
+/// Block for creating local hud instance, requirea a superview to add in
+public typealias LocalHudInstanceBlock = ((UIView) -> LocalHud)
+
 /*
  Global configurations
  For some use cases, we have to setup these configurations to make our application work
@@ -107,6 +110,17 @@ public struct DDConfigurations {
         
         // remove animator delegate
         (page as? ITransitionView)?.animatorDelegate = nil
+    }
+    
+    /*
+     Block for create local hud.
+     Local hud is a loader indicator places inside a page
+     
+     If we want to make local hud different layouts, show and hide animations, then
+     inherit from LocalHud class to implement your custom local hud
+     */
+    public static var localHudInstanceBlock: LocalHudInstanceBlock = { superview in
+        return LocalHud(addedToView: superview)
     }
 }
 

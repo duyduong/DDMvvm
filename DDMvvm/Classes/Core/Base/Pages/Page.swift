@@ -82,7 +82,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         view.backgroundColor = .white
         
         // setup default local hud
-        localHud = LocalHud(addedToView: view)
+        localHud = DDConfigurations.localHudInstanceBlock(view)
         
         initialize()
         viewModelChanged()

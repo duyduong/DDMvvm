@@ -24,8 +24,8 @@ extension Reactive where Base: LocalHud {
 
 open class LocalHud: UIView {
     
-    fileprivate let label = UILabel()
-    fileprivate let indicatorView = UIActivityIndicatorView(style: .white)
+    public let label = UILabel()
+    public let indicatorView = UIActivityIndicatorView(style: .white)
     
     public init(addedToView view: UIView) {
         super.init(frame: .zero)
@@ -35,7 +35,7 @@ open class LocalHud: UIView {
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     /// Subclasses override this method to style and re-layout components

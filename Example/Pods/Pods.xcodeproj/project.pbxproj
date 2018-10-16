@@ -188,7 +188,7 @@
 		728338EA59F3130999C8133CC0EDD190 /* WKWebViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F4AAFF96D4E7024BC2AA640B74D160 /* WKWebViewExtensions.swift */; };
 		72EB09F682D7A6F866E705EDFD0BF833 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 135CB64C4D69F8BEE556D250A829A080 /* Foundation.framework */; };
 		739C7BD2EB03520FA2EDCB42F21A6E52 /* BindingOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C104B2817688F38EB237BBF9E9ACC6 /* BindingOperators.swift */; };
-		73C034B65DE97461029BC415213F7CF8 /* InlineLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265EFC19B629F3A033EC88CB8C10094E /* InlineLoaderView.swift */; };
+		73C034B65DE97461029BC415213F7CF8 /* LocalHud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265EFC19B629F3A033EC88CB8C10094E /* LocalHud.swift */; };
 		746CC38C2147C699D0610717A63CE0D5 /* RecursiveScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42E5EC070C3E771062E3788241FDE7E /* RecursiveScheduler.swift */; };
 		765600B6C587D5513D9C922E6D8287A3 /* NSObject+Rx+KVORepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349D7DDFED8F08EF5D97AFEA016DF71A /* NSObject+Rx+KVORepresentable.swift */; };
 		76B04F4735FDEC5E1969235F39E1EEE1 /* TransformOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505A7FC4EBE39163E502BD61C2FAB74 /* TransformOperators.swift */; };
@@ -633,7 +633,7 @@
 		23E437E5B17BE09CDDBD9DF17893DEF0 /* DDMvvm.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DDMvvm.xcconfig; sourceTree = "<group>"; };
 		23FA364DC49E5654B72177872BD6023F /* Just.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Just.swift; path = RxSwift/Observables/Just.swift; sourceTree = "<group>"; };
 		24736C975D1C5F9464FDD2FFAD76FE90 /* ObserverType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObserverType.swift; path = RxSwift/ObserverType.swift; sourceTree = "<group>"; };
-		265EFC19B629F3A033EC88CB8C10094E /* InlineLoaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InlineLoaderView.swift; sourceTree = "<group>"; };
+		265EFC19B629F3A033EC88CB8C10094E /* LocalHud.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalHud.swift; sourceTree = "<group>"; };
 		2671D251AAD3EFF5EDE64B1E26E0420F /* UIBarButtonItem+Action.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+Action.swift"; path = "Sources/Action/UIKitExtensions/UIBarButtonItem+Action.swift"; sourceTree = "<group>"; };
 		2709A0B38D22C1C76B44232E621F5AF3 /* RxTextStorageDelegateProxy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RxTextStorageDelegateProxy.swift; path = RxCocoa/iOS/Proxies/RxTextStorageDelegateProxy.swift; sourceTree = "<group>"; };
 		2A58A9D7F93606FCE1D69C9E4EB6CDD5 /* DelegateProxyType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DelegateProxyType.swift; path = RxCocoa/Common/DelegateProxyType.swift; sourceTree = "<group>"; };
@@ -1202,14 +1202,14 @@
 			path = AlamofireImage;
 			sourceTree = "<group>";
 		};
-		25EF527B64A18840BAF6C4EF80DCC16C /* View_ViewModel */ = {
+		25EF527B64A18840BAF6C4EF80DCC16C /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				2EDB6677A8B2B678CC1715AD94DF2CBC /* Base */,
 				EFAD45A2A20E13CE771422137602BE14 /* Controls */,
 			);
-			name = View_ViewModel;
-			path = DDMvvm/Classes/View_ViewModel;
+			name = Core;
+			path = DDMvvm/Classes/Core;
 			sourceTree = "<group>";
 		};
 		2EDB6677A8B2B678CC1715AD94DF2CBC /* Base */ = {
@@ -1411,7 +1411,7 @@
 				4D656A0E7EDC765F346208187C0D5745 /* Pod */,
 				F5FC1B1438921551A75EB0C653B94386 /* Services */,
 				505D051861D125E81B6E3C039A4F0A22 /* Support Files */,
-				25EF527B64A18840BAF6C4EF80DCC16C /* View_ViewModel */,
+				25EF527B64A18840BAF6C4EF80DCC16C /* Core */,
 			);
 			name = DDMvvm;
 			path = ../..;
@@ -1910,7 +1910,7 @@
 			isa = PBXGroup;
 			children = (
 				83BA31E65DCBF2496A7646543B060145 /* AbstractView.swift */,
-				265EFC19B629F3A033EC88CB8C10094E /* InlineLoaderView.swift */,
+				265EFC19B629F3A033EC88CB8C10094E /* LocalHud.swift */,
 				982ED7DE9A5753CB6C18595E519A4BD4 /* OverlayView.swift */,
 			);
 			path = Controls;
@@ -2316,7 +2316,7 @@
 				4CAAFA2612D7510C51BE12C9171ED40A /* DependencyManager.swift in Sources */,
 				1D4FA7CD5CC51E0A4ACB8312C086767C /* Font.swift in Sources */,
 				695ABEAF9BA19885D4A6184E50745A7A /* Global.swift in Sources */,
-				73C034B65DE97461029BC415213F7CF8 /* InlineLoaderView.swift in Sources */,
+				73C034B65DE97461029BC415213F7CF8 /* LocalHud.swift in Sources */,
 				0028407A2BCCF2A8FC68122FAFD90304 /* ListPage.swift in Sources */,
 				044F1E02CAF0212BB8BADF8CE6A1B9B4 /* Model.swift in Sources */,
 				2374A516663DA323E72C21B8ADDC40E0 /* NavigationPage.swift in Sources */,
