@@ -63,6 +63,16 @@ open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListV
         super.init(model: model)
     }
     
+    open override func destroy() {
+        super.destroy()
+        
+        itemsSource.forEach { (_, sectionList) in
+            sectionList.forEach({ (_, cvm) in
+                cvm.destroy()
+            })
+        }
+    }
+    
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
 }
 

@@ -149,7 +149,7 @@ extension IJsonService {
 }
 
 /// Json API service
-public class JsonService: NetworkService, IJsonService {
+open class JsonService: NetworkService, IJsonService {
     
     public override init(baseUrl: String) {
         super.init(baseUrl: baseUrl)

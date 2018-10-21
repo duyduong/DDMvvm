@@ -23,7 +23,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         get { return _viewModel }
         set {
             if _viewModel != newValue {
-                destroy()
+                cleanUp()
                 
                 _viewModel = newValue
                 viewModelChanged()
@@ -33,11 +33,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
     public var anyViewModel: Any? {
         get { return _viewModel }
-        set {
-            if let vm = newValue as? VM {
-                viewModel = vm
-            }
-        }
+        set { viewModel = newValue as? VM }
     }
     
     public var backButton: UIBarButtonItem?
@@ -129,6 +125,12 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
     open func onBack() {
         navigationService.pop()
+    }
+    
+    private func cleanUp() {
+        disposeBag = DisposeBag()
+        hudBag = DisposeBag()
+        viewModel?.destroy()
     }
     
     private func bindLocalHud() {
