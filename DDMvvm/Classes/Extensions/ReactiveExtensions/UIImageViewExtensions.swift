@@ -37,6 +37,22 @@ extension Reactive where Base: UIImageView {
             }
         }
     }
+    
+    // allow UI to set completion
+    public func networkImage(_ completion: ((DataResponse<UIImage>) -> Void)? = nil) -> Binder<NetworkImage> {
+        return Binder(self.base) { view, image in
+            if let placeholder = image.placeholder {
+                view.image = placeholder
+            }
+            
+            if let url = image.url {
+                view.af_setImage(withURL: url, imageTransition: .crossDissolve(0.25), completion: { response in
+                    image.completion?(response)
+                    completion?(response)
+                })
+            }
+        }
+    }
 }
 
 
