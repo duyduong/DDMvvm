@@ -20,6 +20,8 @@ public protocol IStorageService {
     
     func saveModels<T: Model>(_ models: [T]?, forKey key: String)
     func loadModels<T: Model>(forKey key: String) -> [T]?
+    
+    func remove(_ key: String)
 }
 
 public class StorageService: IStorageService {
@@ -28,6 +30,7 @@ public class StorageService: IStorageService {
     
     public func save<T>(_ value: T, forKey key: String) {
         defaults.set(value, forKey: key)
+        defaults.synchronize()
     }
     
     public func get<T>(forKey key: String) -> T? {
@@ -38,6 +41,7 @@ public class StorageService: IStorageService {
         if let model = model {
             let json = Mapper<T>().toJSON(model)
             defaults.set(json, forKey: key)
+            defaults.synchronize()
         }
     }
     
@@ -53,6 +57,7 @@ public class StorageService: IStorageService {
         if let models = models {
             let json = Mapper<T>().toJSONArray(models)
             defaults.set(json, forKey: key)
+            defaults.synchronize()
         }
     }
     
@@ -62,6 +67,11 @@ public class StorageService: IStorageService {
         }
         
         return nil
+    }
+    
+    public func remove(_ key: String) {
+        defaults.removeObject(forKey: key)
+        defaults.synchronize()
     }
 }
 
