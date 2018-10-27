@@ -30,11 +30,10 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
     public let rxViewState = BehaviorRelay<ViewState>(value: .none)
     public let rxShowInlineLoader = BehaviorRelay(value: false)
     
-    public let navigationService: INavigationService
+    public let navigationService: INavigationService = DependencyManager.shared.getService()
     
     required public init(model: M? = nil) {
         _model = model
-        navigationService = DependencyManager.shared.getService()
     }
     
     open func destroy() {

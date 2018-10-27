@@ -115,6 +115,7 @@
 		4B4DF40EEFE83552720E92153B69E5A4 /* UITableViewCellExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C86B5109FFE21BD54AB52755698F4 /* UITableViewCellExtensions.swift */; };
 		4CAAFA2612D7510C51BE12C9171ED40A /* DependencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FA8B8CA6F850A135011DF7C012D8E9 /* DependencyManager.swift */; };
 		4D2C27A8EB2285432CDD4F0B11C9B81B /* BinaryDisposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAD67559503BD2B55309B0F5574AAD4 /* BinaryDisposable.swift */; };
+		4E1B21742183AE09003AE9DD /* DrawerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1B21732183AE09003AE9DD /* DrawerPage.swift */; };
 		4EBFB423DCBAD948D286D7B98F76F5E9 /* Using.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9052F05CA0B6A694CCEC63FA207D92 /* Using.swift */; };
 		504C17FE56510CE9075E81632BC3FD8F /* ItemEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD19B93413E978210F6071E067EDF0 /* ItemEvents.swift */; };
 		50ED4A5FBAC13359ABA08E2A0830D098 /* InfiniteSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E85D6232EB54053FB33D397426DC60 /* InfiniteSequence.swift */; };
@@ -722,6 +723,7 @@
 		4DACB352E12BD8E93901F2182550DF8E /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DD4F6DB47BCED107AD97A727E6BD1D0 /* IntegerOperators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntegerOperators.swift; path = Sources/IntegerOperators.swift; sourceTree = "<group>"; };
 		4DEC7144D632BC17EAAC0CF3936C7780 /* UIStepper+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIStepper+Rx.swift"; path = "RxCocoa/iOS/UIStepper+Rx.swift"; sourceTree = "<group>"; };
+		4E1B21732183AE09003AE9DD /* DrawerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPage.swift; sourceTree = "<group>"; };
 		4E29A3ABF7F9C35A4F95DC4F89B8F056 /* ArrayExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		4E795E162A634EAD14FA6964086CA672 /* UISearchController+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UISearchController+Rx.swift"; path = "RxCocoa/iOS/UISearchController+Rx.swift"; sourceTree = "<group>"; };
 		4F517DE194467B44DD5B9BC88D91F7B2 /* BehaviorSubject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BehaviorSubject.swift; path = RxSwift/Subjects/BehaviorSubject.swift; sourceTree = "<group>"; };
@@ -1521,11 +1523,12 @@
 		9DEF1D161431E96E8073EEEFA5789F1B /* Pages */ = {
 			isa = PBXGroup;
 			children = (
+				A16F9AB1FAEA2530FDCE1F2C9656BECB /* Page.swift */,
 				AA55F8BE0B267A43CC960B287A7DCF03 /* CollectionPage.swift */,
 				EA8226DE4656C0F658BF2B9E3ED6715B /* ListPage.swift */,
 				A2CBF1C0F874C24B5A669BB6EEDE24DE /* NavigationPage.swift */,
-				A16F9AB1FAEA2530FDCE1F2C9656BECB /* Page.swift */,
 				1F53947BC6005F032D73B722A40FF00B /* PresenterPage.swift */,
+				4E1B21732183AE09003AE9DD /* DrawerPage.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -2315,6 +2318,7 @@
 				F082B4C6529818D484AF189F86710FCA /* DDMvvm-dummy.m in Sources */,
 				4CAAFA2612D7510C51BE12C9171ED40A /* DependencyManager.swift in Sources */,
 				1D4FA7CD5CC51E0A4ACB8312C086767C /* Font.swift in Sources */,
+				4E1B21742183AE09003AE9DD /* DrawerPage.swift in Sources */,
 				695ABEAF9BA19885D4A6184E50745A7A /* Global.swift in Sources */,
 				73C034B65DE97461029BC415213F7CF8 /* LocalHud.swift in Sources */,
 				0028407A2BCCF2A8FC68122FAFD90304 /* ListPage.swift in Sources */,
@@ -3021,7 +3025,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/PureLayout/PureLayout-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/PureLayout/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/PureLayout/PureLayout.modulemap";
 				PRODUCT_MODULE_NAME = PureLayout;
@@ -3153,7 +3157,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/PureLayout/PureLayout-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/PureLayout/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/PureLayout/PureLayout.modulemap";
 				PRODUCT_MODULE_NAME = PureLayout;

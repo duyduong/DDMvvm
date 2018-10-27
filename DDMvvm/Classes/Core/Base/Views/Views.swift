@@ -21,7 +21,7 @@ open class View<VM: IGenericViewModel>: UIView, IView {
         get { return _viewModel }
         set {
             if newValue != _viewModel {
-                destroy()
+                cleanUp()
                 
                 _viewModel = newValue
                 viewModelChanged()
@@ -67,6 +67,10 @@ open class View<VM: IGenericViewModel>: UIView, IView {
     open func bindViewAndViewModel() {}
     
     open func destroy() {
+        cleanUp()
+    }
+    
+    private func cleanUp() {
         disposeBag = DisposeBag()
         viewModel?.destroy()
     }
@@ -84,7 +88,7 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
         get { return _viewModel }
         set {
             if newValue != _viewModel {
-                destroy()
+                cleanUp()
                 
                 _viewModel = newValue
                 viewModelChanged()
@@ -109,7 +113,7 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
     
     override open func prepareForReuse() {
         super.prepareForReuse()
-        destroy()
+        cleanUp()
     }
     
     private func setup() {
@@ -123,6 +127,10 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
     }
     
     open func destroy() {
+        cleanUp()
+    }
+    
+    private func cleanUp() {
         disposeBag = DisposeBag()
         viewModel?.destroy()
     }
@@ -143,7 +151,7 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
         get { return _viewModel }
         set {
             if newValue != _viewModel {
-                destroy()
+                cleanUp()
                 
                 _viewModel = newValue
                 viewModelChanged()
@@ -168,7 +176,7 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
     
     override open func prepareForReuse() {
         super.prepareForReuse()
-        destroy()
+        cleanUp()
     }
     
     private func setup() {
@@ -186,6 +194,10 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
     }
     
     open func destroy() {
+        cleanUp()
+    }
+    
+    private func cleanUp() {
         disposeBag = DisposeBag()
         viewModel?.destroy()
     }

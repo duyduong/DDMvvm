@@ -58,17 +58,14 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         }
     }
     
-    public let navigationService: INavigationService
+    public let navigationService: INavigationService = DependencyManager.shared.getService()
     
     public init(viewModel: VM? = nil) {
         _viewModel = viewModel
-        navigationService = DependencyManager.shared.getService()
-        
         super.init(nibName: nil, bundle: nil)
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        navigationService = DependencyManager.shared.getService()
         super.init(coder: aDecoder)
     }
     
@@ -111,9 +108,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     open func localHudToggled(_ value: Bool) {}
     
     open func destroy() {
-        disposeBag = DisposeBag()
-        hudBag = DisposeBag()
-        viewModel?.destroy()
+        cleanUp()
     }
     
     open func createBackButton() -> UIBarButtonItem {
