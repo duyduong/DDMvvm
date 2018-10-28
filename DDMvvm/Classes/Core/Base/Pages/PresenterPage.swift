@@ -10,18 +10,18 @@ import UIKit
 import RxSwift
 import Action
 
-class PresenterPage: UIViewController, IDestroyable {
+public class PresenterPage: UIViewController, IDestroyable {
     
-    private var contentPage: UIViewController!
-    private var overlayView: OverlayView!
+    private let contentPage: UIViewController
+    private let overlayView = OverlayView()
     
-    var disposeBag: DisposeBag? = DisposeBag()
+    public var disposeBag: DisposeBag? = DisposeBag()
     
-    private var heightConstraint: NSLayoutConstraint!
-    private var widthConstraint: NSLayoutConstraint!
+    var widthConstraint: NSLayoutConstraint!
+    var heightConstraint: NSLayoutConstraint!
     
-    var popupType: PopupType = .popup
-    var shouldDismissOnTapOutside: Bool = true
+    private let shouldDismissOnTapOutside: Bool
+    private let overlayColor: UIColor
     
     private lazy var tapAction: Action<Void, Void> = {
         return Action() {
@@ -33,56 +33,54 @@ class PresenterPage: UIViewController, IDestroyable {
         }
     }()
     
-    init(contentPage: UIViewController, popupType: PopupType = .popup, shouldDismissOnTapOutside: Bool = true) {
+    init(contentPage: UIViewController, options: PopupOptions) {
         self.contentPage = contentPage
-        self.popupType = popupType
-        self.shouldDismissOnTapOutside = shouldDismissOnTapOutside
+        
+        shouldDismissOnTapOutside = options.shouldDismissOnTapOutside
+        overlayColor = options.overlayColor
         
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("This should not be called")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         view.backgroundColor = .clear
         
-        overlayView = OverlayView.addToPage(self)
         overlayView.alpha = 0
+        overlayView.backgroundColor = overlayColor
+        view.addSubview(overlayView)
+        overlayView.autoPinEdgesToSuperviewEdges()
         
+        contentPage.view.isHidden = true
         addChild(contentPage)
         view.addSubview(contentPage.view)
-        contentPage.view.isHidden = true
-        
-        switch popupType {
-        case .popup:
-            contentPage.view.transform = CGAffineTransform(scaleX: 0, y: 0)
+        if let popupView = contentPage as? IPopupView {
+            popupView.popupLayout()
+        } else {
             contentPage.view.cornerRadius = 7
             contentPage.view.autoCenterInSuperview()
             widthConstraint = contentPage.view.autoSetDimension(.width, toSize: 320)
-            
-        case .picker:
-            contentPage.view.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
-            contentPage.view.setShadow(offset: CGSize(width: 0, height: -5), color: .black, opacity: 0.3, blur: 5)
+            heightConstraint = contentPage.view.autoSetDimension(.height, toSize: 480)
         }
-        heightConstraint = contentPage.view.autoSetDimension(.height, toSize: 480)
+        
         contentPage.didMove(toParent: self)
         
         overlayView.tapGesture.bind(to: tapAction, input: ())
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        adjustContainerSize()
         show()
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
         coordinator.animate(alongsideTransition: { _ in
@@ -90,28 +88,23 @@ class PresenterPage: UIViewController, IDestroyable {
         }, completion: nil)
     }
     
-    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        UIView.animate(withDuration: popupType.dismissDuration, animations: {
-            self.overlayView.alpha = 0
-            
-            let view = self.contentPage.view!
-            switch self.popupType {
-            case .popup:
-                view.alpha = 0
-                view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                
-            case .picker:
-                view.transform = CGAffineTransform(translationX: 0, y: view.frame.size.height)
+    public override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        if let popupView = contentPage as? IPopupView {
+            popupView.hide(overlayView: overlayView) {
+                super.dismiss(animated: false, completion: {
+                    self.destroy()
+                    completion?()
+                })
             }
-        }) { _ in
-            super.dismiss(animated: false) {
+        } else {
+            super.dismiss(animated: false, completion: {
                 self.destroy()
                 completion?()
-            }
+            })
         }
     }
     
-    func destroy() {
+    public func destroy() {
         overlayView.tapGesture.unbindAction()
         
         (contentPage as? IDestroyable)?.destroy()
@@ -124,48 +117,29 @@ class PresenterPage: UIViewController, IDestroyable {
     // MARK: - Toggle content view
     
     private func show() {
-        contentPage.view.isHidden = false
-        
-        switch popupType {
-        case .popup:
-            UIView.animate(withDuration: popupType.showDuration, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-                self.overlayView.alpha = 1
-                self.contentPage.view.transform = .identity
-            }, completion: nil)
-            
-        case .picker:
-            UIView.animate(withDuration: popupType.showDuration) {
-                self.overlayView.alpha = 1
-                self.contentPage.view.transform = .identity
-            }
+        if let popupView = contentPage as? IPopupView {
+            popupView.show(overlayView: overlayView)
+        } else {
+            adjustContainerSize()
+            overlayView.alpha = 1
+            contentPage.view.isHidden = false
         }
     }
-    
+
     private func adjustContainerSize() {
+        guard widthConstraint != nil && heightConstraint != nil else { return }
+        
         let contentSize = contentPage.preferredContentSize
-        
-        switch popupType {
-        case .popup:
-            let maxWidth = view.frame.width - 40
-            let maxHeight = view.frame.height - 80
-            
-            let width = contentSize.width > 0 && contentSize.width < maxWidth ? contentSize.width : maxWidth
-            let height = contentSize.height > 0 && contentSize.height < maxHeight ? contentSize.height : maxHeight
-            
-            widthConstraint.constant = width
-            heightConstraint.constant = height
-            
-        case .picker:
-            let maxHeight = view.frame.height / 2
-            let height = contentSize.height > 0 && contentSize.height < maxHeight ? contentSize.height : maxHeight
-            
-            heightConstraint.constant = height
-            
-            if contentPage.view.isHidden {
-                contentPage.view.transform = CGAffineTransform(translationX: 0, y: height)
-            }
-        }
-        
+
+        let maxWidth = view.frame.width - 40
+        let maxHeight = view.frame.height - 80
+
+        let width = contentSize.width > 0 && contentSize.width < maxWidth ? contentSize.width : maxWidth
+        let height = contentSize.height > 0 && contentSize.height < maxHeight ? contentSize.height : maxHeight
+
+        widthConstraint.constant = width
+        heightConstraint.constant = height
+
         view.layoutIfNeeded()
     }
 }

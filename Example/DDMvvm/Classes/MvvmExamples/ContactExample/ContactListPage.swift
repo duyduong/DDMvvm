@@ -77,7 +77,9 @@ class ContactListPageViewModel: ListViewModel<Model, ContactCellViewModel> {
             }
         }) => disposeBag
         
-        navigationService.push(to: page)
+//        navigationService.push(to: page)
+        let navPage = WrapperPage(rootViewController: page)
+        navigationService.push(to: navPage, options: PushOptions(pushType: .popup(.defaultOptions)))
     }
 }
 

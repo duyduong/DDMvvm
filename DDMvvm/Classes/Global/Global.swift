@@ -21,24 +21,6 @@ public enum ApplicationState {
     case none, resignActive, didEnterBackground, willEnterForeground, didBecomeActive, willTerminate
 }
 
-public enum PopupType {
-    case popup, picker
-    
-    var showDuration: Double {
-        switch self {
-        case .popup: return 0.7
-        case .picker: return 0.4
-        }
-    }
-    
-    var dismissDuration: Double {
-        switch self {
-        case .popup: return 0.25
-        case .picker: return 0.4
-        }
-    }
-}
-
 /// Block type for searching top page
 public typealias SearchTopPageBlock = (() -> UIViewController?)
 
@@ -72,6 +54,10 @@ public struct DDConfigurations {
         var currPage: UIViewController? = rootPage.presentedViewController ?? rootPage
         while currPage?.presentedViewController != nil {
             currPage = currPage?.presentedViewController
+        }
+        
+        if currPage is PresenterPage {
+            currPage = currPage?.children.first
         }
         
         while currPage is UINavigationController || currPage is UITabBarController {

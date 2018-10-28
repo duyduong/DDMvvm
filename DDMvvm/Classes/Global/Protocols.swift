@@ -15,6 +15,24 @@ public protocol IDestroyable: class {
     func destroy()
 }
 
+public protocol IPopupView: class {
+    
+    /// Layout this view inside the presenter page
+    func popupLayout()
+    
+    /*
+     Show animation
+     The presenter page has overlayView, use this if we want to animation the overlayView too, e.g alpha
+     */
+    func show(overlayView: UIView)
+    
+    /*
+     Hide animation
+     Must call completion when the animation is finished
+     */
+    func hide(overlayView: UIView, completion: @escaping (() -> ()))
+}
+
 public protocol ITransitionView: class {
     
     var animatorDelegate: AnimatorDelegate? { get set }

@@ -1,16 +1,14 @@
 //
-//  ListPage.swift
+//  ListView.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 9/26/18.
+//  Created by Dao Duy Duong on 10/28/18.
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
-open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITableViewDelegate {
-    
+open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITableViewDelegate {
+
     public typealias CVM = VM.CellViewModelElement
     
     public let tableView: UITableView
@@ -25,18 +23,17 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         super.init(coder: aDecoder)
     }
     
-    override open func viewDidLoad() {
+    override func setup() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .clear
-        view.addSubview(tableView)
+        addSubview(tableView)
         
-        super.viewDidLoad()
+        super.setup()
     }
     
     open override func initialize() {
-        tableView.autoPin(toTopLayoutOf: self)
-        tableView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
+        tableView.autoPinEdgesToSuperviewEdges(with: .zero)
     }
     
     open override func destroy() {
@@ -48,10 +45,6 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
-    }
-    
-    open override func localHudToggled(_ value: Bool) {
-        tableView.isHidden = value
     }
     
     private func onItemSelected(_ indexPath: IndexPath) {
@@ -147,12 +140,3 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         return nil
     }
 }
-
-
-
-
-
-
-
-
-

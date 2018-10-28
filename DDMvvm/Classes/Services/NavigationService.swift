@@ -9,11 +9,26 @@
 import UIKit
 
 public enum PushType {
-    case auto, push, modally(UIModalPresentationStyle)
+    case auto, push, modally(UIModalPresentationStyle), popup(PopupOptions)
 }
 
 public enum PopType {
-    case auto, pop, dismiss
+    case auto, pop, dismiss, dismissPopup
+}
+
+public struct PopupOptions {
+    
+    public let shouldDismissOnTapOutside: Bool
+    public let overlayColor: UIColor
+    
+    public init(shouldDismissOnTapOutside: Bool = true, overlayColor: UIColor = UIColor(r: 0, g: 0, b: 0, a: 0.7)) {
+        self.shouldDismissOnTapOutside = shouldDismissOnTapOutside
+        self.overlayColor = overlayColor
+    }
+    
+    public static var defaultOptions: PopupOptions {
+        return PopupOptions()
+    }
 }
 
 public struct PushOptions {
@@ -101,7 +116,7 @@ public class NavigationService: INavigationService {
                 page.modalPresentationStyle = presentationStyle
             }
             
-            topPage.present(page, animated: options.animated, completion: nil)
+            topPage.present(page, animated: options.animated)
         }
         
         switch options.pushType {
@@ -115,6 +130,11 @@ public class NavigationService: INavigationService {
         case .push: handlePush()
             
         case .modally(let presentationStyle): handleModal(presentationStyle)
+            
+        case .popup(let options):
+            let presenterPage = PresenterPage(contentPage: page, options: options)
+            presenterPage.modalPresentationStyle = .overFullScreen
+            topPage.present(presenterPage, animated: false)
         }
     }
     
@@ -123,10 +143,9 @@ public class NavigationService: INavigationService {
     public func pop(with options: PopOptions) {
         guard let topPage = topPage else { return }
         
+        let destroyPageBlock = DDConfigurations.destroyPageBlock
         let handleDismiss = {
             topPage.dismiss(animated: options.animated) {
-                let destroyPageBlock = DDConfigurations.destroyPageBlock
-                
                 destroyPageBlock(topPage)
                 destroyPageBlock(topPage.navigationController)
                 destroyPageBlock(topPage.tabBarController)
@@ -136,16 +155,20 @@ public class NavigationService: INavigationService {
         switch options.popType {
         case .auto:
             if let navPage = topPage.navigationController {
-                navPage.popViewController(animated: options.animated) { DDConfigurations.destroyPageBlock($0) }
+                navPage.popViewController(animated: options.animated) { destroyPageBlock($0) }
             } else {
                 handleDismiss()
             }
             
         case .pop:
-            topPage.navigationController?.popViewController(animated: options.animated) { DDConfigurations.destroyPageBlock($0) }
+            topPage.navigationController?.popViewController(animated: options.animated) { destroyPageBlock($0) }
             
         case .dismiss:
             handleDismiss()
+            
+        case .dismissPopup:
+            let presenterPage = topPage.navigationController?.parent ?? topPage.tabBarController?.parent ?? topPage.parent
+            presenterPage?.dismiss(animated: false)
         }
     }
 }

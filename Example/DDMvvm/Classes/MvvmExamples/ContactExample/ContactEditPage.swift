@@ -12,8 +12,66 @@ import RxSwift
 import RxCocoa
 import DDMvvm
 
-class ContactEditPage: Page<ContactEditPageViewModel> {
+class WrapperPage: NavigationPage, IPopupView {
+    
+    var widthConstraint: NSLayoutConstraint!
+    var heightConstraint: NSLayoutConstraint!
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(alongsideTransition: { (_) in
+            self.adjustPopupSize()
+        }, completion: nil)
+    }
+    
+    func popupLayout() {
+        view.cornerRadius = 7
+        view.autoCenterInSuperview()
+        widthConstraint = view.autoSetDimension(.width, toSize: 320)
+        heightConstraint = view.autoSetDimension(.height, toSize: 480)
+    }
+    
+    func show(overlayView: UIView) {
+        adjustPopupSize()
+        
+        view.transform = CGAffineTransform(scaleX: 0, y: 0)
+        view.isHidden = false
+        
+        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+            overlayView.alpha = 1
+            self.view.transform = .identity
+        }, completion: nil)
+    }
+    
+    func hide(overlayView: UIView, completion: @escaping (() -> ())) {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            overlayView.alpha = 0
+            self.view.alpha = 0
+            self.view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        }) { _ in
+            completion()
+        }
+    }
+    
+    private func adjustPopupSize() {
+        guard let superview = view.superview else { return }
+        if superview.bounds.height < heightConstraint.constant {
+            heightConstraint.constant = superview.bounds.height - 20
+        } else {
+            heightConstraint.constant = 480
+        }
+        
+        if superview.bounds.width < widthConstraint.constant {
+            widthConstraint.constant = superview.bounds.width - 20
+        } else {
+            widthConstraint.constant = 320
+        }
+        
+        view.layoutIfNeeded()
+    }
+}
 
+class ContactEditPage: Page<ContactEditPageViewModel> {
+    
     let scrollView = UIScrollView()
     let containerView = UIView()
     
@@ -87,16 +145,21 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         cancelBtn.rx.bind(to: viewModel.cancelAction, input: ())
         submitBtn.rx.bind(to: viewModel.saveAction, input: ())
     }
+    
+    override func onBack() {
+        navigationService.pop(with: PopOptions(popType: .dismissPopup))
+    }
 }
 
 class ContactEditPageViewModel: ViewModel<ContactModel> {
     
     lazy var cancelAction: Action<Void, Void> = {
-        return Action() { .just(self.navigationService.pop()) }
+        return Action() { .just(self.navigationService.pop(with: PopOptions(popType: .dismissPopup))) }
     }()
     
     lazy var saveAction: Action<Void, ContactModel> = {
         return Action(enabledIf: self.rxSaveEnabled.asObservable()) {
+            
             return self.save()
         }
     }()
@@ -119,7 +182,7 @@ class ContactEditPageViewModel: ViewModel<ContactModel> {
         contact.name = rxName.value ?? ""
         contact.phone = rxPhone.value ?? ""
         
-        navigationService.pop()
+        navigationService.pop(with: PopOptions(popType: .dismissPopup))
         
         return .just(contact)
     }

@@ -1,54 +1,44 @@
 //
-//  CollectionPage.swift
+//  CollectionView.swift
 //  DDMvvm
 //
-//  Created by Dao Duy Duong on 9/26/18.
+//  Created by Dao Duy Duong on 10/28/18.
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
-open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     public typealias CVM = VM.CellViewModelElement
-
+    
     public var collectionView: UICollectionView!
     public var layout: UICollectionViewLayout!
     
     private var counter = [Int: Int]()
-
+    
     public override init(viewModel: VM? = nil) {
         super.init(viewModel: viewModel)
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
-    override open func viewDidLoad() {
+    
+    override func setup() {
         setupLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
-        view.addSubview(collectionView)
-
-        super.viewDidLoad()
-    }
-
-    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-
-        coordinator.animate(alongsideTransition: { _ in
-            self.layout?.invalidateLayout()
-        }, completion: nil)
+        addSubview(collectionView)
+        
+        super.setup()
     }
     
     open func setupLayout() {
         layout = UICollectionViewFlowLayout()
     }
-
+    
     open override func initialize() {
         collectionView.autoPinEdgesToSuperviewEdges()
     }
@@ -57,17 +47,13 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         super.destroy()
         collectionView.removeFromSuperview()
     }
-
-    open override func localHudToggled(_ value: Bool) {
-        collectionView.isHidden = value
-    }
-
+    
     open override func bindViewAndViewModel() {
         collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
-
+    
     private func onItemSelected(_ indexPath: IndexPath) {
         guard let viewModel = viewModel else { return }
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
@@ -151,33 +137,20 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return .zero
     }
-
+    
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return .zero
     }
-
+    
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .zero
     }
-
+    
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
+    
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

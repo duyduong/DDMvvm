@@ -40,18 +40,12 @@ open class View<VM: IGenericViewModel>: UIView, IView {
         setup()
     }
     
-    public init(frame: CGRect, viewModel: VM? = nil) {
-        self._viewModel = viewModel
-        super.init(frame: frame)
-        setup()
-    }
-    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
     
-    private func setup() {
+    func setup() {
         backgroundColor = .clear
         
         initialize()
@@ -65,6 +59,10 @@ open class View<VM: IGenericViewModel>: UIView, IView {
     
     open func initialize() {}
     open func bindViewAndViewModel() {}
+    
+    deinit {
+        destroy()
+    }
     
     open func destroy() {
         cleanUp()
@@ -111,11 +109,6 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
         setup()
     }
     
-    override open func prepareForReuse() {
-        super.prepareForReuse()
-        cleanUp()
-    }
-    
     private func setup() {
         backgroundColor = .clear
         initialize()
@@ -124,6 +117,10 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
     private func viewModelChanged() {
         bindViewAndViewModel()
         viewModel?.react()
+    }
+    
+    deinit {
+        destroy()
     }
     
     open func destroy() {
@@ -174,11 +171,6 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
         setup()
     }
     
-    override open func prepareForReuse() {
-        super.prepareForReuse()
-        cleanUp()
-    }
-    
     private func setup() {
         backgroundColor = .clear
         separatorInset = .zero
@@ -191,6 +183,10 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
     private func viewModelChanged() {
         bindViewAndViewModel()
         viewModel?.react()
+    }
+    
+    deinit {
+        destroy()
     }
     
     open func destroy() {

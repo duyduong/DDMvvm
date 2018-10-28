@@ -115,6 +115,9 @@
 		4B4DF40EEFE83552720E92153B69E5A4 /* UITableViewCellExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C86B5109FFE21BD54AB52755698F4 /* UITableViewCellExtensions.swift */; };
 		4CAAFA2612D7510C51BE12C9171ED40A /* DependencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FA8B8CA6F850A135011DF7C012D8E9 /* DependencyManager.swift */; };
 		4D2C27A8EB2285432CDD4F0B11C9B81B /* BinaryDisposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAD67559503BD2B55309B0F5574AAD4 /* BinaryDisposable.swift */; };
+		4E16D2642185448100B4F89F /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E16D2632185448100B4F89F /* ListView.swift */; };
+		4E16D2662185465200B4F89F /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E16D2652185465200B4F89F /* CollectionView.swift */; };
+		4E16D26D2185961C00B4F89F /* PresenterPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E16D26C2185961C00B4F89F /* PresenterPage.swift */; };
 		4E1B21742183AE09003AE9DD /* DrawerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1B21732183AE09003AE9DD /* DrawerPage.swift */; };
 		4EBFB423DCBAD948D286D7B98F76F5E9 /* Using.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9052F05CA0B6A694CCEC63FA207D92 /* Using.swift */; };
 		504C17FE56510CE9075E81632BC3FD8F /* ItemEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD19B93413E978210F6071E067EDF0 /* ItemEvents.swift */; };
@@ -193,7 +196,6 @@
 		746CC38C2147C699D0610717A63CE0D5 /* RecursiveScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42E5EC070C3E771062E3788241FDE7E /* RecursiveScheduler.swift */; };
 		765600B6C587D5513D9C922E6D8287A3 /* NSObject+Rx+KVORepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349D7DDFED8F08EF5D97AFEA016DF71A /* NSObject+Rx+KVORepresentable.swift */; };
 		76B04F4735FDEC5E1969235F39E1EEE1 /* TransformOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505A7FC4EBE39163E502BD61C2FAB74 /* TransformOperators.swift */; };
-		76B683DABFAD3ED3A797B4456DF75E05 /* PresenterPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53947BC6005F032D73B722A40FF00B /* PresenterPage.swift */; };
 		77623C9635172B98F570B101675CD6DC /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0C0CCA9A037C5FE8429EE5B50A1241 /* HistoricalSchedulerTimeConverter.swift */; };
 		7797ECA15400F78A741211B4C6290D24 /* RxPickerViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A22AE7226EA8A21870410144038D63 /* RxPickerViewAdapter.swift */; };
 		78C67DA3B5A54B31FB25BD350AC94448 /* Repeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5785D30CBA0C18A0D312783E3D72C38F /* Repeat.swift */; };
@@ -625,7 +627,6 @@
 		1EB6C0658E25046A6FF40A9F57C6C1EE /* Throttle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Throttle.swift; path = RxSwift/Observables/Throttle.swift; sourceTree = "<group>"; };
 		1EE1CBD0ECADE0FEAEF1A3B4D848B5D6 /* RxTableViewDataSourceType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RxTableViewDataSourceType.swift; path = RxCocoa/iOS/Protocols/RxTableViewDataSourceType.swift; sourceTree = "<group>"; };
 		1F223428045D19DE147EE0077506868E /* SharedSequence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedSequence.swift; path = RxCocoa/Traits/SharedSequence/SharedSequence.swift; sourceTree = "<group>"; };
-		1F53947BC6005F032D73B722A40FF00B /* PresenterPage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PresenterPage.swift; sourceTree = "<group>"; };
 		1FACE29812C8D8F34E7C432E60BC33E1 /* AsSingle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AsSingle.swift; path = RxSwift/Observables/AsSingle.swift; sourceTree = "<group>"; };
 		1FDEB06D9572F4248921332AEF36A982 /* Alamofire-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-umbrella.h"; sourceTree = "<group>"; };
 		21C75038BEFD064B2D1F118D9F95228D /* UISwitch+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UISwitch+Rx.swift"; path = "RxCocoa/iOS/UISwitch+Rx.swift"; sourceTree = "<group>"; };
@@ -723,6 +724,9 @@
 		4DACB352E12BD8E93901F2182550DF8E /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DD4F6DB47BCED107AD97A727E6BD1D0 /* IntegerOperators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntegerOperators.swift; path = Sources/IntegerOperators.swift; sourceTree = "<group>"; };
 		4DEC7144D632BC17EAAC0CF3936C7780 /* UIStepper+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIStepper+Rx.swift"; path = "RxCocoa/iOS/UIStepper+Rx.swift"; sourceTree = "<group>"; };
+		4E16D2632185448100B4F89F /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		4E16D2652185465200B4F89F /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		4E16D26C2185961C00B4F89F /* PresenterPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenterPage.swift; sourceTree = "<group>"; };
 		4E1B21732183AE09003AE9DD /* DrawerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPage.swift; sourceTree = "<group>"; };
 		4E29A3ABF7F9C35A4F95DC4F89B8F056 /* ArrayExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		4E795E162A634EAD14FA6964086CA672 /* UISearchController+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UISearchController+Rx.swift"; path = "RxCocoa/iOS/UISearchController+Rx.swift"; sourceTree = "<group>"; };
@@ -1166,6 +1170,8 @@
 			isa = PBXGroup;
 			children = (
 				76FFD381A1A0D11E94BF31C688BDD04B /* Views.swift */,
+				4E16D2632185448100B4F89F /* ListView.swift */,
+				4E16D2652185465200B4F89F /* CollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1524,10 +1530,10 @@
 			isa = PBXGroup;
 			children = (
 				A16F9AB1FAEA2530FDCE1F2C9656BECB /* Page.swift */,
-				AA55F8BE0B267A43CC960B287A7DCF03 /* CollectionPage.swift */,
 				EA8226DE4656C0F658BF2B9E3ED6715B /* ListPage.swift */,
+				AA55F8BE0B267A43CC960B287A7DCF03 /* CollectionPage.swift */,
 				A2CBF1C0F874C24B5A669BB6EEDE24DE /* NavigationPage.swift */,
-				1F53947BC6005F032D73B722A40FF00B /* PresenterPage.swift */,
+				4E16D26C2185961C00B4F89F /* PresenterPage.swift */,
 				4E1B21732183AE09003AE9DD /* DrawerPage.swift */,
 			);
 			path = Pages;
@@ -2317,6 +2323,7 @@
 				1FE0ECFEF9984DFA9D1C37C72D37D1FA /* CollectionPage.swift in Sources */,
 				F082B4C6529818D484AF189F86710FCA /* DDMvvm-dummy.m in Sources */,
 				4CAAFA2612D7510C51BE12C9171ED40A /* DependencyManager.swift in Sources */,
+				4E16D2662185465200B4F89F /* CollectionView.swift in Sources */,
 				1D4FA7CD5CC51E0A4ACB8312C086767C /* Font.swift in Sources */,
 				4E1B21742183AE09003AE9DD /* DrawerPage.swift in Sources */,
 				695ABEAF9BA19885D4A6184E50745A7A /* Global.swift in Sources */,
@@ -2332,7 +2339,7 @@
 				C3527FFD043A5267DB9687ABFEB89EA6 /* OptionalTypeExtensions.swift in Sources */,
 				81C0705CCACF0E2C44F637552CECB15F /* OverlayView.swift in Sources */,
 				117E4AA1049B77D6AA66A9044EF8F47F /* Page.swift in Sources */,
-				76B683DABFAD3ED3A797B4456DF75E05 /* PresenterPage.swift in Sources */,
+				4E16D26D2185961C00B4F89F /* PresenterPage.swift in Sources */,
 				95AAA84B9A99E66A0645B22D282CA44C /* Protocols.swift in Sources */,
 				EFD8C046331DA9ABBB0BAA986795550F /* Scheduler.swift in Sources */,
 				A795DB7DD845A90BE01A71568D68734E /* SectionList.swift in Sources */,
@@ -2340,6 +2347,7 @@
 				E36CD93E14EFBFDF08AFE1D651C1E555 /* StringExtensions.swift in Sources */,
 				B07E9DB55CACD89AB40823E22B57404D /* UIBarButtonItemExtensions.swift in Sources */,
 				C62D1F637D4289EFD9EF68640066FF6A /* UIColorExtensions.swift in Sources */,
+				4E16D2642185448100B4F89F /* ListView.swift in Sources */,
 				9F5E62201175BDFEA24E8A94CC8F156E /* UIControlExtensions.swift in Sources */,
 				C2965F786480FACD8FBDE3DF23515E25 /* UIEdgeInsetsExtensions.swift in Sources */,
 				5675023E71541E04904455E061A2CA0B /* UIGestureRecognizerExtensions.swift in Sources */,
