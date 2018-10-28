@@ -40,6 +40,12 @@ open class View<VM: IGenericViewModel>: UIView, IView {
         setup()
     }
     
+    public init(frame: CGRect, viewModel: VM? = nil) {
+        self._viewModel = viewModel
+        super.init(frame: frame)
+        setup()
+    }
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
