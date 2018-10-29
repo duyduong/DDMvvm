@@ -112,6 +112,13 @@ public class PresenterPage: UIViewController, IDestroyable {
         
         contentPage.view.removeFromSuperview()
         contentPage.removeFromParent()
+        
+        // if this presenter page is added as a child on another controller
+        // then remove it
+        if let _ = parent {
+            view.removeFromSuperview()
+            removeFromParent()
+        }
     }
     
     // MARK: - Toggle content view
