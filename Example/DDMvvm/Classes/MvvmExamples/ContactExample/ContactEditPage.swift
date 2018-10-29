@@ -159,7 +159,6 @@ class ContactEditPageViewModel: ViewModel<ContactModel> {
     
     lazy var saveAction: Action<Void, ContactModel> = {
         return Action(enabledIf: self.rxSaveEnabled.asObservable()) {
-            
             return self.save()
         }
     }()

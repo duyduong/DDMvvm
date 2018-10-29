@@ -32,6 +32,7 @@ public enum DrawerWidth {
     case ratio(CGFloat)
 }
 
+/// A navigation drawer page
 public class DrawerPage: UIViewController, IDestroyable {
     
     public var detailPage: UIViewController?
@@ -47,8 +48,11 @@ public class DrawerPage: UIViewController, IDestroyable {
     
     private var widthConstraint: NSLayoutConstraint?
     
-    // public properties for configurations
+    /// Public properties for configurations
     public private(set) var isOpen = false
+    
+    /// Allow drawer to open or not
+    public var isEnabled = true
     
     /*
      Drawer widths:

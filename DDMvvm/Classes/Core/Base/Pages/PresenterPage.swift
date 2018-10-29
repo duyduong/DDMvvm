@@ -33,7 +33,7 @@ public class PresenterPage: UIViewController, IDestroyable {
         }
     }()
     
-    init(contentPage: UIViewController, options: PopupOptions) {
+    public init(contentPage: UIViewController, options: PopupOptions) {
         self.contentPage = contentPage
         
         shouldDismissOnTapOutside = options.shouldDismissOnTapOutside
@@ -42,7 +42,7 @@ public class PresenterPage: UIViewController, IDestroyable {
         super.init(nibName: nil, bundle: nil)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("This should not be called")
     }
     
@@ -116,7 +116,7 @@ public class PresenterPage: UIViewController, IDestroyable {
     
     // MARK: - Toggle content view
     
-    private func show() {
+    public func show() {
         if let popupView = contentPage as? IPopupView {
             popupView.show(overlayView: overlayView)
         } else {
