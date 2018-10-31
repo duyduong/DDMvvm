@@ -48,7 +48,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     public var enableBackButton: Bool = false {
         didSet {
             if enableBackButton {
-                backButton = createBackButton()
+                backButton = DDConfigurations.backButtonFactory.create()
                 navigationItem.leftBarButtonItem = backButton
                 backButton?.rx.bind(to: backAction, input: ())
             } else {
@@ -75,7 +75,10 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         view.backgroundColor = .white
         
         // setup default local hud
-        localHud = DDConfigurations.localHudInstanceBlock(view)
+        let localHud = DDConfigurations.localHudFactory.create()
+        view.addSubview(localHud)
+        localHud.setupView()
+        self.localHud = localHud
         
         initialize()
         viewModelChanged()
@@ -109,13 +112,6 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
     open func destroy() {
         cleanUp()
-    }
-    
-    open func createBackButton() -> UIBarButtonItem {
-        let button = UIBarButtonItem()
-        button.setTitleTextAttributes([.font: Font.system.normal(withSize: 18)], for: .normal)
-        button.title = "\u{2190}"
-        return button
     }
     
     open func onBack() {

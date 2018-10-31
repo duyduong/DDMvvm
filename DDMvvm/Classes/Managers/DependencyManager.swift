@@ -7,13 +7,10 @@
 
 import Foundation
 
-typealias RegistrationBlock = (() -> Any)
-public typealias GenericRegistrationBlock<T> = (() -> T)
-
 protocol IMutableDependencyResolver {
     
     func getService(_ type: Any) -> Any?
-    func registerService(_ factory: @escaping RegistrationBlock, type: Any)
+    func registerService(_ factory: Factory<Any>, type: Any)
     func removeService(_ type: Any)
 }
 
@@ -23,26 +20,28 @@ extension IMutableDependencyResolver {
         return getService(T.self) as! T
     }
     
-    func registerService<T>(_ factory: @escaping GenericRegistrationBlock<T>) {
-        return registerService({ factory() }, type: T.self)
+    func registerService<T>(_ factory: Factory<T>) {
+        return registerService(Factory {
+            factory.create()
+        }, type: T.self)
     }
 }
 
 class DefaultDependencyResolver: IMutableDependencyResolver {
     
-    private var registry = [String: RegistrationBlock]()
+    private var registry = [String: Factory<Any>]()
     
     func getService(_ type: Any) -> Any? {
         let k = String(describing: type)
         for key in registry.keys {
             if k.contains(key) {
-                return registry[key]?()
+                return registry[key]?.create()
             }
         }
         return nil
     }
     
-    func registerService(_ factory: @escaping RegistrationBlock, type: Any) {
+    func registerService(_ factory: Factory<Any>, type: Any) {
         let k = String(describing: type)
         registry[k] = factory
     }
@@ -55,21 +54,21 @@ class DefaultDependencyResolver: IMutableDependencyResolver {
 
 public class DependencyManager {
     
-    public static let shared: DependencyManager = DependencyManager()
+    public static let shared = DependencyManager()
     
     private let resolver: IMutableDependencyResolver = DefaultDependencyResolver()
     
     public func registerDefaults() {
-        registerService { () -> INavigationService in NavigationService() }
-        registerService { () -> IStorageService in StorageService() }
-        registerService { () -> IAlertService in AlertService() }
+        registerService(Factory<INavigationService> { NavigationService() })
+        registerService(Factory<IStorageService> { StorageService() })
+        registerService(Factory<IAlertService> { AlertService() })
     }
     
     public func getService<T>() -> T {
         return resolver.getService()
     }
     
-    public func registerService<T>(_ factory: @escaping GenericRegistrationBlock<T>) {
+    public func registerService<T>(_ factory: Factory<T>) {
         resolver.registerService(factory)
     }
     

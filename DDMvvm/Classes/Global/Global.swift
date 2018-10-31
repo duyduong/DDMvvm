@@ -21,14 +21,25 @@ public enum ApplicationState {
     case none, resignActive, didEnterBackground, willEnterForeground, didBecomeActive, willTerminate
 }
 
-/// Block type for searching top page
-public typealias SearchTopPageBlock = (() -> UIViewController?)
+/// Block type for factory creation
+public typealias FactoryCreationBlock<T> = (() -> T)
 
 /// Block type for destroy a page (mainly to clean up DisposeBag)
 public typealias DestroyPageBlock = ((UIViewController?) -> ())
 
-/// Block for creating local hud instance, requirea a superview to add in
-public typealias LocalHudInstanceBlock = ((UIView) -> LocalHud)
+/// Factory type
+public struct Factory<T> {
+    
+    private let creationBlock: FactoryCreationBlock<T>
+    
+    public init(_ creationBlock: @escaping FactoryCreationBlock<T>) {
+        self.creationBlock = creationBlock
+    }
+    
+    public func create() -> T {
+        return creationBlock()
+    }
+}
 
 /*
  Global configurations
@@ -38,11 +49,12 @@ public typealias LocalHudInstanceBlock = ((UIView) -> LocalHud)
 public struct DDConfigurations {
     
     /*
-     Block for searching top page in our main window
+     Factory for searching top page in our main window
+     
      If your rootViewController is a custom one (such as Drawer...)
      then override this block to make navigation service can find the correct top page
      */
-    public static var topPageFindingBlock: SearchTopPageBlock = {
+    public static var topPageFindingBlock: Factory<UIViewController?> = Factory {
         let myWindow = UIApplication.shared.windows
             .filter { !($0.rootViewController is UIAlertController) }
             .first
@@ -75,6 +87,7 @@ public struct DDConfigurations {
     
     /*
      Block for destroying a page (mainly clean up DisposeBag), using for navigation service
+     
      If you have a custom page more than UINavigationController and UITabBarController,
      then override this block for your customs
      */
@@ -99,18 +112,27 @@ public struct DDConfigurations {
     }
     
     /*
-     Block for create local hud.
+     Factory for creating local hud.
      Local hud is a loader indicator places inside a page
      
      If we want to make local hud different layouts, show and hide animations, then
      inherit from LocalHud class to implement your custom local hud
      */
-    public static var localHudInstanceBlock: LocalHudInstanceBlock = { superview in
-        return LocalHud(addedToView: superview)
+    public static var localHudFactory: Factory<LocalHud> = Factory { return DefaultLocalHud() }
+    
+    /*
+     Factory for creating back button.
+     
+     Each page has a properties for showing back button.
+     With back button, we can have more controlling on page navigation
+     */
+    public static var backButtonFactory: Factory<UIBarButtonItem> = Factory {
+        let barButton = UIBarButtonItem()
+        barButton.setTitleTextAttributes([.font: Font.system.normal(withSize: 18)], for: .normal)
+        barButton.title = "\u{2190}"
+        return barButton
     }
 }
-
-
 
 
 

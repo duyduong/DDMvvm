@@ -24,22 +24,22 @@ extension Reactive where Base: LocalHud {
 
 open class LocalHud: UIView {
     
-    public let label = UILabel()
-    public let indicatorView = UIActivityIndicatorView(style: .white)
-    
-    public init(addedToView view: UIView) {
-        super.init(frame: .zero)
-        
-        view.addSubview(self)
-        setupView()
-    }
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
     /// Subclasses override this method to style and re-layout components
-    open func setupView() {
+    open func setupView() { }
+    
+    /// Subclasses override this method to setup a custom show animation if needed
+    open func show() { }
+    
+    /// Subclasses override this method to setup a custom hide animation if needed
+    open func hide() { }
+}
+
+class DefaultLocalHud: LocalHud {
+    
+    let label = UILabel()
+    let indicatorView = UIActivityIndicatorView(style: .white)
+    
+    override func setupView() {
         indicatorView.hidesWhenStopped = true
         indicatorView.color = .black
         addSubview(indicatorView)
@@ -58,14 +58,12 @@ open class LocalHud: UIView {
         autoCenterInSuperview()
     }
     
-    /// Subclasses override this method to setup a custom show animation if needed
-    open func show() {
+    override func show() {
         isHidden = false
         indicatorView.startAnimating()
     }
     
-    /// Subclasses override this method to setup a custom hide animation if needed
-    open func hide() {
+    override func hide() {
         isHidden = true
         indicatorView.stopAnimating()
     }

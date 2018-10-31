@@ -91,7 +91,7 @@ extension INavigationService {
 public class NavigationService: INavigationService {
     
     private var topPage: UIViewController? {
-        return DDConfigurations.topPageFindingBlock()
+        return DDConfigurations.topPageFindingBlock.create()
     }
     
     // MARK: - Push functions
