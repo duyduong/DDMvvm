@@ -11,8 +11,6 @@ import DDMvvm
 
 class SimpleCollectionPageCell: CollectionCell<SimpleListPageCellViewModel> {
     
-    static let identifier = "SimpleCollectionPageCell"
-    
     let titleLbl = UILabel()
     
     override func initialize() {

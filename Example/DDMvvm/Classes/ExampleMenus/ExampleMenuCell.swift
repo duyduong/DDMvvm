@@ -12,8 +12,6 @@ import DDMvvm
 
 class ExampleMenuCell: TableCell<ExampleMenuCellViewModel> {
     
-    static let identifier = "ExampleMenuCell"
-
     let titleLbl = UILabel()
     let descLbl = UILabel()
     

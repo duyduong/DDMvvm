@@ -12,8 +12,6 @@ import DDMvvm
 
 class FlickrImageCell: CollectionCell<FlickrImageCellViewModel> {
     
-    static let identifier = "FlickrImageCell"
-    
     let imageView = UIImageView()
     let titleLbl = UILabel()
     

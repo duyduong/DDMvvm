@@ -11,8 +11,6 @@ import DDMvvm
 
 class CPTextCell: CollectionCell<SectionTextCellViewModel> {
     
-    static let identifier = "SectionTextCell"
-    
     let titleLbl = UILabel()
     let descLbl = UILabel()
     
@@ -47,8 +45,6 @@ class CPTextCell: CollectionCell<SectionTextCellViewModel> {
 }
 
 class CPImageCell: CollectionCell<SectionImageCellViewModel> {
-    
-    static let identifier = "SectionImageCell"
     
     let netImageView = UIImageView()
     

@@ -45,6 +45,20 @@ public class DrawerPage: UIViewController, IDestroyable {
     private lazy var tapAction: Action<Void, Void> = {
         return Action() { .just(self.closeDrawer(true)) }
     }()
+  
+  public override var prefersStatusBarHidden: Bool {
+    if isOpen {
+      return masterPage?.prefersStatusBarHidden ?? false
+    }
+    return detailPage?.prefersStatusBarHidden ?? false
+  }
+  
+  public override var preferredStatusBarStyle: UIStatusBarStyle {
+    if isOpen {
+      return masterPage?.preferredStatusBarStyle ?? .default
+    }
+    return detailPage?.preferredStatusBarStyle ?? .default
+  }
     
     private var widthConstraint: NSLayoutConstraint?
     

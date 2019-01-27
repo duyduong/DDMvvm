@@ -11,8 +11,6 @@ import DDMvvm
 
 class SectionHeaderCell: CollectionCell<SectionHeaderViewViewModel> {
     
-    static let identifier = "SectionHeaderCell"
-    
     let titleLbl = UILabel()
     let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     

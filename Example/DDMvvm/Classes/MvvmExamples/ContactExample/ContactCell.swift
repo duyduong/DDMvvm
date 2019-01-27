@@ -12,8 +12,6 @@ import DDMvvm
 
 class ContactCell: TableCell<ContactCellViewModel> {
 
-    static let identifier = "ContactCell"
-    
     let avatarIv = UIImageView()
     let nameLbl = UILabel()
     let phoneLbl = UILabel()

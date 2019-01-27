@@ -23,6 +23,7 @@
 		4E48B73C216584A800EF8CED /* SectionListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73B216584A800EF8CED /* SectionListPage.swift */; };
 		4E48B73E2165853700EF8CED /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73D2165853700EF8CED /* SectionHeaderView.swift */; };
 		4E48B7402165881500EF8CED /* SectionListPageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73F2165881500EF8CED /* SectionListPageCells.swift */; };
+		4E8470D72189A323008C4BA6 /* JsonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8470D62189A323008C4BA6 /* JsonService.swift */; };
 		4ED4076B2162016200987322 /* DataBindingExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED4076A2162016200987322 /* DataBindingExamplePage.swift */; };
 		4ED407712162184600987322 /* CustomControlExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED407702162184600987322 /* CustomControlExamplePage.swift */; };
 		4ED407732162193200987322 /* SegmentedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED407722162193200987322 /* SegmentedView.swift */; };
@@ -69,6 +70,7 @@
 		4E48B73B216584A800EF8CED /* SectionListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionListPage.swift; sourceTree = "<group>"; };
 		4E48B73D2165853700EF8CED /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		4E48B73F2165881500EF8CED /* SectionListPageCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionListPageCells.swift; sourceTree = "<group>"; };
+		4E8470D62189A323008C4BA6 /* JsonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonService.swift; sourceTree = "<group>"; };
 		4ED4076A2162016200987322 /* DataBindingExamplePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBindingExamplePage.swift; sourceTree = "<group>"; };
 		4ED407702162184600987322 /* CustomControlExamplePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomControlExamplePage.swift; sourceTree = "<group>"; };
 		4ED407722162193200987322 /* SegmentedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedView.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 			children = (
 				4EEA34722163CFF800033616 /* FlickrSearchPage.swift */,
 				4EEA34742163D0AD00033616 /* FlickrImageCell.swift */,
+				4E8470D62189A323008C4BA6 /* JsonService.swift */,
 			);
 			path = FlickrSearch;
 			sourceTree = "<group>";
@@ -503,6 +506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EEA34752163D0AD00033616 /* FlickrImageCell.swift in Sources */,
+				4E8470D72189A323008C4BA6 /* JsonService.swift in Sources */,
 				4ED4076B2162016200987322 /* DataBindingExamplePage.swift in Sources */,
 				4E2AD48A2167184D0016BFCF /* ContactModel.swift in Sources */,
 				4E2AD47F21670C740016BFCF /* SectionCollectionPage.swift in Sources */,

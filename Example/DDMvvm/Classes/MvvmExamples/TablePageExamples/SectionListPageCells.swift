@@ -12,8 +12,6 @@ import DDMvvm
 
 class SectionTextCell: TableCell<SectionTextCellViewModel> {
     
-    static let identifier = "SectionTextCell"
-    
     let titleLbl = UILabel()
     let descLbl = UILabel()
     
@@ -56,8 +54,6 @@ class SectionTextCellViewModel: SuperCellViewModel {
 }
 
 class SectionImageCell: TableCell<SectionImageCellViewModel> {
-    
-    static let identifier = "SectionImageCell"
     
     let netImageView = UIImageView()
     

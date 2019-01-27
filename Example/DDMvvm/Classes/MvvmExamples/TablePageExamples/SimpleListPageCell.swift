@@ -12,8 +12,6 @@ import DDMvvm
 
 class SimpleListPageCell: TableCell<SimpleListPageCellViewModel> {
 
-    static let identifier = "SimpleListPageCell"
-    
     let titleLbl = UILabel()
     
     override func initialize() {

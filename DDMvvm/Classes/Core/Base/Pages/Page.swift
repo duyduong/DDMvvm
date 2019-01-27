@@ -128,8 +128,9 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         hudBag = DisposeBag()
         
         if let viewModel = viewModel, let localHud = localHud {
-            viewModel.rxShowInlineLoader ~> localHud.rx.show => hudBag
-            viewModel.rxShowInlineLoader.subscribe(onNext: localHudToggled) => hudBag
+            let shared = viewModel.rxShowInlineLoader.distinctUntilChanged().share()
+            shared ~> localHud.rx.show => hudBag
+            shared.subscribe(onNext: localHudToggled) => hudBag
         }
     }
     
