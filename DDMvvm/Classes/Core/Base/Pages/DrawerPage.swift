@@ -308,7 +308,7 @@ public class DrawerPage: UIViewController, IDestroyable {
     }
   }
   
-  private func closeDrawerAnimation(duration: TimeInterval, completion: ((Bool) -> ())) {
+  private func closeDrawerAnimation(duration: TimeInterval, completion: @escaping ((Bool) -> ())) {
     switch drawerAnimation {
     case .slide:
       switch drawerLayout {
@@ -316,26 +316,14 @@ public class DrawerPage: UIViewController, IDestroyable {
         UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
           self.overlayView.alpha = 0
           self.masterContentView.transform = CGAffineTransform(translationX: -self.masterContentView.frame.width, y: 0)
-        }, completion: { _ in
-          self.overlayView.isHidden = true
-          self.masterContentView.isHidden = true
-          
-          self.masterPage?.endAppearanceTransition()
-          self.isOpen = !self.isOpen
-        })
+        }, completion: completion)
         
       case .under:
         UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
           self.overlayView.alpha = 0
           self.masterContentView.transform = CGAffineTransform(translationX: -(self.masterContentView.frame.width / 3), y: 0)
           self.detailContentView.transform = .identity
-        }, completion: { _ in
-          self.overlayView.isHidden = true
-          self.masterContentView.isHidden = true
-          
-          self.masterPage?.endAppearanceTransition()
-          self.isOpen = !self.isOpen
-        })
+        }, completion: completion)
       }
       
     case .slideAndZoom:
@@ -348,13 +336,7 @@ public class DrawerPage: UIViewController, IDestroyable {
       UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
         self.overlayView.alpha = 0
         self.detailContentView.transform = .identity
-      }, completion: { _ in
-        self.overlayView.isHidden = true
-        self.masterContentView.isHidden = true
-        
-        self.masterPage?.endAppearanceTransition()
-        self.isOpen = !self.isOpen
-      })
+      }, completion: completion)
     }
   }
   
