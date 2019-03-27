@@ -18,6 +18,17 @@ open class Model: NSObject, Mappable {
     open func mapping(map: Map) {}
 }
 
+extension Model {
+    
+    static func fromJSON<T: Mappable>(_ JSON: Any?) -> T? {
+        return Mapper<T>().map(JSONObject: JSON)
+    }
+    
+    static func fromJSONArray<T: Mappable>(_ JSON: Any?) -> [T] {
+        return Mapper<T>().mapArray(JSONObject: JSON) ?? []
+    }
+}
+
 
 
 

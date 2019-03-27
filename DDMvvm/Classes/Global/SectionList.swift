@@ -76,6 +76,11 @@ public class SectionList<T> where T: Equatable {
         return innerSources.remove(at: index)
     }
     
+    public func remove(at indice: [Int]) {
+        let newSources = innerSources.enumerated().compactMap { indice.contains($0.offset) ? nil : $0.element }
+        innerSources = newSources
+    }
+    
     public func removeAll() {
         innerSources.removeAll()
     }
@@ -113,11 +118,9 @@ public class ReactiveCollection<T> where T: Equatable {
     
     private var innerSources: [SectionList<T>] = []
     
-//    private let publisher = PublishRelay<ChangeEvent>()
     private let publisher = PublishRelay<ChangeSet>()
     private let rxInnerSources = BehaviorRelay<[SectionList<T>]>(value: [])
     
-//    public let collectionChanged: Observable<ChangeEvent>
     public let collectionChanged: Observable<ChangeSet>
     
     public subscript(index: Int, section: Int) -> T {
@@ -281,6 +284,12 @@ public class ReactiveCollection<T> where T: Equatable {
         publisher.accept(.deleteElements(elementIndice: [index], section: section))
         
         return element
+    }
+    
+    public func remove(at indice: [Int], of section: Int = 0) {
+        innerSources[section].remove(at: indice)
+        rxInnerSources.accept(innerSources)
+        publisher.accept(.deleteElements(elementIndice: indice, section: section))
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {

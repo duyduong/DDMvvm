@@ -39,7 +39,7 @@ public class StorageService: IStorageService {
     
     public func saveModel<T: Model>(_ model: T?, forKey key: String) {
         if let model = model {
-            let json = Mapper<T>().toJSON(model)
+            let json = model.toJSON()
             defaults.set(json, forKey: key)
             defaults.synchronize()
         }
@@ -47,7 +47,7 @@ public class StorageService: IStorageService {
     
     public func loadModel<T: Model>(forKey key: String) -> T? {
         if let json = defaults.object(forKey: key) {
-            return Mapper<T>().map(JSONObject: json)
+            return Model.fromJSON(json)
         }
         
         return nil
@@ -55,7 +55,7 @@ public class StorageService: IStorageService {
     
     public func saveModels<T: Model>(_ models: [T]?, forKey key: String) {
         if let models = models {
-            let json = Mapper<T>().toJSONArray(models)
+            let json = models.toJSON()
             defaults.set(json, forKey: key)
             defaults.synchronize()
         }
@@ -63,7 +63,7 @@ public class StorageService: IStorageService {
     
     public func loadModels<T: Model>(forKey key: String) -> [T]? {
         if let json = defaults.object(forKey: key) {
-            return Mapper<T>().mapArray(JSONObject: json)
+            return Model.fromJSONArray(json)
         }
         
         return nil

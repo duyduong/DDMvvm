@@ -12,6 +12,14 @@ open class NavigationPage: UINavigationController, ITransitionView, IDestroyable
     
     public var animatorDelegate: AnimatorDelegate?
     
+    public var statusBarStyle: UIStatusBarStyle = .lightContent {
+        didSet { setNeedsStatusBarAppearanceUpdate() }
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return statusBarStyle
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self

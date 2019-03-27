@@ -34,7 +34,6 @@ extension UIColor {
     public static func fromHex(_ hexString: String) -> UIColor {
         return UIColor(hexString: hexString) ?? UIColor.clear
     }
-
 }
 
 

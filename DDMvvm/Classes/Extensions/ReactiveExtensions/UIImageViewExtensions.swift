@@ -13,9 +13,9 @@ import AlamofireImage
 
 public struct NetworkImage {
     
-    var url: URL? = nil
-    var placeholder: UIImage? = nil
-    var completion: ((DataResponse<UIImage>) -> Void)? = nil
+    public private(set) var url: URL? = nil
+    public private(set) var placeholder: UIImage? = nil
+    public private(set)var completion: ((DataResponse<UIImage>) -> Void)? = nil
     
     public init(withURL url: URL? = nil, placeholder: UIImage? = nil, completion: ((DataResponse<UIImage>) -> Void)? = nil) {
         self.url = url
@@ -27,20 +27,12 @@ public struct NetworkImage {
 extension Reactive where Base: UIImageView {
     
     public var networkImage: Binder<NetworkImage> {
-        return Binder(self.base) { view, image in
-            if let placeholder = image.placeholder {
-                view.image = placeholder
-            }
-            
-            if let url = image.url {
-                view.af_setImage(withURL: url, imageTransition: .crossDissolve(0.25), completion: image.completion)
-            }
-        }
+        return networkImage()
     }
     
     // allow UI to set completion
-    public func networkImage(_ completion: ((DataResponse<UIImage>) -> Void)? = nil) -> Binder<NetworkImage> {
-        return Binder(self.base) { view, image in
+    public func networkImage(_ imageTransition: UIImageView.ImageTransition = .crossDissolve(0.25), _ completion: ((DataResponse<UIImage>) -> Void)? = nil) -> Binder<NetworkImage> {
+        return Binder(base) { view, image in
             if let placeholder = image.placeholder {
                 view.image = placeholder
             }
