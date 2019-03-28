@@ -13,22 +13,27 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
 
     public typealias CVM = VM.CellViewModelElement
 
-    public var collectionView: UICollectionView!
+    public private(set) var collectionView: UICollectionView!
     public var layout: UICollectionViewLayout!
     
     private var counter = [Int: Int]()
 
     public override init(viewModel: VM? = nil) {
         super.init(viewModel: viewModel)
+        setupCollectionView()
     }
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        setupCollectionView()
+    }
+    
+    private func setupCollectionView() {
+        layout = collectionViewLayout()
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     }
 
     override open func viewDidLoad() {
-        setupLayout()
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -41,10 +46,15 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         super.viewWillTransition(to: size, with: coordinator)
 
         coordinator.animate(alongsideTransition: { _ in
-            self.layout?.invalidateLayout()
+            self.layout.invalidateLayout()
         }, completion: nil)
     }
     
+    func collectionViewLayout() -> UICollectionViewLayout {
+        return UICollectionViewFlowLayout()
+    }
+    
+    @available(*, deprecated, message: "CollectionPage no longer support this func. Please override layout property")
     open func setupLayout() {
         layout = UICollectionViewFlowLayout()
     }
@@ -147,6 +157,8 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     }
     
     // MARK: - Collection view delegates
+    
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) { }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return .zero

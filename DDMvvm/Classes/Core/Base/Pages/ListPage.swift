@@ -35,8 +35,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     }
     
     open override func initialize() {
-        tableView.autoPin(toTopLayoutOf: self)
-        tableView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
+        tableView.autoPinEdgesToSuperviewEdges(with: .zero)
     }
     
     open override func destroy() {
