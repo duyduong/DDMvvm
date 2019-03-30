@@ -44,8 +44,9 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     }
     
     open override func bindViewAndViewModel() {
-        tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
+        tableView.reloadData()
         
+        tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
     

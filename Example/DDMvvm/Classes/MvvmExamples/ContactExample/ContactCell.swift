@@ -19,7 +19,7 @@ class ContactCell: TableCell<ContactCellViewModel> {
     override func initialize() {
         let paddingView = UIView()
         contentView.addSubview(paddingView)
-        paddingView.autoPinEdgesToSuperviewEdges(with: .equally(5))
+        paddingView.autoPinEdgesToSuperviewEdges(with: .all(5))
         
         avatarIv.image = UIImage(named: "default-contact")
         paddingView.addSubview(avatarIv)

@@ -73,8 +73,10 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     }
 
     open override func bindViewAndViewModel() {
-        collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
+        updateCounter()
+        collectionView.reloadData()
         
+        collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
 
@@ -115,9 +117,13 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
             }
             
             // update counter
-            counter.removeAll()
-            viewModel?.itemsSource.forEach { counter[$0] = $1.count }
+            updateCounter()
         }, completion: nil)
+    }
+    
+    private func updateCounter() {
+        counter.removeAll()
+        viewModel?.itemsSource.forEach { counter[$0] = $1.count }
     }
     
     // MARK: - Abstract for subclasses

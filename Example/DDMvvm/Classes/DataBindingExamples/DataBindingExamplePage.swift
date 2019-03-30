@@ -59,7 +59,7 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
         submitBtn.setTitleColor(.lightGray, for: .disabled)
         submitBtn.setBackgroundImage(UIImage.from(color: .blue), for: .normal)
         submitBtn.setBackgroundImage(UIImage.from(color: .gray), for: .disabled)
-        submitBtn.contentEdgeInsets = .topBottom(5, leftRight: 10)
+        submitBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         submitBtn.cornerRadius = 5
         containerView.addSubview(submitBtn)
         submitBtn.autoConstrainAttribute(.trailing, to: .trailing, of: passTxt)

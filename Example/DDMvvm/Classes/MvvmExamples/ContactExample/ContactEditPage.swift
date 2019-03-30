@@ -118,7 +118,7 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         cancelBtn.setTitle("Cancel", for: .normal)
         cancelBtn.setTitleColor(.white, for: .normal)
         cancelBtn.setBackgroundImage(UIImage.from(color: .red), for: .normal)
-        cancelBtn.contentEdgeInsets = .topBottom(5, leftRight: 10)
+        cancelBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         cancelBtn.cornerRadius = 5
         buttonView.addSubview(cancelBtn)
         cancelBtn.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .trailing)
@@ -128,7 +128,7 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         submitBtn.setTitleColor(.lightGray, for: .disabled)
         submitBtn.setBackgroundImage(UIImage.from(color: .blue), for: .normal)
         submitBtn.setBackgroundImage(UIImage.from(color: .gray), for: .disabled)
-        submitBtn.contentEdgeInsets = .topBottom(5, leftRight: 10)
+        submitBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         submitBtn.cornerRadius = 5
         buttonView.addSubview(submitBtn)
         submitBtn.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .leading)

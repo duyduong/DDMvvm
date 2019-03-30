@@ -16,7 +16,7 @@ class SimpleListPageCell: TableCell<SimpleListPageCellViewModel> {
     
     override func initialize() {
         contentView.addSubview(titleLbl)
-        titleLbl.autoPinEdgesToSuperviewEdges(with: .topBottom(10, leftRight: 15))
+        titleLbl.autoPinEdgesToSuperviewEdges(with: .symmetric(horizontal: 15, vertical: 10))
     }
     
     override func bindViewAndViewModel() {

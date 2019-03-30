@@ -20,7 +20,7 @@ class SimpleCollectionPageCell: CollectionCell<SimpleListPageCellViewModel> {
         titleLbl.textColor = .white
         titleLbl.numberOfLines = 0
         contentView.addSubview(titleLbl)
-        titleLbl.autoPinEdgesToSuperviewEdges(with: .equally(5))
+        titleLbl.autoPinEdgesToSuperviewEdges(with: .all(5))
     }
     
     override func bindViewAndViewModel() {

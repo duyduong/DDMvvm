@@ -20,7 +20,7 @@ class CPTextCell: CollectionCell<SectionTextCellViewModel> {
         
         let paddingView = UIView()
         contentView.addSubview(paddingView)
-        paddingView.autoPinEdgesToSuperviewEdges(with: .equally(5))
+        paddingView.autoPinEdgesToSuperviewEdges(with: .all(5))
         
         titleLbl.textColor = .white
         titleLbl.numberOfLines = 0

@@ -18,7 +18,7 @@ class SectionTextCell: TableCell<SectionTextCellViewModel> {
     override func initialize() {
         let paddingView = UIView()
         contentView.addSubview(paddingView)
-        paddingView.autoPinEdgesToSuperviewEdges(with: .equally(5))
+        paddingView.autoPinEdgesToSuperviewEdges(with: .all(5))
         
         titleLbl.numberOfLines = 0
         titleLbl.font = Font.system.bold(withSize: 17)
@@ -62,7 +62,7 @@ class SectionImageCell: TableCell<SectionImageCellViewModel> {
         netImageView.clipsToBounds = true
         contentView.addSubview(netImageView)
         netImageView.autoMatch(.height, to: .width, of: netImageView, withMultiplier: 9/16.0)
-        netImageView.autoPinEdgesToSuperviewEdges(with: .topBottom(10, leftRight: 15))
+        netImageView.autoPinEdgesToSuperviewEdges(with: .symmetric(horizontal: 15, vertical: 10))
     }
     
     override func bindViewAndViewModel() {

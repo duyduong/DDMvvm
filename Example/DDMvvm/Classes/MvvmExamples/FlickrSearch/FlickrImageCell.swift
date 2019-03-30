@@ -32,7 +32,7 @@ class FlickrImageCell: CollectionCell<FlickrImageCellViewModel> {
         titleLbl.textColor = .white
         titleLbl.numberOfLines = 2
         titleView.addSubview(titleLbl)
-        titleLbl.autoPinEdgesToSuperviewEdges(with: .equally(5))
+        titleLbl.autoPinEdgesToSuperviewEdges(with: .all(5))
     }
     
     override func bindViewAndViewModel() {

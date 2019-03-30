@@ -24,13 +24,13 @@ class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewM
         
         flipButton.setTitle("Push Flip", for: .normal)
         flipButton.setBackgroundImage(UIImage.from(color: .blue), for: .normal)
-        flipButton.contentEdgeInsets = .topBottom(5, leftRight: 10)
+        flipButton.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         centerView.addSubview(flipButton)
         flipButton.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         
         zoomButton.setTitle("Zoom and Switch", for: .normal)
         zoomButton.setBackgroundImage(UIImage.from(color: .blue), for: .normal)
-        zoomButton.contentEdgeInsets = .topBottom(5, leftRight: 10)
+        zoomButton.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         centerView.addSubview(zoomButton)
         zoomButton.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         zoomButton.autoPinEdge(.top, to: .bottom, of: flipButton, withOffset: 20)

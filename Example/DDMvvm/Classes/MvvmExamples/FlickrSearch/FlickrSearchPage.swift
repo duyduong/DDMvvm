@@ -129,7 +129,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
     }
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .equally(padding)
+        return .all(padding)
     }
 }
 

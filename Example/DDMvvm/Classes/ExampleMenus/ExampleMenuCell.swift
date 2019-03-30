@@ -18,7 +18,7 @@ class ExampleMenuCell: TableCell<ExampleMenuCellViewModel> {
     override func initialize() {
         let paddingView = UIView()
         contentView.addSubview(paddingView)
-        paddingView.autoPinEdgesToSuperviewEdges(with: .equally(5))
+        paddingView.autoPinEdgesToSuperviewEdges(with: .all(5))
         
         titleLbl.numberOfLines = 0
         titleLbl.font = Font.system.bold(withSize: 17)

@@ -75,7 +75,7 @@ class SegmentedView: AbstractControlView {
         shadowView = UIView()
         shadowView.backgroundColor = .white
         addSubview(shadowView)
-        shadowView.autoPinEdgesToSuperviewEdges(with: .bottom(4))
+        shadowView.autoPinEdgesToSuperviewEdges(with: .only(bottom: 4))
         
         stackView = UIStackView()
         stackView.alignment = .fill
@@ -91,7 +91,7 @@ class SegmentedView: AbstractControlView {
             btn.setTitleColor(.fromHex("2895ff"), for: .highlighted)
             btn.setTitleColor(.fromHex("2895ff"), for: .selected)
             btn.titleLabel?.font = Font.system.bold(withSize: 15)
-            btn.contentEdgeInsets = .equally(15)
+            btn.contentEdgeInsets = .all(15)
             btn.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(btn)
         }
