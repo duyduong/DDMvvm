@@ -118,7 +118,7 @@ public class ReactiveCollection<T> where T: Equatable {
     
     private var innerSources: [SectionList<T>] = []
     
-    private let publisher = PublishRelay<ChangeSet>()
+    private let publisher = PublishSubject<ChangeSet>()
     private let rxInnerSources = BehaviorRelay<[SectionList<T>]>(value: [])
     
     public let collectionChanged: Observable<ChangeSet>
@@ -185,7 +185,7 @@ public class ReactiveCollection<T> where T: Equatable {
     public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
         innerSources.insert(sectionList, at: index)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.insertSection(section: index))
+        publisher.onNext(.insertSection(section: index))
     }
     
     public func appendSections(_ sectionLists: [SectionList<T>]) {
@@ -203,14 +203,14 @@ public class ReactiveCollection<T> where T: Equatable {
         
         innerSources.append(sectionList)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.insertSection(section: section))
+        publisher.onNext(.insertSection(section: section))
     }
     
     @discardableResult
     public func removeSection(at index: Int) -> SectionList<T> {
         let element = innerSources.remove(at: index)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.deleteSection(section: index))
+        publisher.onNext(.deleteSection(section: index))
         
         return element
     }
@@ -218,7 +218,7 @@ public class ReactiveCollection<T> where T: Equatable {
     public func removeAll() {
         innerSources.removeAll()
         rxInnerSources.accept(innerSources)
-        publisher.accept(.deleteSection(section: -1))
+        publisher.onNext(.deleteSection(section: -1))
     }
     
     // MARK: - section elements manipulations
@@ -228,12 +228,12 @@ public class ReactiveCollection<T> where T: Equatable {
             innerSources[section].append(element)
             rxInnerSources.accept(innerSources)
             
-            publisher.accept(.insertElements(elementIndice: [index], section: 0))
+            publisher.onNext(.insertElements(elementIndice: [index], section: 0))
         } else if index < innerSources[section].count {
             innerSources[section].insert(element, at: index)
             rxInnerSources.accept(innerSources)
             
-            publisher.accept(.insertElements(elementIndice: [index], section: section))
+            publisher.onNext(.insertElements(elementIndice: [index], section: section))
         }
     }
     
@@ -242,7 +242,7 @@ public class ReactiveCollection<T> where T: Equatable {
         rxInnerSources.accept(innerSources)
         
         let indice = elements.count == 0 ? [] : Array(0..<elements.count)
-        publisher.accept(.insertElements(elementIndice: indice, section: section))
+        publisher.onNext(.insertElements(elementIndice: indice, section: section))
     }
     
     public func append(_ element: T, to section: Int = 0) {
@@ -254,7 +254,7 @@ public class ReactiveCollection<T> where T: Equatable {
         let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
         innerSources[section].append(element)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.insertElements(elementIndice: [index], section: section))
+        publisher.onNext(.insertElements(elementIndice: [index], section: section))
     }
     
     public func append(_ elements: [T], to section: Int = 0) {
@@ -274,14 +274,14 @@ public class ReactiveCollection<T> where T: Equatable {
         
         innerSources[section].append(elements)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.insertElements(elementIndice: indice, section: section))
+        publisher.onNext(.insertElements(elementIndice: indice, section: section))
     }
     
     @discardableResult
     public func remove(at index: Int, of section: Int = 0) -> T? {
         let element = innerSources[section].remove(at: index)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.deleteElements(elementIndice: [index], section: section))
+        publisher.onNext(.deleteElements(elementIndice: [index], section: section))
         
         return element
     }
@@ -289,7 +289,7 @@ public class ReactiveCollection<T> where T: Equatable {
     public func remove(at indice: [Int], of section: Int = 0) {
         innerSources[section].remove(at: indice)
         rxInnerSources.accept(innerSources)
-        publisher.accept(.deleteElements(elementIndice: indice, section: section))
+        publisher.onNext(.deleteElements(elementIndice: indice, section: section))
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {

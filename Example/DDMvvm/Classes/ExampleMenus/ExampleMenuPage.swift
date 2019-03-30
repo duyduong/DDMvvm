@@ -272,7 +272,7 @@ class CPExampleMenuPageViewModel: ExampleMenuPageViewModel {
             page = SimpleCollectionPage(viewModel: vm)
             
         case 1:
-            let vm = SectionListPageViewModel(model: cellViewModel.model)
+            let vm = TestPageViewModel(model: cellViewModel.model)
             page = SectionCollectionPage(viewModel: vm)
             
         default: ()

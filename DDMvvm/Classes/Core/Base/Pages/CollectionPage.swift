@@ -50,11 +50,16 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         }, completion: nil)
     }
     
-    func collectionViewLayout() -> UICollectionViewLayout {
+    /**
+     Subclasses override this method to create its own collection view layout.
+     
+     By default, flow layout will be using.
+     */
+    open func collectionViewLayout() -> UICollectionViewLayout {
         return UICollectionViewFlowLayout()
     }
     
-    @available(*, deprecated, message: "CollectionPage no longer support this func. Please override layout property")
+    @available(*, deprecated, message: "CollectionPage no longer support this func. Please override `collectionViewLayout` func")
     open func setupLayout() {
         layout = UICollectionViewFlowLayout()
     }
@@ -128,10 +133,16 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     
     // MARK: - Abstract for subclasses
     
+    /**
+     Subclasses have to override this method to return correct cell identifier based `CVM` type.
+     */
     open func cellIdentifier(_ cellViewModel: CVM) -> String {
         fatalError("Subclasses have to implemented this method.")
     }
     
+    /**
+     Subclasses override this method to handle cell pressed action.
+     */
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
     
     // MARK: - Collection view datasources

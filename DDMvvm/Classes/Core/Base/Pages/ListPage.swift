@@ -93,10 +93,16 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     
     // MARK: - Abstract for subclasses
     
+    /**
+     Subclasses have to override this method to return correct cell identifier based `CVM` type.
+     */
     open func cellIdentifier(_ cellViewModel: CVM) -> String {
         fatalError("Subclasses have to implement this method.")
     }
     
+    /**
+     Subclasses override this method to handle cell pressed action.
+     */
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
     
     // MARK: - Table view datasources

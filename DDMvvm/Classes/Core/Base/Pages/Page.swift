@@ -26,6 +26,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
                 cleanUp()
                 
                 _viewModel = newValue
+                updateAfterViewModelChanged()
                 viewModelChanged()
             }
         }
@@ -36,8 +37,8 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         set { viewModel = newValue as? VM }
     }
     
-    public var backButton: UIBarButtonItem?
-    public var localHud: LocalHud? {
+    public private(set) var backButton: UIBarButtonItem?
+    public private(set) var localHud: LocalHud? {
         didSet { bindLocalHud() }
     }
     
@@ -48,7 +49,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     public var enableBackButton: Bool = false {
         didSet {
             if enableBackButton {
-                backButton = DDConfigurations.backButtonFactory.create()
+                backButton = backButtonFactory().create()
                 navigationItem.leftBarButtonItem = backButton
                 backButton?.rx.bind(to: backAction, input: ())
             } else {
@@ -75,13 +76,13 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         view.backgroundColor = .white
         
         // setup default local hud
-        let localHud = DDConfigurations.localHudFactory.create()
+        let localHud = localHudFactory().create()
         view.addSubview(localHud)
         localHud.setupView()
         self.localHud = localHud
         
         initialize()
-        viewModelChanged()
+        updateAfterViewModelChanged()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -104,19 +105,67 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         viewModel?.rxViewState.accept(.didDisappear)
     }
     
+    /**
+     Subclasses override this method to create its own hud loader.
+     
+     This method allows subclasses to create custom hud loader. To create the default hud loader, use global configurations `DDConfigurations.localHudFactory`
+     */
+    open func localHudFactory() -> Factory<LocalHud> {
+        return DDConfigurations.localHudFactory
+    }
+    
+    /**
+     Subclasses override this method to create its own back button on navigation bar.
+     
+     This method allows subclasses to create custom back button. To create the default back button, use global configurations `DDConfigurations.backButtonFactory`
+     */
+    open func backButtonFactory() -> Factory<UIBarButtonItem> {
+        return DDConfigurations.backButtonFactory
+    }
+    
+    /**
+     Subclasses override this method to initialize UIs.
+     
+     This method is called in `viewDidLoad`. So try not to use `viewModel` property if you are
+     not sure about it
+     */
     open func initialize() {}
     
+    /**
+     Subclasses override this method to create data binding between view and viewModel.
+     
+     This method always happens, so subclasses should check if viewModel is nil or not. For example:
+     ```
+     guard let viewModel = viewModel else { return }
+     ```
+     */
     open func bindViewAndViewModel() {}
     
+    /**
+     Subclasses override this method to do custom actions when hud loader view is toggle (hidden/shown).
+     */
     open func localHudToggled(_ value: Bool) {}
     
+    /**
+     Subclasses override this method to remove all things related to `DisposeBag`.
+     */
     open func destroy() {
         cleanUp()
     }
     
+    /**
+     Subclasses override this method to create custom back action for back button.
+     
+     By default, this will call pop action in navigation or dismiss in modal
+     */
     open func onBack() {
         navigationService.pop()
     }
+    
+    /**
+     Subclasses override this method to do more action when `viewModel` changed.
+     */
+    open func viewModelChanged() { }
     
     private func cleanUp() {
         disposeBag = DisposeBag()
@@ -134,7 +183,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         }
     }
     
-    private func viewModelChanged() {
+    private func updateAfterViewModelChanged() {
         bindLocalHud()
         bindViewAndViewModel()
         viewModel?.react()
