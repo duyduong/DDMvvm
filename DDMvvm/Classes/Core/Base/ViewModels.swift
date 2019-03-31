@@ -61,7 +61,7 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
  A based ViewModel for ListPage. The idea for ListViewModel is that it will contain a list of CellViewModels
  By using this list, ListPage will render the cell and assign ViewModel to it respectively
  */
-open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
+open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
     
     public typealias CellViewModelElement = CVM
     
@@ -92,7 +92,25 @@ open class ListViewModel<M: Model, CVM: ICellViewModel>: ViewModel<M>, IListView
  A based ViewModel for TableCell and CollectionCell
  The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService
  */
-open class CellViewModel<M: Model>: NSObject, ICellViewModel, MutableIndexableCellViewModel {
+protocol Indexable: class {
+    
+    var indexPath: IndexPath? { get }
+    func setIndexPath(_ indexPath: IndexPath?)
+}
+
+protocol IndexableCellViewModel: Indexable {
+    
+    var indexPath: IndexPath? { get set }
+}
+
+extension IndexableCellViewModel {
+    
+    public func setIndexPath(_ indexPath: IndexPath?) {
+        self.indexPath = indexPath
+    }
+}
+
+open class CellViewModel<M: Model>: NSObject, IGenericViewModel, IndexableCellViewModel {
     
     public typealias ModelElement = M
     
@@ -108,14 +126,8 @@ open class CellViewModel<M: Model>: NSObject, ICellViewModel, MutableIndexableCe
     }
     
     /// Each cell will keep its own index path
+    /// In some cases, each cell needs to use this index to create some customizations
     public internal(set) var indexPath: IndexPath?
-    
-    /// In case cell needs update from table or collection view
-    /// This will be handy for that to request a update from cell
-    public var requestUpdateObservable: Observable<IndexPath?> {
-        return updateRequester.asObservable()
-    }
-    let updateRequester = PublishSubject<IndexPath?>()
     
     /// Bag for databindings
     public var disposeBag: DisposeBag? = DisposeBag()
@@ -130,16 +142,6 @@ open class CellViewModel<M: Model>: NSObject, ICellViewModel, MutableIndexableCe
     
     open func react() {}
     open func modelChanged() {}
-    
-    /**
-     Cell will manually call this to request an update from table or collection view
-     
-     Sometimes, the height of cell is not calculate automatically, call this to request an
-     UI update from table or collection view
-     */
-    public func requestUpdate() {
-        updateRequester.onNext(indexPath)
-    }
 }
 
 /// A usefull CellViewModel based class to support ListPage and CollectionPage that have more than one cell identifier

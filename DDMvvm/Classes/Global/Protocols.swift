@@ -9,15 +9,27 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+/// Destroyable type for handling dispose bag and destroy it
 public protocol IDestroyable: class {
     
     var disposeBag: DisposeBag? { get set }
     func destroy()
 }
 
+/// PopView type for Page to implement as a pop view
 public protocol IPopupView: class {
     
-    /// Layout this view inside the presenter page
+    /*
+     Setup popup layout
+     
+     Popview is a UIViewController base, therefore it already has a filled view in. This method allows
+     implementation to layout it customly. For example:
+     
+     ```
+     view.cornerRadius = 7
+     view.autoCenterInSuperview()
+     ```
+     */
     func popupLayout()
     
     /*
@@ -35,6 +47,7 @@ public protocol IPopupView: class {
     func hide(overlayView: UIView, completion: @escaping (() -> ()))
 }
 
+/// TransitionView type to create custom transitioning between pages
 public protocol ITransitionView: class {
     
     /**
@@ -43,11 +56,16 @@ public protocol ITransitionView: class {
     var animatorDelegate: AnimatorDelegate? { get set }
 }
 
+/// AnyView type for helping assign any viewModel to any view
 public protocol IAnyView: class {
     
+    /**
+     Any value assign to this property will be delegate to its correct viewModel type
+     */
     var anyViewModel: Any? { get set }
 }
 
+/// Base View type for the whole library
 public protocol IView: IAnyView, IDestroyable {
     
     associatedtype ViewModelElement
@@ -61,6 +79,7 @@ public protocol IView: IAnyView, IDestroyable {
 
 // MARK: - Viewmodel protocols
 
+/// Base generic viewModel type, implement Destroyable and Equatable
 public protocol IGenericViewModel: IDestroyable, Equatable {
     
     associatedtype ModelElement
@@ -71,6 +90,7 @@ public protocol IGenericViewModel: IDestroyable, Equatable {
     func react()
 }
 
+/// Base ViewModel type for Page (UIViewController), View (UIVIew)
 public protocol IViewModel: IGenericViewModel {
     
     var rxViewState: BehaviorRelay<ViewState> { get }
@@ -83,33 +103,9 @@ public protocol IViewModel: IGenericViewModel {
     var navigationService: INavigationService { get }
 }
 
-public protocol IndexableCellViewModel: class {
-    
-    var indexPath: IndexPath? { get }
-    func setIndexPath(_ indexPath: IndexPath?)
-}
-
-internal protocol MutableIndexableCellViewModel: IndexableCellViewModel {
-    
-    var indexPath: IndexPath? { get set }
-}
-
-extension MutableIndexableCellViewModel {
-    
-    public func setIndexPath(_ indexPath: IndexPath?) {
-        self.indexPath = indexPath
-    }
-}
-
-public protocol ICellViewModel: IGenericViewModel {
-    
-    var requestUpdateObservable: Observable<IndexPath?> { get }
-    func requestUpdate()
-}
-
 public protocol IListViewModel: IViewModel {
     
-    associatedtype CellViewModelElement: ICellViewModel
+    associatedtype CellViewModelElement: IGenericViewModel
     
     var itemsSource: ReactiveCollection<CellViewModelElement> { get }
     var rxSelectedItem: BehaviorRelay<CellViewModelElement?> { get }

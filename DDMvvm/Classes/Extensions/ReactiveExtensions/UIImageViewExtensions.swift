@@ -15,7 +15,7 @@ public struct NetworkImage {
     
     public private(set) var url: URL? = nil
     public private(set) var placeholder: UIImage? = nil
-    public private(set)var completion: ((DataResponse<UIImage>) -> Void)? = nil
+    public private(set) var completion: ((DataResponse<UIImage>) -> Void)? = nil
     
     public init(withURL url: URL? = nil, placeholder: UIImage? = nil, completion: ((DataResponse<UIImage>) -> Void)? = nil) {
         self.url = url
@@ -26,11 +26,12 @@ public struct NetworkImage {
 
 extension Reactive where Base: UIImageView {
     
+    /// Simple binder for `NetworkImage`
     public var networkImage: Binder<NetworkImage> {
         return networkImage()
     }
     
-    // allow UI to set completion
+    /// Optional image transition and completion that allow View to do more action after completing download image
     public func networkImage(_ imageTransition: UIImageView.ImageTransition = .crossDissolve(0.25), completion: ((DataResponse<UIImage>) -> Void)? = nil) -> Binder<NetworkImage> {
         return Binder(base) { view, image in
             if let placeholder = image.placeholder {
@@ -38,8 +39,11 @@ extension Reactive where Base: UIImageView {
             }
             
             if let url = image.url {
-                view.af_setImage(withURL: url, imageTransition: .crossDissolve(0.25), completion: { response in
+                view.af_setImage(withURL: url, imageTransition: imageTransition, completion: { response in
+                    /// callback for ViewModel to handle after completion
                     image.completion?(response)
+                    
+                    /// callback for View to handle after completion
                     completion?(response)
                 })
             }

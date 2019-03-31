@@ -48,20 +48,6 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         
         tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
-        
-        viewModel?.itemsSource.asObservable()
-            .flatMap { sectionLists -> Observable<IndexPath?> in
-                return Observable.merge(sectionLists.flatMap {
-                    $0.allElements.map { $0.requestUpdateObservable }
-                })
-            }
-            .filterNil()
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: { indexPath in
-                if let _ = self.tableView.cellForRow(at: indexPath) {
-                    self.tableView.reloadRows(at: [indexPath], with: .fade)
-                }
-            }) => disposeBag
     }
     
     open override func localHudToggled(_ value: Bool) {
@@ -135,7 +121,9 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         }
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
-        (cellViewModel as? MutableIndexableCellViewModel)?.setIndexPath(indexPath)
+        
+        // set index for each cell
+        (cellViewModel as? IndexableCellViewModel)?.setIndexPath(indexPath)
         
         let identifier = cellIdentifier(cellViewModel)
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
