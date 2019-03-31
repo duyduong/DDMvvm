@@ -161,6 +161,10 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         }
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
+        
+        // set index for each cell
+        (cellViewModel as? IndexableCellViewModel)?.setIndexPath(indexPath)
+        
         let identifier = cellIdentifier(cellViewModel)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
         if let cell = cell as? IAnyView {
