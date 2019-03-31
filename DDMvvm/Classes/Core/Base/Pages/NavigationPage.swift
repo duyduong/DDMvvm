@@ -12,6 +12,9 @@ open class NavigationPage: UINavigationController, ITransitionView, IDestroyable
     
     public var animatorDelegate: AnimatorDelegate?
     
+    /**
+     Request to update status bar content color
+     */
     public var statusBarStyle: UIStatusBarStyle = .lightContent {
         didSet { setNeedsStatusBarAppearanceUpdate() }
     }

@@ -25,7 +25,7 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
     }
     
     override func setup() {
-        setupLayout()
+        layout = collectionViewLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
@@ -35,6 +35,21 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
         super.setup()
     }
     
+    private func setupCollectionView() {
+        layout = collectionViewLayout()
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    }
+    
+    /**
+     Subclasses override this method to create its own collection view layout.
+     
+     By default, flow layout will be using.
+     */
+    open func collectionViewLayout() -> UICollectionViewLayout {
+        return UICollectionViewFlowLayout()
+    }
+    
+    @available(*, deprecated, message: "CollectionPage no longer support this func. Please override `collectionViewLayout` func")
     open func setupLayout() {
         layout = UICollectionViewFlowLayout()
     }
@@ -49,8 +64,10 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
     }
     
     open override func bindViewAndViewModel() {
-        collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
+        updateCounter()
+        collectionView.reloadData()
         
+        collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
     }
     
@@ -91,17 +108,27 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
             }
             
             // update counter
-            counter.removeAll()
-            viewModel?.itemsSource.forEach { counter[$0] = $1.count }
+            updateCounter()
         }, completion: nil)
+    }
+    
+    private func updateCounter() {
+        counter.removeAll()
+        viewModel?.itemsSource.forEach { counter[$0] = $1.count }
     }
     
     // MARK: - Abstract for subclasses
     
+    /**
+     Subclasses have to override this method to return correct cell identifier based `CVM` type.
+     */
     open func cellIdentifier(_ cellViewModel: CVM) -> String {
         fatalError("Subclasses have to implemented this method.")
     }
     
+    /**
+     Subclasses override this method to handle cell pressed action.
+     */
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
     
     // MARK: - Collection view datasources

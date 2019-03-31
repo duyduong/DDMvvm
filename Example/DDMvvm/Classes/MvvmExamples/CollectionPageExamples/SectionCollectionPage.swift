@@ -15,7 +15,7 @@ import DDMvvm
  Even the cells, it reused SectionTextCellViewModel and SectionImageCellViewModel
  This should be the characteristic of ViewModel, decoupling with View
  */
-class SectionCollectionPage: CollectionPage<TestPageViewModel> {
+class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
 
     let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     

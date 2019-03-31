@@ -11,6 +11,20 @@ import RxCocoa
 import Action
 import PureLayout
 
+extension Reactive where Base: IView {
+    
+    public typealias ViewModelElement = Base.ViewModelElement
+    
+    /**
+     Custom binder for viewModel, can be any type
+     
+     This could be handy for binding a sub viewModel
+     */
+    public var viewModel: Binder<ViewModelElement?> {
+        return Binder(base) { $0.viewModel = $1 }
+    }
+}
+
 open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
     public var disposeBag: DisposeBag? = DisposeBag()
@@ -27,7 +41,6 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
                 
                 _viewModel = newValue
                 updateAfterViewModelChanged()
-                viewModelChanged()
             }
         }
     }
@@ -177,7 +190,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         hudBag = DisposeBag()
         
         if let viewModel = viewModel, let localHud = localHud {
-            let shared = viewModel.rxShowInlineLoader.distinctUntilChanged().share()
+            let shared = viewModel.rxShowLocalHud.distinctUntilChanged().share()
             shared ~> localHud.rx.show => hudBag
             shared.subscribe(onNext: localHudToggled) => hudBag
         }
@@ -187,6 +200,8 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         bindLocalHud()
         bindViewAndViewModel()
         viewModel?.react()
+        
+        viewModelChanged()
     }
 }
 

@@ -205,6 +205,7 @@ class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
         case 3:
             /*
              Register for JsonService injection
+             
              For real project, this should be call on AppDelegate. For now, as an example project,
              I may want to use different base url for different examples
              */
@@ -272,7 +273,7 @@ class CPExampleMenuPageViewModel: ExampleMenuPageViewModel {
             page = SimpleCollectionPage(viewModel: vm)
             
         case 1:
-            let vm = TestPageViewModel(model: cellViewModel.model)
+            let vm = SectionListPageViewModel(model: cellViewModel.model)
             page = SectionCollectionPage(viewModel: vm)
             
         default: ()

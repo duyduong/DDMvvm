@@ -61,14 +61,16 @@ class SectionImageCell: TableCell<SectionImageCellViewModel> {
         netImageView.contentMode = .scaleAspectFill
         netImageView.clipsToBounds = true
         contentView.addSubview(netImageView)
-        netImageView.autoMatch(.height, to: .width, of: netImageView, withMultiplier: 9/16.0)
+//        netImageView.autoMatch(.height, to: .width, of: netImageView, withMultiplier: 9/16.0)
         netImageView.autoPinEdgesToSuperviewEdges(with: .symmetric(horizontal: 15, vertical: 10))
     }
     
     override func bindViewAndViewModel() {
         guard let viewModel = viewModel else { return }
         
-        viewModel.rxImage ~> netImageView.rx.networkImage => disposeBag
+        viewModel.rxImage ~> netImageView.rx.networkImage(completion: { (response) in
+            viewModel.requestUpdate()
+        }) => disposeBag
     }
 }
 

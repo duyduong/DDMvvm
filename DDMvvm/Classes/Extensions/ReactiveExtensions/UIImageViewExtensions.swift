@@ -31,7 +31,7 @@ extension Reactive where Base: UIImageView {
     }
     
     // allow UI to set completion
-    public func networkImage(_ imageTransition: UIImageView.ImageTransition = .crossDissolve(0.25), _ completion: ((DataResponse<UIImage>) -> Void)? = nil) -> Binder<NetworkImage> {
+    public func networkImage(_ imageTransition: UIImageView.ImageTransition = .crossDissolve(0.25), completion: ((DataResponse<UIImage>) -> Void)? = nil) -> Binder<NetworkImage> {
         return Binder(base) { view, image in
             if let placeholder = image.placeholder {
                 view.image = placeholder

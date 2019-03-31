@@ -43,6 +43,7 @@ public struct Factory<T> {
 
 /*
  Global configurations
+ 
  For some use cases, we have to setup these configurations to make our application work
  correctly
  */
