@@ -16,20 +16,18 @@ class SectionTextCell: TableCell<SectionTextCellViewModel> {
     let descLbl = UILabel()
     
     override func initialize() {
-        let paddingView = UIView()
-        contentView.addSubview(paddingView)
-        paddingView.autoPinEdgesToSuperviewEdges(with: .all(5))
-        
         titleLbl.numberOfLines = 0
         titleLbl.font = Font.system.bold(withSize: 17)
-        paddingView.addSubview(titleLbl)
-        titleLbl.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         
         descLbl.numberOfLines = 0
         descLbl.font = Font.system.normal(withSize: 15)
-        paddingView.addSubview(descLbl)
-        descLbl.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
-        descLbl.autoPinEdge(.top, to: .bottom, of: titleLbl)
+        
+        let layout = StackLayout().direction(.vertical).children([
+            titleLbl,
+            descLbl
+        ])
+        contentView.addSubview(layout)
+        layout.autoPinEdgesToSuperviewEdges(with: .all(5))
     }
     
     override func bindViewAndViewModel() {

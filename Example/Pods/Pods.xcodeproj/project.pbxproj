@@ -26,6 +26,9 @@
 		0B97CADB7A032EAB712510751B737673 /* UIImageView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BF206EB06166ECAF80BF1519AD9858 /* UIImageView+Rx.swift */; };
 		0B984FE0C25786AFEC2E60F21DD95A54 /* SubscriptionDisposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3414A859AB37DD56C4C64BB07DF2387 /* SubscriptionDisposable.swift */; };
 		0D4F6C5CF0B7F23B12E5EC51F598B537 /* Zip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC9D432790AD266C9D794BAAC1E3B8 /* Zip.swift */; };
+		0E908B6A227FDA9A00312AB9 /* StackLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E908B69227FDA9A00312AB9 /* StackLayout.swift */; };
+		0E908B6C227FE62700312AB9 /* ScrollLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E908B6B227FE62700312AB9 /* ScrollLayout.swift */; };
+		0E908B6E227FF3D900312AB9 /* AbsoluteLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E908B6D227FF3D900312AB9 /* AbsoluteLayout.swift */; };
 		0EA2B9851FE17736950C5E497EBA09F5 /* Observable+Bind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53426C0ED82D1A9479CAF75D34FB96 /* Observable+Bind.swift */; };
 		0F3CEBBD0E52283C4A62EB35CAE56D89 /* RxPickerViewDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B402970379ECA201AEA8CE1D2435C3 /* RxPickerViewDataSourceType.swift */; };
 		0F8B4EA81592762FCCB3E33C6BA34853 /* _RXObjCRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = C10EEE97238EE5F68B64EB2E88FDB7DA /* _RXObjCRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -602,6 +605,9 @@
 		0CFE421055FC54C745429DD2F9DF1C31 /* Binder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Binder.swift; path = RxCocoa/Common/Binder.swift; sourceTree = "<group>"; };
 		0D3199A49A56A988BC5B94947AFD3D6B /* ToArray.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToArray.swift; path = RxSwift/Observables/ToArray.swift; sourceTree = "<group>"; };
 		0DC7BDFE8D2BF6D517BA6640277B2221 /* Action-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Action-umbrella.h"; sourceTree = "<group>"; };
+		0E908B69227FDA9A00312AB9 /* StackLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackLayout.swift; sourceTree = "<group>"; };
+		0E908B6B227FE62700312AB9 /* ScrollLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollLayout.swift; sourceTree = "<group>"; };
+		0E908B6D227FF3D900312AB9 /* AbsoluteLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsoluteLayout.swift; sourceTree = "<group>"; };
 		0F36220420BEFF5B498C416038907105 /* MapError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MapError.swift; path = Sources/MapError.swift; sourceTree = "<group>"; };
 		124AFAC84D823C9D3BE54B8D530C41B0 /* AsyncSubject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AsyncSubject.swift; path = RxSwift/Subjects/AsyncSubject.swift; sourceTree = "<group>"; };
 		1287C78FB59FAAB13B4638C7AC8ED839 /* UISlider+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UISlider+Rx.swift"; path = "RxCocoa/iOS/UISlider+Rx.swift"; sourceTree = "<group>"; };
@@ -1176,6 +1182,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		0E908B68227FDA8700312AB9 /* Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				0E908B69227FDA9A00312AB9 /* StackLayout.swift */,
+				0E908B6B227FE62700312AB9 /* ScrollLayout.swift */,
+				0E908B6D227FF3D900312AB9 /* AbsoluteLayout.swift */,
+			);
+			path = Layouts;
+			sourceTree = "<group>";
+		};
 		20B3970935F631E5546C471685980668 /* PureLayout */ = {
 			isa = PBXGroup;
 			children = (
@@ -1215,6 +1231,7 @@
 			children = (
 				2EDB6677A8B2B678CC1715AD94DF2CBC /* Base */,
 				EFAD45A2A20E13CE771422137602BE14 /* Controls */,
+				0E908B68227FDA8700312AB9 /* Layouts */,
 			);
 			name = Core;
 			path = DDMvvm/Classes/Core;
@@ -2257,6 +2274,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
@@ -2348,6 +2366,7 @@
 				B07E9DB55CACD89AB40823E22B57404D /* UIBarButtonItemExtensions.swift in Sources */,
 				C62D1F637D4289EFD9EF68640066FF6A /* UIColorExtensions.swift in Sources */,
 				4E16D2642185448100B4F89F /* ListView.swift in Sources */,
+				0E908B6C227FE62700312AB9 /* ScrollLayout.swift in Sources */,
 				9F5E62201175BDFEA24E8A94CC8F156E /* UIControlExtensions.swift in Sources */,
 				C2965F786480FACD8FBDE3DF23515E25 /* UIEdgeInsetsExtensions.swift in Sources */,
 				5675023E71541E04904455E061A2CA0B /* UIGestureRecognizerExtensions.swift in Sources */,
@@ -2358,6 +2377,8 @@
 				EE3CFE251909D452605A46E0CAD7A9CD /* UIScrollViewExtensions.swift in Sources */,
 				63FEFBDC52FB9E7ADDD112904B789D94 /* UISwitchExtensions.swift in Sources */,
 				090196E9A725769635A0B493BF0DC210 /* UITabBarItemExtensions.swift in Sources */,
+				0E908B6A227FDA9A00312AB9 /* StackLayout.swift in Sources */,
+				0E908B6E227FF3D900312AB9 /* AbsoluteLayout.swift in Sources */,
 				4B4DF40EEFE83552720E92153B69E5A4 /* UITableViewCellExtensions.swift in Sources */,
 				70C79C2FD395F020653A5B234FC8F236 /* UIViewControllerExtensions.swift in Sources */,
 				8FBDCC1652DA9B376419629B81C424E5 /* UIViewExntesions.swift in Sources */,

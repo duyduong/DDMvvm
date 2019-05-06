@@ -23,6 +23,8 @@ public class PresenterPage: UIViewController, IDestroyable {
     private let shouldDismissOnTapOutside: Bool
     private let overlayColor: UIColor
     
+    private var isShown = false
+    
     private lazy var tapAction: Action<Void, Void> = {
         return Action() {
             if self.shouldDismissOnTapOutside {
@@ -124,6 +126,9 @@ public class PresenterPage: UIViewController, IDestroyable {
     // MARK: - Toggle content view
     
     public func show() {
+        if isShown { return }
+        isShown = true
+        
         if let popupView = contentPage as? IPopupView {
             popupView.show(overlayView: overlayView)
         } else {

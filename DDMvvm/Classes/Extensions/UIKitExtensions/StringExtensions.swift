@@ -27,7 +27,6 @@ extension String {
     public func trim() -> String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
     }
-    
 }
 
 

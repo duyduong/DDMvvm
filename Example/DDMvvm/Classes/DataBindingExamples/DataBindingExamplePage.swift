@@ -14,7 +14,7 @@ import DDMvvm
 
 class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
 
-    let scrollView = UIScrollView()
+    let scrollView = ScrollLayout()
     let containerView = UIView()
     
     let helloLbl = UILabel()
@@ -25,34 +25,18 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
     override func initialize() {
         enableBackButton = true
         
-        scrollView.alwaysBounceVertical = true
         view.addSubview(scrollView)
         scrollView.autoPin(toTopLayoutOf: self)
         scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         
-        scrollView.addSubview(containerView)
-        containerView.autoPinEdgesToSuperviewEdges()
-        containerView.autoMatch(.width, to: .width, of: scrollView)
-        
         helloLbl.font = Font.system.bold(withSize: 18)
-        containerView.addSubview(helloLbl)
-        helloLbl.autoPinEdge(toSuperviewEdge: .top, withInset: 30)
-        helloLbl.autoAlignAxis(toSuperviewAxis: .vertical)
         
         emailTxt.borderStyle = .roundedRect
         emailTxt.placeholder = "Enter your name"
-        containerView.addSubview(emailTxt)
-        emailTxt.autoPinEdge(.top, to: .bottom, of: helloLbl, withOffset: 30)
-        emailTxt.autoAlignAxis(toSuperviewAxis: .vertical)
-        emailTxt.autoMatch(.width, to: .width, of: view, withMultiplier: 0.8)
         
         passTxt.borderStyle = .roundedRect
         passTxt.placeholder = "Enter your pass"
         passTxt.isSecureTextEntry = true
-        containerView.addSubview(passTxt)
-        passTxt.autoMatch(.width, to: .width, of: emailTxt)
-        passTxt.autoPinEdge(.top, to: .bottom, of: emailTxt, withOffset: 20)
-        passTxt.autoAlignAxis(toSuperviewAxis: .vertical)
         
         submitBtn.setTitle("Submit", for: .normal)
         submitBtn.setTitleColor(.white, for: .normal)
@@ -61,10 +45,21 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
         submitBtn.setBackgroundImage(UIImage.from(color: .gray), for: .disabled)
         submitBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         submitBtn.cornerRadius = 5
-        containerView.addSubview(submitBtn)
-        submitBtn.autoConstrainAttribute(.trailing, to: .trailing, of: passTxt)
-        submitBtn.autoPinEdge(.top, to: .bottom, of: passTxt, withOffset: 20)
-        submitBtn.autoPinEdge(toSuperviewEdge: .bottom, withInset: 50)
+
+        scrollView.paddings = .all(20)
+        scrollView.appendChildren([
+            StackSpaceItem(height: 30),
+            helloLbl,
+            StackSpaceItem(height: 30),
+            emailTxt,
+            StackSpaceItem(height: 20),
+            passTxt,
+            StackSpaceItem(height: 20),
+            StackViewItem(view: submitBtn) { view in
+                view.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .leading)
+            },
+            StackSpaceItem(height: 50),
+        ])
     }
     
     override func bindViewAndViewModel() {

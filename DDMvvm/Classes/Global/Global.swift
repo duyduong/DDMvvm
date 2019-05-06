@@ -64,7 +64,13 @@ public struct DDConfigurations {
             return nil
         }
         
-        var currPage: UIViewController? = rootPage.presentedViewController ?? rootPage
+        var currPage: UIViewController?
+        if let drawerPage = rootPage as? DrawerPage {
+            currPage = drawerPage.detailPage
+        } else {
+            currPage = rootPage.presentedViewController ?? rootPage
+        }
+        
         while currPage?.presentedViewController != nil {
             currPage = currPage?.presentedViewController
         }

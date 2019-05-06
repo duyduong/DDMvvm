@@ -72,7 +72,7 @@ class WrapperPage: NavigationPage, IPopupView {
 
 class ContactEditPage: Page<ContactEditPageViewModel> {
     
-    let scrollView = UIScrollView()
+    let scrollView = ScrollLayout()
     let containerView = UIView()
     
     let nameTxt = UITextField()
@@ -85,43 +85,21 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         
         enableBackButton = true
         
-        scrollView.alwaysBounceVertical = true
         view.addSubview(scrollView)
         scrollView.autoPin(toTopLayoutOf: self)
         scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         
-        scrollView.addSubview(containerView)
-        containerView.autoPinEdgesToSuperviewEdges()
-        containerView.autoMatch(.width, to: .width, of: scrollView)
-        
         nameTxt.borderStyle = .roundedRect
         nameTxt.placeholder = "Enter your name"
-        containerView.addSubview(nameTxt)
-        nameTxt.autoPinEdge(toSuperviewEdge: .top, withInset: 40)
-        nameTxt.autoAlignAxis(toSuperviewAxis: .vertical)
-        nameTxt.autoMatch(.width, to: .width, of: view, withMultiplier: 0.8)
         
         phoneTxt.borderStyle = .roundedRect
         phoneTxt.placeholder = "Enter your phone number"
-        containerView.addSubview(phoneTxt)
-        phoneTxt.autoMatch(.width, to: .width, of: nameTxt)
-        phoneTxt.autoPinEdge(.top, to: .bottom, of: nameTxt, withOffset: 20)
-        phoneTxt.autoAlignAxis(toSuperviewAxis: .vertical)
-        
-        let buttonView = UIView()
-        containerView.addSubview(buttonView)
-        buttonView.autoAlignAxis(toSuperviewAxis: .vertical)
-        buttonView.autoMatch(.width, to: .width, of: phoneTxt)
-        buttonView.autoPinEdge(.top, to: .bottom, of: phoneTxt, withOffset: 20)
-        buttonView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 50)
         
         cancelBtn.setTitle("Cancel", for: .normal)
         cancelBtn.setTitleColor(.white, for: .normal)
         cancelBtn.setBackgroundImage(UIImage.from(color: .red), for: .normal)
         cancelBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         cancelBtn.cornerRadius = 5
-        buttonView.addSubview(cancelBtn)
-        cancelBtn.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .trailing)
         
         submitBtn.setTitle("Save", for: .normal)
         submitBtn.setTitleColor(.white, for: .normal)
@@ -130,10 +108,31 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         submitBtn.setBackgroundImage(UIImage.from(color: .gray), for: .disabled)
         submitBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         submitBtn.cornerRadius = 5
-        buttonView.addSubview(submitBtn)
-        submitBtn.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .leading)
-        submitBtn.autoPinEdge(.leading, to: .trailing, of: cancelBtn, withOffset: 10)
-        submitBtn.autoMatch(.width, to: .width, of: cancelBtn)
+        
+        let buttonLayout = StackLayout().justifyContent(.fillEqually).spacing(10).children([
+            cancelBtn,
+            submitBtn
+        ])
+        
+        scrollView.paddings = .all(20)
+        scrollView.appendChildren([
+            StackSpaceItem(height: 40),
+            nameTxt,
+            StackSpaceItem(height: 20),
+            phoneTxt,
+            StackSpaceItem(height: 40),
+            buttonLayout
+        ])
+        
+        /*
+         Adding custom space between items can be replaced with belows
+         
+        scrollView.appendChildren([
+            StackViewItem(view: nameTxt, attribute: .margin(insets: .only(top: 40))),
+            StackViewItem(view: phoneTxt, attribute: .margin(insets: .only(top: 20))),
+            StackViewItem(view: buttonLayout, attribute: .margin(insets: .only(top: 40))),
+        ])
+         */
     }
     
     override func bindViewAndViewModel() {

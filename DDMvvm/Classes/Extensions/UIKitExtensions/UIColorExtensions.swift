@@ -26,13 +26,16 @@ extension UIColor {
     }
     
     public convenience init?(hexString: String) {
-        let hexString = hexString.replacingOccurrences(of: "#", with: "")
+        var hexString = hexString.replacingOccurrences(of: "#", with: "")
+        if hexString.count == 3 {
+            hexString += hexString
+        }
         guard let hex = hexString.toHex() else { return nil }
         self.init(hex: hex)
     }
     
     public static func fromHex(_ hexString: String) -> UIColor {
-        return UIColor(hexString: hexString) ?? UIColor.clear
+        return UIColor(hexString: hexString) ?? .clear
     }
 }
 

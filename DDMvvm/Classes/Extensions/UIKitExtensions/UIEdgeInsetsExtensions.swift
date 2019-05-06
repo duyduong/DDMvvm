@@ -27,7 +27,7 @@ extension UIEdgeInsets {
         return UIEdgeInsets(top: topBottom, left: leftRight, bottom: topBottom, right: leftRight)
     }
     
-    public static func symmetric(horizontal: CGFloat, vertical: CGFloat) -> UIEdgeInsets {
+    public static func symmetric(horizontal: CGFloat = 0, vertical: CGFloat = 0) -> UIEdgeInsets {
         return UIEdgeInsets(top: vertical, left: horizontal, bottom: vertical, right: horizontal)
     }
     

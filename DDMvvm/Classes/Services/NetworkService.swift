@@ -22,7 +22,7 @@ extension String: ParameterEncoding {
 /// Base network service, using SessionManager from Alamofire
 open class NetworkService {
     
-    let sessionManager: SessionManager
+    public let sessionManager: SessionManager
     private let sessionConfiguration: URLSessionConfiguration = .default
     
     public var timeout: TimeInterval = 30 {

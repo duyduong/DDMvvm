@@ -17,32 +17,26 @@ class ContactCell: TableCell<ContactCellViewModel> {
     let phoneLbl = UILabel()
     
     override func initialize() {
-        let paddingView = UIView()
-        contentView.addSubview(paddingView)
-        paddingView.autoPinEdgesToSuperviewEdges(with: .all(5))
-        
         avatarIv.image = UIImage(named: "default-contact")
-        paddingView.addSubview(avatarIv)
         avatarIv.autoSetDimensions(to: CGSize(width: 64, height: 64))
-        avatarIv.autoPinEdge(toSuperviewEdge: .top)
-        avatarIv.autoPinEdge(toSuperviewEdge: .leading)
-        avatarIv.autoPinEdge(toSuperviewEdge: .bottom)
-        
-        let infoView = UIView()
-        paddingView.addSubview(infoView)
-        infoView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .leading)
-        infoView.autoPinEdge(.leading, to: .trailing, of: avatarIv, withOffset: 8)
         
         nameLbl.numberOfLines = 0
         nameLbl.font = Font.system.bold(withSize: 17)
-        infoView.addSubview(nameLbl)
-        nameLbl.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         
         phoneLbl.numberOfLines = 0
         phoneLbl.font = Font.system.normal(withSize: 15)
-        infoView.addSubview(phoneLbl)
-        phoneLbl.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
-        phoneLbl.autoPinEdge(.top, to: .bottom, of: nameLbl)
+        
+        let infoLayout = StackLayout().direction(.vertical).children([
+            nameLbl,
+            phoneLbl
+        ])
+        
+        let layout = StackLayout().spacing(8).alignItems(.center).children([
+            avatarIv,
+            infoLayout
+        ])
+        contentView.addSubview(layout)
+        layout.autoPinEdgesToSuperviewEdges(with: .all(5))
     }
     
     override func bindViewAndViewModel() {

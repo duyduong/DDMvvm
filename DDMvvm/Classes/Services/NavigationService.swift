@@ -13,9 +13,10 @@ public enum PushType {
 }
 
 public enum PopType {
-    case auto, pop, dismiss, dismissPopup
+    case auto, pop, popToRoot, popTo(index: Int), dismiss, dismissPopup
 }
 
+/// Popup options, allow to change overlay color and enable dimiss when tap outside the popup
 public struct PopupOptions {
     
     public let shouldDismissOnTapOutside: Bool
@@ -31,6 +32,7 @@ public struct PopupOptions {
     }
 }
 
+/// Push options for pushing new page, including push, modally or popup
 public struct PushOptions {
     
     public let pushType: PushType
@@ -47,6 +49,10 @@ public struct PushOptions {
         return PushOptions()
     }
     
+    public static func pushType(_ type: PushType) -> PushOptions {
+        return PushOptions(pushType: type)
+    }
+    
     public static func pushWithAnimator(_ animator: Animator) -> PushOptions {
         return PushOptions(pushType: .push, animator: animator)
     }
@@ -56,6 +62,7 @@ public struct PushOptions {
     }
 }
 
+/// Pop options for poping/dismissing current active page
 public struct PopOptions {
     
     public let popType: PopType
@@ -68,6 +75,10 @@ public struct PopOptions {
     
     public static var defaultOptions: PopOptions {
         return PopOptions()
+    }
+    
+    public static func popType(_ type: PopType) -> PopOptions {
+        return PopOptions(popType: type)
     }
 }
 
@@ -162,6 +173,16 @@ public class NavigationService: INavigationService {
             
         case .pop:
             topPage.navigationController?.popViewController(animated: options.animated) { destroyPageBlock($0) }
+            
+        case .popToRoot:
+            topPage.navigationController?.popToRootViewController(animated: options.animated) { pages in
+                pages?.forEach { destroyPageBlock($0) }
+            }
+            
+        case .popTo(let index):
+            topPage.navigationController?.popToViewController(at: index, animated: options.animated) { pages in
+                pages?.forEach { destroyPageBlock($0) }
+            }
             
         case .dismiss:
             handleDismiss()
