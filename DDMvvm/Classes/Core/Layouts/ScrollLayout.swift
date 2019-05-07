@@ -71,6 +71,7 @@ public extension ScrollLayout {
     
     /// Append a child into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
+    @discardableResult
     func appendChild(_ child: Any) -> ScrollLayout {
         layout.children([child])
         return self
@@ -78,18 +79,21 @@ public extension ScrollLayout {
     
     /// Append children into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
+    @discardableResult
     func appendChildren(_ children: [Any]) -> ScrollLayout {
         layout.children(children)
         return self
     }
     
     /// Insert a specific child at index
+    @discardableResult
     func insertChild(_ child: Any, at index: Int) -> ScrollLayout {
         layout.child(child, at: index)
         return self
     }
     
     /// Spacing between items
+    @discardableResult
     func interitemSpacing(_ value: CGFloat) -> ScrollLayout {
         layout.spacing(value)
         return self
