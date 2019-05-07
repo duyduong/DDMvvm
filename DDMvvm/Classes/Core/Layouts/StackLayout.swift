@@ -76,14 +76,14 @@ public extension StackLayout {
     
     /// Define how stack layout aligns its children
     @discardableResult
-    func alignItems(_ alignment: UIStackView.Alignment) -> StackLayout {
+    func alignItems(_ alignment: Alignment) -> StackLayout {
         self.alignment = alignment
         return self
     }
     
     /// Define how stack layout distributes its children
     @discardableResult
-    func justifyContent(_ distribution: UIStackView.Distribution) -> StackLayout {
+    func justifyContent(_ distribution: Distribution) -> StackLayout {
         self.distribution = distribution
         return self
     }
@@ -91,23 +91,44 @@ public extension StackLayout {
     /// Spacing between stack items
     @discardableResult
     func spacing(_ value: CGFloat) -> StackLayout {
-        self.spacing = value
+        spacing = value
         return self
     }
     
     /// Add children into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
     @discardableResult
-    func children(_ items: [Any]) -> StackLayout {
-        items.forEach { item in
-            if let stackItem = item as? StackItem {
-                let view = stackItem.build(with: self)
-                self.addArrangedSubview(view)
-            } else if let view = item as? UIView {
-                self.addArrangedSubview(view)
+    func children(_ children: [Any]) -> StackLayout {
+        children.forEach { child in
+            if let view = getView(for: child) {
+                addArrangedSubview(view)
             }
         }
         return self
+    }
+    
+    /// Insert a child at specific index, accept only UIView or StackItem type,
+    /// otherwise will be ignore
+    @discardableResult
+    func child(_ child: Any, at index: Int) -> StackLayout {
+        guard index >= 0 && index < arrangedSubviews.count else { return self }
+        
+        if let view = getView(for: child) {
+            insertArrangedSubview(view, at: index)
+        }
+        
+        return self
+    }
+    
+    /// Get the view for a child, only accept UIView or StackItem type
+    private func getView(for child: Any) -> UIView? {
+        if let stackItem = child as? StackItem {
+            return stackItem.build(with: self)
+        } else if let view = child as? UIView {
+            return view
+        }
+        
+        return nil
     }
 }
 
@@ -137,9 +158,26 @@ public protocol StackItem {
 public struct StackViewItem: StackItem {
     
     public enum Attribute {
+        @available(*, deprecated, renamed: "fill")
         case margin(insets: UIEdgeInsets)
+        
+        @available(*, deprecated, message: "Pre-condition for centerX is to have a fixed width. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerY")
         case centerX
+        
+        @available(*, deprecated, message: "Pre-condition for centerY is to have a fixed height. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerY")
         case centerY
+        
+        /// Align left with top, left, bottom insets
+        case leading(insets: UIEdgeInsets)
+        
+        /// Align right with top, right, bottom insets
+        case trailing(insets: UIEdgeInsets)
+        
+        /// Center the view
+        case center(insets: UIEdgeInsets)
+        
+        /// Fill the content with insets
+        case fill(insets: UIEdgeInsets)
     }
     
     private let wrapperView = UIView()
@@ -157,17 +195,30 @@ public struct StackViewItem: StackItem {
     public init(view: UIView, attribute: Attribute) {
         self.init(view: view) { (view) in
             switch attribute {
-            case .centerX:
-                view.autoAlignAxis(toSuperviewAxis: .vertical)
-                view.autoPinEdge(toSuperviewEdge: .top)
-                view.autoPinEdge(toSuperviewEdge: .bottom)
+            case .centerX, .centerY:
+                view.autoCenterInSuperview()
+                view.autoPinEdge(toSuperviewEdge: .top, withInset: 0, relation: .greaterThanOrEqual)
+                view.autoPinEdge(toSuperviewEdge: .leading, withInset: 0, relation: .greaterThanOrEqual)
+                view.autoPinEdge(toSuperviewEdge: .bottom, withInset: 0, relation: .greaterThanOrEqual)
+                view.autoPinEdge(toSuperviewEdge: .right, withInset: 0, relation: .greaterThanOrEqual)
                 
-            case .centerY:
-                view.autoAlignAxis(toSuperviewAxis: .horizontal)
-                view.autoPinEdge(toSuperviewEdge: .leading)
-                view.autoPinEdge(toSuperviewEdge: .trailing)
+            case .leading(let insets):
+                view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .trailing)
+                
+            case .trailing(let insets):
+                view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .leading)
+                
+            case .center(let insets):
+                view.autoCenterInSuperview()
+                view.autoPinEdge(toSuperviewEdge: .top, withInset: insets.top, relation: .greaterThanOrEqual)
+                view.autoPinEdge(toSuperviewEdge: .leading, withInset: insets.left, relation: .greaterThanOrEqual)
+                view.autoPinEdge(toSuperviewEdge: .bottom, withInset: insets.bottom, relation: .greaterThanOrEqual)
+                view.autoPinEdge(toSuperviewEdge: .right, withInset: insets.right, relation: .greaterThanOrEqual)
                 
             case .margin(let insets):
+                view.autoPinEdgesToSuperviewEdges(with: insets)
+                
+            case .fill(let insets):
                 view.autoPinEdgesToSuperviewEdges(with: insets)
             }
         }

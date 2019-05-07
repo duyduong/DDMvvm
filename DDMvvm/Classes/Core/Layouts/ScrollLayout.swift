@@ -23,6 +23,11 @@ public class ScrollLayout: UIScrollView {
         didSet { updatePaddings() }
     }
     
+    /// List of subviews inside stack layout
+    public var children: [UIView] {
+        return layout.arrangedSubviews
+    }
+    
     public init(axis: NSLayoutConstraint.Axis = .vertical) {
         layout.direction(axis)
         super.init(frame: .zero)
@@ -60,16 +65,33 @@ public class ScrollLayout: UIScrollView {
         bottomConstraint.constant = -paddings.bottom
         rightConstraint.constant = -paddings.right
     }
+}
+
+public extension ScrollLayout {
     
     /// Append a child into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
-    public func appendChild(_ child: Any) {
+    func appendChild(_ child: Any) -> ScrollLayout {
         layout.children([child])
+        return self
     }
     
     /// Append children into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
-    public func appendChildren(_ children: [Any]) {
+    func appendChildren(_ children: [Any]) -> ScrollLayout {
         layout.children(children)
+        return self
+    }
+    
+    /// Insert a specific child at index
+    func insertChild(_ child: Any, at index: Int) -> ScrollLayout {
+        layout.child(child, at: index)
+        return self
+    }
+    
+    /// Spacing between items
+    func interitemSpacing(_ value: CGFloat) -> ScrollLayout {
+        layout.spacing(value)
+        return self
     }
 }
