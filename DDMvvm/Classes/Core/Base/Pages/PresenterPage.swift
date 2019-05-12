@@ -10,6 +10,9 @@ import UIKit
 import RxSwift
 import Action
 
+/*
+ PresenterPage used for present a popup
+ */
 public class PresenterPage: UIViewController, IDestroyable {
     
     private let contentPage: UIViewController

@@ -58,7 +58,9 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
 }
 
 /**
- A based ViewModel for ListPage. The idea for ListViewModel is that it will contain a list of CellViewModels
+ A based ViewModel for ListPage.
+ 
+ The idea for ListViewModel is that it will contain a list of CellViewModels
  By using this list, ListPage will render the cell and assign ViewModel to it respectively
  */
 open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
@@ -88,28 +90,27 @@ open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListV
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
 }
 
-/**
- A based ViewModel for TableCell and CollectionCell
- The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService
- */
 protocol Indexable: class {
-    
     var indexPath: IndexPath? { get }
     func setIndexPath(_ indexPath: IndexPath?)
 }
 
 protocol IndexableCellViewModel: Indexable {
-    
     var indexPath: IndexPath? { get set }
 }
 
 extension IndexableCellViewModel {
-    
     public func setIndexPath(_ indexPath: IndexPath?) {
         self.indexPath = indexPath
     }
 }
 
+/**
+ A based ViewModel for TableCell and CollectionCell
+ 
+ The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService. Also CellViewModel
+ contains its own index
+ */
 open class CellViewModel<M: Model>: NSObject, IGenericViewModel, IndexableCellViewModel {
     
     public typealias ModelElement = M

@@ -33,7 +33,6 @@ open class NetworkService {
     var defaultHeaders: HTTPHeaders = [:]
     
     public init(baseUrl: String) {
-        assert(!baseUrl.isEmpty, "baseUrl should not be empty.")
         self.baseUrl = baseUrl
         
         sessionConfiguration.timeoutIntervalForRequest = timeout

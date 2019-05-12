@@ -49,16 +49,20 @@ public struct PushOptions {
         return PushOptions()
     }
     
-    public static func pushType(_ type: PushType) -> PushOptions {
-        return PushOptions(pushType: type)
+    public static var auto: PushOptions {
+        return PushOptions(pushType: .auto)
     }
     
-    public static func pushWithAnimator(_ animator: Animator) -> PushOptions {
+    public static func push(with animator: Animator? = nil) -> PushOptions {
         return PushOptions(pushType: .push, animator: animator)
     }
     
-    public static func modalWithAnimator(_ animator: Animator, presentationStyle: UIModalPresentationStyle = .custom) -> PushOptions {
+    public static func modal(presentationStyle: UIModalPresentationStyle = .currentContext, animator: Animator? = nil) -> PushOptions {
         return PushOptions(pushType: .modally(presentationStyle), animator: animator)
+    }
+    
+    public static func popup(_ options: PopupOptions = .defaultOptions) -> PushOptions {
+        return PushOptions(pushType: .popup(options))
     }
 }
 
@@ -77,8 +81,28 @@ public struct PopOptions {
         return PopOptions()
     }
     
-    public static func popType(_ type: PopType) -> PopOptions {
-        return PopOptions(popType: type)
+    public static var auto: PopOptions {
+        return PopOptions(popType: .auto)
+    }
+    
+    public static var pop: PopOptions {
+        return PopOptions(popType: .pop)
+    }
+    
+    public static var popToRoot: PopOptions {
+        return PopOptions(popType: .popToRoot)
+    }
+    
+    public static func popTo(index: Int) -> PopOptions {
+        return PopOptions(popType: .popTo(index: index))
+    }
+    
+    public static var dismiss: PopOptions {
+        return PopOptions(popType: .dismiss)
+    }
+    
+    public static var dismissPopup: PopOptions {
+        return PopOptions(popType: .dismissPopup)
     }
 }
 
@@ -188,8 +212,8 @@ public class NavigationService: INavigationService {
             handleDismiss()
             
         case .dismissPopup:
-            let presenterPage = topPage.navigationController?.parent ?? topPage.tabBarController?.parent ?? topPage.parent
-            presenterPage?.dismiss(animated: false)
+            let presenterPage = topPage.navigationController?.parent ?? topPage.tabBarController?.parent ?? topPage.parent ?? topPage
+            presenterPage.dismiss(animated: false)
         }
     }
 }

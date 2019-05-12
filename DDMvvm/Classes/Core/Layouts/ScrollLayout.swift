@@ -92,6 +92,13 @@ public extension ScrollLayout {
         return self
     }
     
+    /// Remove a specific child at index
+    @discardableResult
+    func removeChild(at index: Int) -> ScrollLayout {
+        layout.removeChild(at: index)
+        return self
+    }
+    
     /// Spacing between items
     @discardableResult
     func interitemSpacing(_ value: CGFloat) -> ScrollLayout {

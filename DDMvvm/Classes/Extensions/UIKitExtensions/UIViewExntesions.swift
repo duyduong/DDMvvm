@@ -9,7 +9,7 @@ import UIKit
 
 extension UIView {
     
-    public var cornerRadius: CGFloat {
+    var cornerRadius: CGFloat {
         get { return layer.cornerRadius }
         set {
             layer.cornerRadius = newValue
@@ -18,18 +18,18 @@ extension UIView {
         }
     }
     
-    public var borderWidth: CGFloat {
+    var borderWidth: CGFloat {
         get { return layer.borderWidth }
         set { layer.borderWidth = newValue }
     }
     
-    // load nib file
-    public static func loadFrom<T: UIView>(nibNamed: String, bundle : Bundle? = nil) -> T? {
+    /// Load Xib from name
+    static func loadFrom<T: UIView>(nibNamed: String, bundle : Bundle? = nil) -> T? {
         let nib = UINib(nibName: nibNamed, bundle: bundle)
         return nib.instantiate(withOwner: nil, options: nil)[0] as? T
     }
     
-    public func getGesture<G: UIGestureRecognizer>(_ comparison: ((G) -> Bool)? = nil) -> G? {
+    func getGesture<G: UIGestureRecognizer>(_ comparison: ((G) -> Bool)? = nil) -> G? {
         return gestureRecognizers?.filter { g in
             if let comparison = comparison {
                 return g is G && comparison(g as! G)
@@ -39,12 +39,12 @@ extension UIView {
         }.first as? G
     }
     
-    public func getConstraint(byAttribute attr: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
+    func getConstraint(byAttribute attr: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
         return constraints.filter { $0.firstAttribute == attr }.first
     }
     
-    // clear all subviews, destroy if needed
-    public func clearAll() {
+    /// Clear all subviews, destroy if needed
+    func clearAll() {
         if let stackView = self as? UIStackView {
             stackView.arrangedSubviews.forEach { view in
                 (view as? IDestroyable)?.destroy()
@@ -59,14 +59,14 @@ extension UIView {
         }
     }
     
-    // clear all constraints
-    public func clearConstraints() {
+    /// Clear all constraints
+    func clearConstraints() {
         constraints.forEach { $0.autoRemove() }
     }
     
-    // create border view at specific positions
+    /// Create border view at specific positions
     @discardableResult
-    public func addBorderView(atPosition position: ComponentViewPosition, borderColor: UIColor, borderWidth: CGFloat) -> UIView {
+    func addBorderView(atPosition position: ComponentViewPosition, borderColor: UIColor, borderWidth: CGFloat) -> UIView {
         let borderView = UIView()
         borderView.backgroundColor = borderColor
         addSubview(borderView)
@@ -98,16 +98,16 @@ extension UIView {
         return borderView
     }
     
-    // set corder radius for specific corners
-    public func setCornerRadius(corners: UIRectCorner, radius: CGFloat) {
+    /// Set corder radius for specific corners
+    func setCornerRadius(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
         mask.path = path.cgPath
         layer.mask = mask
     }
     
-    // set box shadow
-    public func setShadow(offset: CGSize, color: UIColor, opacity: Float, blur: CGFloat) {
+    /// Set box shadow
+    func setShadow(offset: CGSize, color: UIColor, opacity: Float, blur: CGFloat) {
         let shadowPath = UIBezierPath(roundedRect: layer.bounds, cornerRadius: layer.cornerRadius)
         layer.masksToBounds = false
         layer.shadowColor = color.cgColor
@@ -117,15 +117,15 @@ extension UIView {
         layer.shadowPath = shadowPath.cgPath
     }
     
-    // set layer border style
-    public func setBorder(with color: UIColor, width: CGFloat) {
+    /// Set layer border style
+    func setBorder(with color: UIColor, width: CGFloat) {
         layer.borderColor = color.cgColor
         layer.borderWidth = width
     }
     
-    // set linear gradient background color
+    /// Set linear gradient background color
     @discardableResult
-    public func setGradientBackground(_ topColor: UIColor, bottomColor: UIColor, topLocation: Double, bottomLocation: Double) -> CAGradientLayer {
+    func setGradientBackground(_ topColor: UIColor, bottomColor: UIColor, topLocation: Double, bottomLocation: Double) -> CAGradientLayer {
         let gl = CAGradientLayer()
         gl.colors = [topColor.cgColor, bottomColor.cgColor]
         gl.locations = [NSNumber(value: topLocation), NSNumber(value: bottomLocation)]
@@ -135,17 +135,8 @@ extension UIView {
         return gl
     }
     
-    @available(iOS 11.0, *)
     @discardableResult
-    public func autoPin(toSafeAreaLayoutGuideOf view: UIView, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
-        let constraint = topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 0)
-        constraint.constant = inset
-        constraint.isActive = true
-        return constraint
-    }
-    
-    @discardableResult
-    public func autoPin(toTopLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
+    func autoPin(toTopLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
         if #available(iOS 11.0, *) {
             let constraint = topAnchor.constraint(equalToSystemSpacingBelow: viewController.view.safeAreaLayoutGuide.topAnchor, multiplier: 0)
             constraint.constant = inset
@@ -157,7 +148,7 @@ extension UIView {
     }
     
     @discardableResult
-    public func autoPin(toBottomLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
+    func autoPin(toBottomLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
         if #available(iOS 11.0, *) {
             let constraint = bottomAnchor.constraint(equalToSystemSpacingBelow: viewController.view.safeAreaLayoutGuide.bottomAnchor, multiplier: 0)
             constraint.constant = inset
@@ -167,7 +158,6 @@ extension UIView {
             return autoPin(toTopLayoutGuideOf: viewController, withInset: inset)
         }
     }
-    
 }
 
 

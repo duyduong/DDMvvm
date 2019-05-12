@@ -19,7 +19,7 @@ extension Reactive where Base: UIGestureRecognizer {
 
 extension UIGestureRecognizer {
     
-    // Bind action with input transformation
+    /// Bind action with input transformation
     public func bind<Input, Output>(to action: Action<Input, Output>, inputTransform: @escaping (UIGestureRecognizer) -> (Input))   {
         // This effectively disposes of any existing subscriptions.
         unbindAction()
@@ -37,7 +37,7 @@ extension UIGestureRecognizer {
             .disposed(by: actionDisposeBag)
     }
     
-    // Bind action with static input
+    /// Bind action with static input
     public func bind<Input, Output>(to action: Action<Input, Output>, input: Input)   {
         bind(to: action) { _ in input }
     }

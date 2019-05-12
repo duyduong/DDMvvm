@@ -120,6 +120,18 @@ public extension StackLayout {
         return self
     }
     
+    /// Remove a specific child at index
+    @discardableResult
+    func removeChild(at index: Int) -> StackLayout {
+        guard index >= 0 && index < arrangedSubviews.count else { return self }
+        
+        let child = arrangedSubviews[index]
+        removeArrangedSubview(child)
+        child.removeFromSuperview()
+        
+        return self
+    }
+    
     /// Get the view for a child, only accept UIView or StackItem type
     private func getView(for child: Any) -> UIView? {
         if let stackItem = child as? StackItem {
@@ -161,7 +173,7 @@ public struct StackViewItem: StackItem {
         @available(*, deprecated, renamed: "fill")
         case margin(insets: UIEdgeInsets)
         
-        @available(*, deprecated, message: "Pre-condition for centerX is to have a fixed width. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerY")
+        @available(*, deprecated, message: "Pre-condition for centerX is to have a fixed width. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerX")
         case centerX
         
         @available(*, deprecated, message: "Pre-condition for centerY is to have a fixed height. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerY")
@@ -179,8 +191,6 @@ public struct StackViewItem: StackItem {
         /// Fill the content with insets
         case fill(insets: UIEdgeInsets)
     }
-    
-    private let wrapperView = UIView()
     
     private let originalView: UIView
     private let constraintsDefinition: ((UIView) -> ())
