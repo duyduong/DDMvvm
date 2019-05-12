@@ -7,9 +7,9 @@
 
 import UIKit
 
-extension Optional where Wrapped == String {
+public extension Optional where Wrapped == String {
     
-    public var isNilOrEmpty: Bool {
+    var isNilOrEmpty: Bool {
         return self == nil || self!.isEmpty
     }
 }

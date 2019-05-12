@@ -69,9 +69,9 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
         let animator = FlipAnimator()
         if usingModal {
             let navPage = NavigationPage(rootViewController: page)
-            navigationService.push(to: navPage, options: .modalWithAnimator(animator))
+            navigationService.push(to: navPage, options: .modal(animator: animator))
         } else {
-            navigationService.push(to: page, options: .pushWithAnimator(animator))
+            navigationService.push(to: page, options: .push(with: animator))
         }
     }
     
@@ -80,9 +80,9 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
         let animator = ZoomAnimator()
         if usingModal {
             let navPage = NavigationPage(rootViewController: page)
-            navigationService.push(to: navPage, options: .modalWithAnimator(animator))
+            navigationService.push(to: navPage, options: .modal(animator: animator))
         } else {
-            navigationService.push(to: page, options: .pushWithAnimator(animator))
+            navigationService.push(to: page, options: .push(with: animator))
         }
     }
 }

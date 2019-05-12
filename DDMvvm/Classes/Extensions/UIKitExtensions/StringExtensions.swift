@@ -7,24 +7,24 @@
 
 import UIKit
 
-extension String {
+public extension String {
     
-    public func toURL() -> URL? {
+    func toURL() -> URL? {
         return URL(string: self)
     }
     
-    public func toURLRequest() -> URLRequest? {
+    func toURLRequest() -> URLRequest? {
         if let url = toURL() {
             return URLRequest(url: url)
         }
         return nil
     }
     
-    public func toHex() -> Int? {
+    func toHex() -> Int? {
         return Int(self, radix: 16)
     }
     
-    public func trim() -> String {
+    func trim() -> String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

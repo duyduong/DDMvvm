@@ -10,9 +10,9 @@ import WebKit
 import RxSwift
 import RxCocoa
 
-extension Reactive where Base: WKWebView {
+public extension Reactive where Base: WKWebView {
     
-    public var url: Binder<URL?> {
+    var url: Binder<URL?> {
         return Binder(base) { view, url in
             if let url = url {
                 view.stopLoading()

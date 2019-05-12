@@ -32,9 +32,9 @@ public protocol FontFactory {
     var boldName: String { get }
 }
 
-extension FontFactory {
+public extension FontFactory {
     
-    public func normal(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
+    func normal(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
         if let font = UIFont(name: normalName, size: shouldScale ? calculateFontSize(size) : size) {
             return font
         }
@@ -42,7 +42,7 @@ extension FontFactory {
         return UIFont.systemFont(ofSize: shouldScale ? calculateFontSize(size) : size)
     }
     
-    public func light(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
+    func light(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
         if let font = UIFont(name: lightName, size: shouldScale ? calculateFontSize(size) : size) {
             return font
         }
@@ -50,7 +50,7 @@ extension FontFactory {
         return UIFont.systemFont(ofSize: shouldScale ? calculateFontSize(size) : size, weight: .light)
     }
     
-    public func bold(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
+    func bold(withSize size: CGFloat, shouldScaleForScreenSize shouldScale: Bool = true) -> UIFont {
         if let font = UIFont(name: boldName, size: shouldScale ? calculateFontSize(size) : size) {
             return font
         }

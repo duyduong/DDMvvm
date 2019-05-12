@@ -7,25 +7,25 @@
 
 import UIKit
 
-extension UIColor {
+public extension UIColor {
     
-    public convenience init(hex: Int) {
+    convenience init(hex: Int) {
         self.init(hex: hex, a: 1.0)
     }
     
-    public convenience init(hex: Int, a: CGFloat) {
+    convenience init(hex: Int, a: CGFloat) {
         self.init(r: (hex >> 16) & 0xff, g: (hex >> 8) & 0xff, b: hex & 0xff, a: a)
     }
     
-    public convenience init(r: Int, g: Int, b: Int) {
+    convenience init(r: Int, g: Int, b: Int) {
         self.init(r: r, g: g, b: b, a: 1.0)
     }
     
-    public convenience init(r: Int, g: Int, b: Int, a: CGFloat) {
+    convenience init(r: Int, g: Int, b: Int, a: CGFloat) {
         self.init(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: a)
     }
     
-    public convenience init?(hexString: String) {
+    convenience init?(hexString: String) {
         var hexString = hexString.replacingOccurrences(of: "#", with: "")
         if hexString.count == 3 {
             hexString += hexString
@@ -34,7 +34,7 @@ extension UIColor {
         self.init(hex: hex)
     }
     
-    public static func fromHex(_ hexString: String) -> UIColor {
+    static func fromHex(_ hexString: String) -> UIColor {
         return UIColor(hexString: hexString) ?? .clear
     }
 }

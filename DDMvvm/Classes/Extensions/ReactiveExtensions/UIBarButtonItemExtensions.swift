@@ -9,9 +9,9 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-extension Reactive where Base: UIBarButtonItem {
+public extension Reactive where Base: UIBarButtonItem {
     
-    public var image: Binder<UIImage?> {
+    var image: Binder<UIImage?> {
         return Binder(self.base) { $0.image = $1 }
     }
 }

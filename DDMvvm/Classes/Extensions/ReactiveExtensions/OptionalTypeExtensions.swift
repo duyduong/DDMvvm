@@ -15,16 +15,16 @@ public protocol OptionalType {
     var value: Wrapped? { get }
 }
 
-extension Optional: OptionalType {
+public extension Optional: OptionalType {
     
-    public var value: Wrapped? {
+    var value: Wrapped? {
         return self
     }
 }
 
-extension ObservableType where E: OptionalType {
+public extension ObservableType where E: OptionalType {
     
-    public func filterNil() -> Observable<E.Wrapped> {
+    func filterNil() -> Observable<E.Wrapped> {
         return self.flatMap { element -> Observable<E.Wrapped> in
             return Observable.from(optional: element.value)
         }

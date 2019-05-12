@@ -9,13 +9,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension Reactive where Base: UITableViewCell {
+public extension Reactive where Base: UITableViewCell {
     
-    public var accessoryType: Binder<UITableViewCell.AccessoryType> {
+    var accessoryType: Binder<UITableViewCell.AccessoryType> {
         return Binder(self.base) { $0.accessoryType = $1 }
     }
     
-    public var selectionStyle: Binder<UITableViewCell.SelectionStyle> {
+    var selectionStyle: Binder<UITableViewCell.SelectionStyle> {
         return Binder(self.base) { $0.selectionStyle = $1 }
     }
 }
