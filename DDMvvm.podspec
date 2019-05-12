@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DDMvvm'
-  s.version          = '1.4.1'
+  s.version          = '1.4.2'
   s.summary          = 'A MVVM library for iOS Swift.'
 
 # This description is used to generate tags and improve search results.
