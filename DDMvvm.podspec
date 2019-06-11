@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DDMvvm'
-  s.version          = '1.4.3'
+  s.version          = '1.4.4'
   s.summary          = 'A MVVM library for iOS Swift.'
 
 # This description is used to generate tags and improve search results.
@@ -32,14 +32,14 @@ A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model
   s.ios.deployment_target = '9.0'
 
   s.source_files = 'DDMvvm/Classes/**/*'
-  
+
   # s.resource_bundles = {
   #   'DDMvvm' => ['DDMvvm/Assets/*.png']
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
-  
+
   s.dependency 'RxSwift'
   s.dependency 'RxCocoa'
   s.dependency 'Action'
