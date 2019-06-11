@@ -454,7 +454,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-DDMvvm_Example/Pods-DDMvvm_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-DDMvvm_Example/Pods-DDMvvm_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Action/Action.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
@@ -477,7 +477,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DDMvvm_Example/Pods-DDMvvm_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DDMvvm_Example/Pods-DDMvvm_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EA14619BA410398981E067F6 /* [CP] Check Pods Manifest.lock */ = {
