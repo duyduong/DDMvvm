@@ -1,6 +1,0 @@
-github "Alamofire/Alamofire" "4.8.1"
-github "Alamofire/AlamofireImage" "3.5.2"
-github "PureLayout/PureLayout" "v3.1.4"
-github "ReactiveX/RxSwift" "5.0.1"
-github "RxSwiftCommunity/Action" "4.0.1"
-github "tristanhimmelman/ObjectMapper" "3.5.0"

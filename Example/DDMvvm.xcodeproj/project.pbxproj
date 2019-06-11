@@ -24,13 +24,6 @@
 		4E48B7402165881500EF8CED /* SectionListPageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48B73F2165881500EF8CED /* SectionListPageCells.swift */; };
 		4E8470D72189A323008C4BA6 /* JsonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8470D62189A323008C4BA6 /* JsonService.swift */; };
 		4E98C39522AF6AFE006BD8A4 /* Pods_DDMvvm_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C39422AF6AFE006BD8A4 /* Pods_DDMvvm_Example.framework */; };
-		4E98C39922AF78FC006BD8A4 /* Action.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C39822AF78FC006BD8A4 /* Action.framework */; };
-		4E98C39B22AF78FC006BD8A4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C39A22AF78FC006BD8A4 /* Alamofire.framework */; };
-		4E98C39D22AF78FC006BD8A4 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C39C22AF78FC006BD8A4 /* AlamofireImage.framework */; };
-		4E98C3A122AF78FC006BD8A4 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C3A022AF78FC006BD8A4 /* ObjectMapper.framework */; };
-		4E98C3A322AF78FC006BD8A4 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C3A222AF78FC006BD8A4 /* PureLayout.framework */; };
-		4E98C3A522AF78FC006BD8A4 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C3A422AF78FC006BD8A4 /* RxCocoa.framework */; };
-		4E98C3A722AF78FC006BD8A4 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E98C3A622AF78FC006BD8A4 /* RxSwift.framework */; };
 		4ED4076B2162016200987322 /* DataBindingExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED4076A2162016200987322 /* DataBindingExamplePage.swift */; };
 		4ED407712162184600987322 /* CustomControlExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED407702162184600987322 /* CustomControlExamplePage.swift */; };
 		4ED407732162193200987322 /* SegmentedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED407722162193200987322 /* SegmentedView.swift */; };
@@ -77,13 +70,6 @@
 		4E48B73F2165881500EF8CED /* SectionListPageCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionListPageCells.swift; sourceTree = "<group>"; };
 		4E8470D62189A323008C4BA6 /* JsonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonService.swift; sourceTree = "<group>"; };
 		4E98C39422AF6AFE006BD8A4 /* Pods_DDMvvm_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_DDMvvm_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C39822AF78FC006BD8A4 /* Action.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Action.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C39A22AF78FC006BD8A4 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C39C22AF78FC006BD8A4 /* AlamofireImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AlamofireImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C3A022AF78FC006BD8A4 /* ObjectMapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C3A222AF78FC006BD8A4 /* PureLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PureLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C3A422AF78FC006BD8A4 /* RxCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E98C3A622AF78FC006BD8A4 /* RxSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ED4076A2162016200987322 /* DataBindingExamplePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBindingExamplePage.swift; sourceTree = "<group>"; };
 		4ED407702162184600987322 /* CustomControlExamplePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomControlExamplePage.swift; sourceTree = "<group>"; };
 		4ED407722162193200987322 /* SegmentedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedView.swift; sourceTree = "<group>"; };
@@ -118,13 +104,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E98C39922AF78FC006BD8A4 /* Action.framework in Frameworks */,
-				4E98C39B22AF78FC006BD8A4 /* Alamofire.framework in Frameworks */,
-				4E98C39D22AF78FC006BD8A4 /* AlamofireImage.framework in Frameworks */,
-				4E98C3A122AF78FC006BD8A4 /* ObjectMapper.framework in Frameworks */,
-				4E98C3A322AF78FC006BD8A4 /* PureLayout.framework in Frameworks */,
-				4E98C3A522AF78FC006BD8A4 /* RxCocoa.framework in Frameworks */,
-				4E98C3A722AF78FC006BD8A4 /* RxSwift.framework in Frameworks */,
 				4E98C39522AF6AFE006BD8A4 /* Pods_DDMvvm_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,13 +316,6 @@
 		B7830FDE80F21ED50241C79F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4E98C39822AF78FC006BD8A4 /* Action.framework */,
-				4E98C39A22AF78FC006BD8A4 /* Alamofire.framework */,
-				4E98C39C22AF78FC006BD8A4 /* AlamofireImage.framework */,
-				4E98C3A022AF78FC006BD8A4 /* ObjectMapper.framework */,
-				4E98C3A222AF78FC006BD8A4 /* PureLayout.framework */,
-				4E98C3A422AF78FC006BD8A4 /* RxCocoa.framework */,
-				4E98C3A622AF78FC006BD8A4 /* RxSwift.framework */,
 				4E98C39422AF6AFE006BD8A4 /* Pods_DDMvvm_Example.framework */,
 			);
 			name = Frameworks;
