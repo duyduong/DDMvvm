@@ -13,55 +13,50 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
 
     public typealias CVM = VM.CellViewModelElement
 
-    public private(set) var collectionView: UICollectionView!
-    public var layout: UICollectionViewLayout!
-    
-    private var counter = [Int: Int]()
-
-    public override init(viewModel: VM? = nil) {
-        super.init(viewModel: viewModel)
-        setupCollectionView()
-    }
-
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupCollectionView()
-    }
-    
-    private func setupCollectionView() {
-        layout = collectionViewLayout()
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    }
-
-    override open func viewDidLoad() {
+    public lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
-        view.addSubview(collectionView)
+        
+        return collectionView
+    }()
+    
+    private var counter = [Int: Int]()
+    
+    public override init(viewModel: VM? = nil) {
+        super.init(viewModel: viewModel)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
+    override open func viewDidLoad() {
+        view.addSubview(collectionView)
         super.viewDidLoad()
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.backgroundView = nil
     }
 
     override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
         coordinator.animate(alongsideTransition: { _ in
-            self.layout.invalidateLayout()
+            self.collectionView.collectionViewLayout.invalidateLayout()
         }, completion: nil)
     }
     
     /**
      Subclasses override this method to create its own collection view layout.
      
-     By default, flow layout will be using.
+     By default, flow layout will be used.
      */
     open func collectionViewLayout() -> UICollectionViewLayout {
         return UICollectionViewFlowLayout()
-    }
-    
-    @available(*, deprecated, message: "CollectionPage no longer support this func. Please override `collectionViewLayout` func")
-    open func setupLayout() {
-        layout = UICollectionViewFlowLayout()
     }
 
     open override func initialize() {
@@ -97,33 +92,38 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     }
     
     private func onDataSourceChanged(_ changeSet: ChangeSet) {
-        collectionView.performBatchUpdates({
-            switch changeSet {
-            case .insertSection(let section):
-                collectionView.insertSections(IndexSet([section]))
-                
-            case .deleteSection(let section):
-                if section < 0 {
-                    if collectionView.numberOfSections > 0 {
-                        let sections = Array(0...collectionView.numberOfSections - 1)
-                        collectionView.deleteSections(IndexSet(sections))
+        if changeSet.animated {
+            collectionView.performBatchUpdates({
+                switch changeSet {
+                case .insertSection(let section, _):
+                    collectionView.insertSections(IndexSet([section]))
+                    
+                case .deleteSection(let section, _):
+                    if section < 0 {
+                        if collectionView.numberOfSections > 0 {
+                            let sections = Array(0...collectionView.numberOfSections - 1)
+                            collectionView.deleteSections(IndexSet(sections))
+                        }
+                    } else {
+                        collectionView.deleteSections(IndexSet([section]))
                     }
-                } else {
-                    collectionView.deleteSections(IndexSet([section]))
+                    
+                case .insertElements(let indice, let section, _):
+                    let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                    collectionView.insertItems(at: indexPaths)
+                    
+                case .deleteElements(let indice, let section, _):
+                    let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                    collectionView.deleteItems(at: indexPaths)
                 }
                 
-            case .insertElements(let indice, let section):
-                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
-                collectionView.insertItems(at: indexPaths)
-                
-            case .deleteElements(let indice, let section):
-                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
-                collectionView.deleteItems(at: indexPaths)
-            }
-            
-            // update counter
+                // update counter
+                updateCounter()
+            }, completion: nil)
+        } else {
             updateCounter()
-        }, completion: nil)
+            collectionView.reloadData()
+        }
     }
     
     private func updateCounter() {

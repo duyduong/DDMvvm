@@ -28,7 +28,7 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
         
         navigationItem.rightBarButtonItem = addBtn
         
-        (layout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
         collectionView.register(SectionHeaderCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: SectionHeaderCell.identifier)
         collectionView.register(CPTextCell.self, forCellWithReuseIdentifier: CPTextCell.identifier)
         collectionView.register(CPImageCell.self, forCellWithReuseIdentifier: CPImageCell.identifier)

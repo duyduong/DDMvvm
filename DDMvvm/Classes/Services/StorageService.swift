@@ -24,7 +24,7 @@ public protocol IStorageService {
     func remove(_ key: String)
 }
 
-public class StorageService: IStorageService {
+open class StorageService: IStorageService {
     
     private let defaults = UserDefaults.standard
     

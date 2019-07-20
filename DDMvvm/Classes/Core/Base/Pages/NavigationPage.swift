@@ -41,9 +41,9 @@ extension NavigationPage: UINavigationControllerDelegate {
         
         var animatorDelegate: AnimatorDelegate?
         switch operation {
-        case .none: animatorDelegate = nil
         case .push: animatorDelegate = (toVC as? ITransitionView)?.animatorDelegate
         case .pop: animatorDelegate = (fromVC as? ITransitionView)?.animatorDelegate
+        default: animatorDelegate = nil
         }
         
         animatorDelegate?.animator.isPresenting = operation == .push

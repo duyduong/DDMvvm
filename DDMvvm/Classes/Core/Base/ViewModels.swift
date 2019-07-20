@@ -19,7 +19,7 @@ extension Reactive where Base: IGenericViewModel {
 }
 
 /// A master based ViewModel for all
-open class ViewModel<M: Model>: NSObject, IViewModel {
+open class ViewModel<M>: NSObject, IViewModel {
     
     public typealias ModelElement = M
     
@@ -27,10 +27,8 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
     public var model: M? {
         get { return _model }
         set {
-            if _model != newValue {
-                _model = newValue
-                modelChanged()
-            }
+            _model = newValue
+            modelChanged()
         }
     }
     
@@ -63,7 +61,7 @@ open class ViewModel<M: Model>: NSObject, IViewModel {
  The idea for ListViewModel is that it will contain a list of CellViewModels
  By using this list, ListPage will render the cell and assign ViewModel to it respectively
  */
-open class ListViewModel<M: Model, CVM: IGenericViewModel>: ViewModel<M>, IListViewModel where CVM.ModelElement: Model {
+open class ListViewModel<M, CVM: IGenericViewModel>: ViewModel<M>, IListViewModel {
     
     public typealias CellViewModelElement = CVM
     
@@ -111,7 +109,7 @@ extension IndexableCellViewModel {
  The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService. Also CellViewModel
  contains its own index
  */
-open class CellViewModel<M: Model>: NSObject, IGenericViewModel, IndexableCellViewModel {
+open class CellViewModel<M>: NSObject, IGenericViewModel, IndexableCellViewModel {
     
     public typealias ModelElement = M
     
@@ -119,10 +117,8 @@ open class CellViewModel<M: Model>: NSObject, IGenericViewModel, IndexableCellVi
     public var model: M? {
         get { return _model }
         set {
-            if _model != newValue {
-                _model = newValue
-                modelChanged()
-            }
+            _model = newValue
+            modelChanged()
         }
     }
     

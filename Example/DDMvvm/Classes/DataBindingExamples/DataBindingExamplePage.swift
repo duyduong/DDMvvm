@@ -46,8 +46,7 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
         submitBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         submitBtn.cornerRadius = 5
 
-        scrollView.paddings = .all(20)
-        scrollView.appendChildren([
+        scrollView.paddings(.all(20)).appendChildren([
             StackSpaceItem(height: 30),
             helloLbl,
             StackSpaceItem(height: 30),

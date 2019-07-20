@@ -10,15 +10,6 @@ import Alamofire
 import ObjectMapper
 import RxSwift
 
-extension String: ParameterEncoding {
-    
-    public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
-        var request = try urlRequest.asURLRequest()
-        request.httpBody = data(using: .utf8, allowLossyConversion: false)
-        return request
-    }
-}
-
 /// Base network service, using SessionManager from Alamofire
 open class NetworkService {
     

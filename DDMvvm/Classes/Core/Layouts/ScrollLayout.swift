@@ -18,11 +18,6 @@ public class ScrollLayout: UIScrollView {
     private var bottomConstraint: NSLayoutConstraint!
     private var rightConstraint: NSLayoutConstraint!
     
-    /// Scroll view paddings
-    public var paddings: UIEdgeInsets = .zero {
-        didSet { updatePaddings() }
-    }
-    
     /// List of subviews inside stack layout
     public var children: [UIView] {
         return layout.arrangedSubviews
@@ -44,12 +39,12 @@ public class ScrollLayout: UIScrollView {
         addSubview(containerView)
         containerView.autoPinEdgesToSuperviewEdges()
         switch layout.axis {
-        case .horizontal:
-            alwaysBounceHorizontal = true
-            containerView.autoMatch(.height, to: .height, of: self)
         case .vertical:
             alwaysBounceVertical = true
             containerView.autoMatch(.width, to: .width, of: self)
+        default:
+            alwaysBounceHorizontal = true
+            containerView.autoMatch(.height, to: .height, of: self)
         }
         
         containerView.addSubview(layout)
@@ -59,7 +54,7 @@ public class ScrollLayout: UIScrollView {
         rightConstraint = layout.autoPinEdge(toSuperviewEdge: .trailing)
     }
     
-    private func updatePaddings() {
+    private func updatePaddings(_ paddings: UIEdgeInsets) {
         topConstraint.constant = paddings.top
         leftConstraint.constant = paddings.left
         bottomConstraint.constant = -paddings.bottom
@@ -96,6 +91,20 @@ public extension ScrollLayout {
     @discardableResult
     func removeChild(at index: Int) -> ScrollLayout {
         layout.removeChild(at: index)
+        return self
+    }
+    
+    /// Remove all children inside the layout
+    @discardableResult
+    func removeAll() -> ScrollLayout {
+        layout.clearAll()
+        return self
+    }
+    
+    /// Remove all children inside the layout
+    @discardableResult
+    func paddings(_ insets: UIEdgeInsets = .zero) -> ScrollLayout {
+        updatePaddings(insets)
         return self
     }
     

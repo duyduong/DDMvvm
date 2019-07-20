@@ -114,8 +114,7 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
             submitBtn
         ])
         
-        scrollView.paddings = .all(20)
-        scrollView.appendChildren([
+        scrollView.paddings(.all(20)).appendChildren([
             StackSpaceItem(height: 40),
             nameTxt,
             StackSpaceItem(height: 20),

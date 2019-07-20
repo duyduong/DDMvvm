@@ -10,10 +10,19 @@ import RxSwift
 import RxCocoa
 
 public enum ChangeSet {
-    case deleteSection(section: Int)
-    case insertSection(section: Int)
-    case deleteElements(elementIndice: [Int], section: Int)
-    case insertElements(elementIndice: [Int], section: Int)
+    case deleteSection(section: Int, animated: Bool)
+    case insertSection(section: Int, animated: Bool)
+    case deleteElements(elementIndice: [Int], section: Int, animated: Bool)
+    case insertElements(elementIndice: [Int], section: Int, animated: Bool)
+    
+    var animated: Bool {
+        switch self {
+        case .deleteSection(_, let animated): return animated
+        case .insertSection(_, let animated): return animated
+        case .deleteElements(_, _, let animated): return animated
+        case .insertElements(_, _, let animated): return animated
+        }
+    }
 }
 
 /// Section list data sources
@@ -116,6 +125,8 @@ public class SectionList<T> where T: Equatable {
 
 public class ReactiveCollection<T> where T: Equatable {
     
+    public var animated: Bool = true
+    
     private var innerSources: [SectionList<T>] = []
     
     private let publisher = PublishSubject<ChangeSet>()
@@ -162,90 +173,90 @@ public class ReactiveCollection<T> where T: Equatable {
     
     // MARK: - section manipulations
     
-    public func reset(_ sources: [[T]]) {
-        removeAll()
+    public func reset(_ sources: [[T]], animated: Bool? = nil) {
+        removeAll(animated: animated)
         
         for sectionList in sources {
-            appendSection("", elements: sectionList)
+            appendSection("", elements: sectionList, animated: animated)
         }
     }
     
-    public func reset(_ sources: [SectionList<T>]) {
-        removeAll()
+    public func reset(_ sources: [SectionList<T>], animated: Bool? = nil) {
+        removeAll(animated: animated)
         
         for sectionList in sources {
-            appendSection(sectionList)
+            appendSection(sectionList, animated: animated)
         }
     }
     
-    public func insertSection(_ key: Any, elements: [T], at index: Int) {
-        insertSection(SectionList<T>(key, initialElements: elements), at: index)
+    public func insertSection(_ key: Any, elements: [T], at index: Int, animated: Bool? = nil) {
+        insertSection(SectionList<T>(key, initialElements: elements), at: index, animated: animated)
     }
     
-    public func insertSection(_ sectionList: SectionList<T>, at index: Int) {
+    public func insertSection(_ sectionList: SectionList<T>, at index: Int, animated: Bool? = nil) {
         innerSources.insert(sectionList, at: index)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.insertSection(section: index))
+        publisher.onNext(.insertSection(section: index, animated: animated ?? self.animated))
     }
     
-    public func appendSections(_ sectionLists: [SectionList<T>]) {
+    public func appendSections(_ sectionLists: [SectionList<T>], animated: Bool? = nil) {
         for sectionList in sectionLists {
-            appendSection(sectionList)
+            appendSection(sectionList, animated: animated)
         }
     }
     
-    public func appendSection(_ key: Any, elements: [T]) {
-        appendSection(SectionList<T>(key, initialElements: elements))
+    public func appendSection(_ key: Any, elements: [T], animated: Bool? = nil) {
+        appendSection(SectionList<T>(key, initialElements: elements), animated: animated)
     }
     
-    public func appendSection(_ sectionList: SectionList<T>) {
+    public func appendSection(_ sectionList: SectionList<T>, animated: Bool? = nil) {
         let section = innerSources.count == 0 ? 0 : innerSources.count
         
         innerSources.append(sectionList)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.insertSection(section: section))
+        publisher.onNext(.insertSection(section: section, animated: animated ?? self.animated))
     }
     
     @discardableResult
-    public func removeSection(at index: Int) -> SectionList<T> {
+    public func removeSection(at index: Int, animated: Bool? = nil) -> SectionList<T> {
         let element = innerSources.remove(at: index)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.deleteSection(section: index))
+        publisher.onNext(.deleteSection(section: index, animated: animated ?? self.animated))
         
         return element
     }
     
-    public func removeAll() {
+    public func removeAll(animated: Bool? = nil) {
         innerSources.removeAll()
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.deleteSection(section: -1))
+        publisher.onNext(.deleteSection(section: -1, animated: animated ?? self.animated))
     }
     
     // MARK: - section elements manipulations
     
-    public func insert(_ element: T, at index: Int, of section: Int = 0) {
+    public func insert(_ element: T, at index: Int, of section: Int = 0, animated: Bool? = nil) {
         if innerSources[section].count == 0 {
             innerSources[section].append(element)
             rxInnerSources.accept(innerSources)
             
-            publisher.onNext(.insertElements(elementIndice: [index], section: 0))
+            publisher.onNext(.insertElements(elementIndice: [index], section: 0, animated: animated ?? self.animated))
         } else if index < innerSources[section].count {
             innerSources[section].insert(element, at: index)
             rxInnerSources.accept(innerSources)
             
-            publisher.onNext(.insertElements(elementIndice: [index], section: section))
+            publisher.onNext(.insertElements(elementIndice: [index], section: section, animated: animated ?? self.animated))
         }
     }
     
-    public func insert(_ elements: [T], at index: Int, of section: Int = 0) {
+    public func insert(_ elements: [T], at index: Int, of section: Int = 0, animated: Bool? = nil) {
         innerSources[section].insert(elements, at: index)
         rxInnerSources.accept(innerSources)
         
         let indice = elements.count == 0 ? [] : Array(0..<elements.count)
-        publisher.onNext(.insertElements(elementIndice: indice, section: section))
+        publisher.onNext(.insertElements(elementIndice: indice, section: section, animated: animated ?? self.animated))
     }
     
-    public func append(_ element: T, to section: Int = 0) {
+    public func append(_ element: T, to section: Int = 0, animated: Bool? = nil) {
         if innerSources.count == 0 {
             appendSection(SectionList<T>("", initialElements: [element]))
             return
@@ -254,10 +265,10 @@ public class ReactiveCollection<T> where T: Equatable {
         let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
         innerSources[section].append(element)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.insertElements(elementIndice: [index], section: section))
+        publisher.onNext(.insertElements(elementIndice: [index], section: section, animated: animated ?? self.animated))
     }
     
-    public func append(_ elements: [T], to section: Int = 0) {
+    public func append(_ elements: [T], to section: Int = 0, animated: Bool? = nil) {
         if innerSources.count == 0 {
             appendSection("", elements: elements)
             return
@@ -274,22 +285,22 @@ public class ReactiveCollection<T> where T: Equatable {
         
         innerSources[section].append(elements)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.insertElements(elementIndice: indice, section: section))
+        publisher.onNext(.insertElements(elementIndice: indice, section: section, animated: animated ?? self.animated))
     }
     
     @discardableResult
-    public func remove(at index: Int, of section: Int = 0) -> T? {
+    public func remove(at index: Int, of section: Int = 0, animated: Bool? = nil) -> T? {
         let element = innerSources[section].remove(at: index)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.deleteElements(elementIndice: [index], section: section))
+        publisher.onNext(.deleteElements(elementIndice: [index], section: section, animated: animated ?? self.animated))
         
         return element
     }
     
-    public func remove(at indice: [Int], of section: Int = 0) {
+    public func remove(at indice: [Int], of section: Int = 0, animated: Bool? = nil) {
         innerSources[section].remove(at: indice)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.deleteElements(elementIndice: indice, section: section))
+        publisher.onNext(.deleteElements(elementIndice: indice, section: section, animated: animated ?? self.animated))
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {

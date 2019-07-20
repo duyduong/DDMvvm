@@ -11,8 +11,14 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
 
     public typealias CVM = VM.CellViewModelElement
     
-    public var collectionView: UICollectionView!
-    public var layout: UICollectionViewLayout!
+    public lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
+        collectionView.backgroundColor = .clear
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        return collectionView
+    }()
     
     private var counter = [Int: Int]()
     
@@ -25,19 +31,8 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
     }
     
     override func setup() {
-        layout = collectionViewLayout()
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
         addSubview(collectionView)
-        
         super.setup()
-    }
-    
-    private func setupCollectionView() {
-        layout = collectionViewLayout()
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     }
     
     /**
@@ -47,11 +42,6 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
      */
     open func collectionViewLayout() -> UICollectionViewLayout {
         return UICollectionViewFlowLayout()
-    }
-    
-    @available(*, deprecated, message: "CollectionPage no longer support this func. Please override `collectionViewLayout` func")
-    open func setupLayout() {
-        layout = UICollectionViewFlowLayout()
     }
     
     open override func initialize() {
@@ -83,33 +73,38 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
     }
     
     private func onDataSourceChanged(_ changeSet: ChangeSet) {
-        collectionView.performBatchUpdates({
-            switch changeSet {
-            case .insertSection(let section):
-                collectionView.insertSections(IndexSet([section]))
-                
-            case .deleteSection(let section):
-                if section < 0 {
-                    if collectionView.numberOfSections > 0 {
-                        let sections = Array(0...collectionView.numberOfSections - 1)
-                        collectionView.deleteSections(IndexSet(sections))
+        if changeSet.animated {
+            collectionView.performBatchUpdates({
+                switch changeSet {
+                case .insertSection(let section, _):
+                    collectionView.insertSections(IndexSet([section]))
+                    
+                case .deleteSection(let section, _):
+                    if section < 0 {
+                        if collectionView.numberOfSections > 0 {
+                            let sections = Array(0...collectionView.numberOfSections - 1)
+                            collectionView.deleteSections(IndexSet(sections))
+                        }
+                    } else {
+                        collectionView.deleteSections(IndexSet([section]))
                     }
-                } else {
-                    collectionView.deleteSections(IndexSet([section]))
+                    
+                case .insertElements(let indice, let section, _):
+                    let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                    collectionView.insertItems(at: indexPaths)
+                    
+                case .deleteElements(let indice, let section, _):
+                    let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                    collectionView.deleteItems(at: indexPaths)
                 }
                 
-            case .insertElements(let indice, let section):
-                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
-                collectionView.insertItems(at: indexPaths)
-                
-            case .deleteElements(let indice, let section):
-                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
-                collectionView.deleteItems(at: indexPaths)
-            }
-            
-            // update counter
+                // update counter
+                updateCounter()
+            }, completion: nil)
+        } else {
             updateCounter()
-        }, completion: nil)
+            collectionView.reloadData()
+        }
     }
     
     private func updateCounter() {
@@ -147,6 +142,10 @@ open class CollectionView<VM: IListViewModel>: View<VM>, UICollectionViewDataSou
         }
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
+        
+        // set index for each cell
+        (cellViewModel as? IndexableCellViewModel)?.setIndexPath(indexPath)
+        
         let identifier = cellIdentifier(cellViewModel)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
         if let cell = cell as? IAnyView {

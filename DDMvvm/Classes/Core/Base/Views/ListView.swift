@@ -61,27 +61,31 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
     }
     
     private func onDataSourceChanged(_ changeSet: ChangeSet) {
-        switch changeSet {
-        case .insertSection(let section):
-            tableView.insertSections([section], with: .top)
-            
-        case .deleteSection(let section):
-            if section < 0 {
-                if tableView.numberOfSections > 0 {
-                    let sections = IndexSet(0...tableView.numberOfSections - 1)
-                    tableView.deleteSections(sections, with: .bottom)
+        if changeSet.animated {
+            switch changeSet {
+            case .insertSection(let section, _):
+                tableView.insertSections([section], with: .top)
+                
+            case .deleteSection(let section, _):
+                if section < 0 {
+                    if tableView.numberOfSections > 0 {
+                        let sections = IndexSet(0...tableView.numberOfSections - 1)
+                        tableView.deleteSections(sections, with: .bottom)
+                    }
+                } else {
+                    tableView.deleteSections([section], with: .bottom)
                 }
-            } else {
-                tableView.deleteSections([section], with: .bottom)
+                
+            case .insertElements(let indice, let section, _):
+                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                tableView.insertRows(at: indexPaths, with: .top)
+                
+            case .deleteElements(let indice, let section, _):
+                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                tableView.deleteRows(at: indexPaths, with: .bottom)
             }
-            
-        case .insertElements(let indice, let section):
-            let indexPaths = indice.map { IndexPath(row: $0, section: section) }
-            tableView.insertRows(at: indexPaths, with: .top)
-            
-        case .deleteElements(let indice, let section):
-            let indexPaths = indice.map { IndexPath(row: $0, section: section) }
-            tableView.deleteRows(at: indexPaths, with: .bottom)
+        } else {
+            tableView.reloadData()
         }
     }
     
@@ -109,6 +113,10 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
         }
         
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
+        
+        // set index for each cell
+        (cellViewModel as? IndexableCellViewModel)?.setIndexPath(indexPath)
+        
         let identifier = cellIdentifier(cellViewModel)
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         if let cell = cell as? IAnyView {
