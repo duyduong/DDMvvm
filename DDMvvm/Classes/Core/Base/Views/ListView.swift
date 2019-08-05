@@ -45,7 +45,9 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
         tableView.reloadData()
         
         tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
-        viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
+        viewModel?.itemsSource.collectionChanged
+            .observeOn(Scheduler.shared.mainScheduler)
+            .subscribe(onNext: onDataSourceChanged) => disposeBag
     }
     
     private func onItemSelected(_ indexPath: IndexPath) {
@@ -62,6 +64,8 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
     
     private func onDataSourceChanged(_ changeSet: ChangeSet) {
         if changeSet.animated {
+            tableView.beginUpdates()
+            
             switch changeSet {
             case .insertSection(let section, _):
                 tableView.insertSections([section], with: .top)
@@ -76,14 +80,20 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
                     tableView.deleteSections([section], with: .bottom)
                 }
                 
-            case .insertElements(let indice, let section, _):
-                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+            case .insertElements(let indexPaths, _):
                 tableView.insertRows(at: indexPaths, with: .top)
                 
-            case .deleteElements(let indice, let section, _):
-                let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+            case .deleteElements(let indexPaths, _):
                 tableView.deleteRows(at: indexPaths, with: .bottom)
+                
+            case .moveElements(let fromIndexPaths, let toIndexPaths, _):
+                for (i, fromIndexPath) in fromIndexPaths.enumerated() {
+                    let toIndexPath = toIndexPaths[i]
+                    tableView.moveRow(at: fromIndexPath, to: toIndexPath)
+                }
             }
+            
+            tableView.endUpdates()
         } else {
             tableView.reloadData()
         }

@@ -23,7 +23,12 @@ class SimpleModel: Model {
     }
 }
 
-class SectionTextModel: Model {
+class NumberModel: Model {
+    
+    var number = Int.random(in: 0..<200000)
+}
+
+class SectionTextModel: NumberModel {
     
     var title = ""
     var desc = ""
@@ -38,7 +43,7 @@ class SectionTextModel: Model {
     }
 }
 
-class SectionImageModel: Model {
+class SectionImageModel: NumberModel {
     
     var imageUrl: URL?
     

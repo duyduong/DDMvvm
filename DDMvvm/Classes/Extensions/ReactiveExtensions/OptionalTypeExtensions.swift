@@ -22,10 +22,10 @@ extension Optional: OptionalType {
     }
 }
 
-public extension ObservableType where E: OptionalType {
+public extension ObservableType where Element: OptionalType {
     
-    func filterNil() -> Observable<E.Wrapped> {
-        return self.flatMap { element -> Observable<E.Wrapped> in
+    func filterNil() -> Observable<Element.Wrapped> {
+        return self.flatMap { element -> Observable<Element.Wrapped> in
             return Observable.from(optional: element.value)
         }
     }

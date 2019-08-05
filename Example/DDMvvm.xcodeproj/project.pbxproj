@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14D26EFB6DF7EEEF97CE0FC2 /* Pods_DDMvvm_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFB08EE7E253BF60C14E5F73 /* Pods_DDMvvm_Tests.framework */; };
 		4E2AD47B216707FF0016BFCF /* SimpleCollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD47A216707FF0016BFCF /* SimpleCollectionPage.swift */; };
 		4E2AD47D216709A60016BFCF /* SimpleCollectionPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD47C216709A60016BFCF /* SimpleCollectionPageCell.swift */; };
 		4E2AD47F21670C740016BFCF /* SectionCollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AD47E21670C740016BFCF /* SectionCollectionPage.swift */; };
@@ -93,6 +94,7 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		8073E045A97C23024F36524B /* Pods-DDMvvm_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDMvvm_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-DDMvvm_Example/Pods-DDMvvm_Example.release.xcconfig"; sourceTree = "<group>"; };
+		BFB08EE7E253BF60C14E5F73 /* Pods_DDMvvm_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DDMvvm_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE3853135D3C2B785F6422D3 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		F2B6D0C954E6F0B971AF85E6 /* Pods-DDMvvm_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDMvvm_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DDMvvm_Tests/Pods-DDMvvm_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		FBAB6B204F0970681DCF9099 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14D26EFB6DF7EEEF97CE0FC2 /* Pods_DDMvvm_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				4E98C39422AF6AFE006BD8A4 /* Pods_DDMvvm_Example.framework */,
+				BFB08EE7E253BF60C14E5F73 /* Pods_DDMvvm_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -459,6 +463,7 @@
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -470,6 +475,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

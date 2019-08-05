@@ -179,7 +179,7 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
                     self.rxIsSearching.accept(true)
                 }
             })
-            .debounce(0.5, scheduler: Scheduler.shared.mainScheduler)
+            .debounce(.milliseconds(500), scheduler: Scheduler.shared.mainScheduler)
             .flatMap { text -> Observable<[FlickrImageCellViewModel]> in
                 if !text.isNilOrEmpty {
                     let obs: Single<FlickrSearchResponse> = self.jsonService.get("", params: self.params, parameterEncoding: URLEncoding.queryString)

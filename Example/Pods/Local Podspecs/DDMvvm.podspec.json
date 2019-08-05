@@ -1,6 +1,6 @@
 {
   "name": "DDMvvm",
-  "version": "1.4.3",
+  "version": "1.4.6",
   "summary": "A MVVM library for iOS Swift.",
   "description": "A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model, DI and Services",
   "homepage": "https://github.com/duyduong/DDMvvm.git",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/duyduong/DDMvvm.git",
-    "tag": "1.4.3"
+    "tag": "1.4.6"
   },
   "swift_versions": "4.2",
   "platforms": {

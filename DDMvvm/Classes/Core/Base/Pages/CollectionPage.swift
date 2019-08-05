@@ -77,7 +77,9 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         collectionView.reloadData()
         
         collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
-        viewModel?.itemsSource.collectionChanged.subscribe(onNext: onDataSourceChanged) => disposeBag
+        viewModel?.itemsSource.collectionChanged
+            .observeOn(Scheduler.shared.mainScheduler)
+            .subscribe(onNext: onDataSourceChanged) => disposeBag
     }
 
     private func onItemSelected(_ indexPath: IndexPath) {
@@ -108,13 +110,17 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
                         collectionView.deleteSections(IndexSet([section]))
                     }
                     
-                case .insertElements(let indice, let section, _):
-                    let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                case .insertElements(let indexPaths, _):
                     collectionView.insertItems(at: indexPaths)
                     
-                case .deleteElements(let indice, let section, _):
-                    let indexPaths = indice.map { IndexPath(row: $0, section: section) }
+                case .deleteElements(let indexPaths, _):
                     collectionView.deleteItems(at: indexPaths)
+                    
+                case .moveElements(let fromIndexPaths, let toIndexPaths, _):
+                    for (i, fromIndexPath) in fromIndexPaths.enumerated() {
+                        let toIndexPath = toIndexPaths[i]
+                        collectionView.moveItem(at: fromIndexPath, to: toIndexPath)
+                    }
                 }
                 
                 // update counter

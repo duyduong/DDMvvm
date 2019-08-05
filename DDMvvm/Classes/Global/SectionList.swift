@@ -12,15 +12,17 @@ import RxCocoa
 public enum ChangeSet {
     case deleteSection(section: Int, animated: Bool)
     case insertSection(section: Int, animated: Bool)
-    case deleteElements(elementIndice: [Int], section: Int, animated: Bool)
-    case insertElements(elementIndice: [Int], section: Int, animated: Bool)
+    case deleteElements(indexPaths: [IndexPath], animated: Bool)
+    case insertElements(indexPaths: [IndexPath], animated: Bool)
+    case moveElements(fromIndexPaths: [IndexPath], toIndexPaths: [IndexPath], animated: Bool)
     
     var animated: Bool {
         switch self {
         case .deleteSection(_, let animated): return animated
         case .insertSection(_, let animated): return animated
-        case .deleteElements(_, _, let animated): return animated
-        case .insertElements(_, _, let animated): return animated
+        case .deleteElements(_, let animated): return animated
+        case .insertElements(_, let animated): return animated
+        case .moveElements(_, _, let animated): return animated
         }
     }
 }
@@ -64,61 +66,65 @@ public class SectionList<T> where T: Equatable {
         }
     }
     
-    public func insert(_ element: T, at index: Int) {
+    fileprivate func insert(_ element: T, at index: Int) {
         innerSources.insert(element, at: index)
     }
     
-    public func insert(_ elements: [T], at index: Int) {
+    fileprivate func insert(_ elements: [T], at index: Int) {
         innerSources.insert(contentsOf: elements, at: index)
     }
     
-    public func append(_ element: T) {
+    fileprivate func append(_ element: T) {
         innerSources.append(element)
     }
     
-    public func append(_ elements: [T]) {
+    fileprivate func append(_ elements: [T]) {
         innerSources.append(contentsOf: elements)
     }
     
     @discardableResult
-    public func remove(at index: Int) -> T? {
+    fileprivate func remove(at index: Int) -> T? {
         return innerSources.remove(at: index)
     }
     
-    public func remove(at indice: [Int]) {
+    fileprivate func remove(at indice: [Int]) {
         let newSources = innerSources.enumerated().compactMap { indice.contains($0.offset) ? nil : $0.element }
         innerSources = newSources
     }
     
-    public func removeAll() {
+    fileprivate func removeAll() {
         innerSources.removeAll()
     }
     
+    fileprivate func sort(by predicate: (T, T) throws -> Bool) rethrows {
+        try innerSources.sort(by: predicate)
+    }
+    
     @discardableResult
-    public func firstIndex(of element: T) -> Int? {
+    fileprivate func firstIndex(of element: T) -> Int? {
         return innerSources.firstIndex(of: element)
     }
     
     @discardableResult
-    public func lastIndex(of element: T) -> Int? {
+    fileprivate func lastIndex(of element: T) -> Int? {
         return innerSources.lastIndex(of: element)
     }
     
     @discardableResult
-    public func firstIndex(where predicate: (T) throws -> Bool) rethrows -> Int? {
+    fileprivate func firstIndex(where predicate: (T) throws -> Bool) rethrows -> Int? {
         return try innerSources.firstIndex(where: predicate)
     }
     
     @discardableResult
-    public func lastIndex(where predicate: (T) throws -> Bool) rethrows -> Int? {
+    fileprivate func lastIndex(where predicate: (T) throws -> Bool) rethrows -> Int? {
         return try innerSources.lastIndex(where: predicate)
     }
     
-    public func map<U>(_ transform: (T) throws -> U) rethrows -> [U] {
+    fileprivate func map<U>(_ transform: (T) throws -> U) rethrows -> [U] {
         return try innerSources.map(transform)
     }
     
-    public func compactMap<U>(_ transform: (T) throws -> U?) rethrows -> [U] {
+    fileprivate func compactMap<U>(_ transform: (T) throws -> U?) rethrows -> [U] {
         return try innerSources.compactMap(transform)
     }
 }
@@ -194,7 +200,12 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func insertSection(_ sectionList: SectionList<T>, at index: Int, animated: Bool? = nil) {
-        innerSources.insert(sectionList, at: index)
+        if innerSources.count == 0 {
+            innerSources.append(sectionList)
+        } else {
+            innerSources.insert(sectionList, at: index)
+        }
+        
         rxInnerSources.accept(innerSources)
         publisher.onNext(.insertSection(section: index, animated: animated ?? self.animated))
     }
@@ -234,26 +245,36 @@ public class ReactiveCollection<T> where T: Equatable {
     
     // MARK: - section elements manipulations
     
+    public func insert(_ element: T, at indexPath: IndexPath, animated: Bool? = nil) {
+        let section = indexPath.section
+        let index = indexPath.row
+        
+        insert(element, at: index, of: section, animated: animated)
+    }
+    
     public func insert(_ element: T, at index: Int, of section: Int = 0, animated: Bool? = nil) {
         if innerSources[section].count == 0 {
             innerSources[section].append(element)
-            rxInnerSources.accept(innerSources)
-            
-            publisher.onNext(.insertElements(elementIndice: [index], section: 0, animated: animated ?? self.animated))
         } else if index < innerSources[section].count {
             innerSources[section].insert(element, at: index)
-            rxInnerSources.accept(innerSources)
-            
-            publisher.onNext(.insertElements(elementIndice: [index], section: section, animated: animated ?? self.animated))
         }
+        
+        rxInnerSources.accept(innerSources)
+        publisher.onNext(.insertElements(indexPaths: [IndexPath(row: index, section: section)], animated: animated ?? self.animated))
+    }
+    
+    public func insert(_ elements: [T], at indexPath: IndexPath, animated: Bool? = nil) {
+        let section = indexPath.section
+        let index = indexPath.row
+        
+        insert(elements, at: index, of: section, animated: animated)
     }
     
     public func insert(_ elements: [T], at index: Int, of section: Int = 0, animated: Bool? = nil) {
         innerSources[section].insert(elements, at: index)
         rxInnerSources.accept(innerSources)
         
-        let indice = elements.count == 0 ? [] : Array(0..<elements.count)
-        publisher.onNext(.insertElements(elementIndice: indice, section: section, animated: animated ?? self.animated))
+        publisher.onNext(.insertElements(indexPaths: [IndexPath(row: index, section: section)], animated: animated ?? self.animated))
     }
     
     public func append(_ element: T, to section: Int = 0, animated: Bool? = nil) {
@@ -262,10 +283,10 @@ public class ReactiveCollection<T> where T: Equatable {
             return
         }
         
-        let index = innerSources[section].count == 0 ? 0 : innerSources[section].count
+        let index = innerSources[section].count
         innerSources[section].append(element)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.insertElements(elementIndice: [index], section: section, animated: animated ?? self.animated))
+        publisher.onNext(.insertElements(indexPaths: [IndexPath(row: index, section: section)], animated: animated ?? self.animated))
     }
     
     public func append(_ elements: [T], to section: Int = 0, animated: Bool? = nil) {
@@ -274,33 +295,101 @@ public class ReactiveCollection<T> where T: Equatable {
             return
         }
         
-        let indice: [Int]
+        let indexPaths: [IndexPath]
         if elements.count == 0 {
-            indice = []
+            indexPaths = []
         } else {
             let startIndex = innerSources[section].count == 0 ? 0 : innerSources[section].count
             let endIndex = (startIndex + (elements.count - 1))
-            indice = Array(startIndex...endIndex)
+            indexPaths = Array(startIndex...endIndex).map { IndexPath(row: $0, section: section) }
         }
         
         innerSources[section].append(elements)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.insertElements(elementIndice: indice, section: section, animated: animated ?? self.animated))
+        publisher.onNext(.insertElements(indexPaths: indexPaths, animated: animated ?? self.animated))
+    }
+    
+    @discardableResult
+    public func remove(at indexPath: IndexPath, animated: Bool? = nil) -> T? {
+        let section = indexPath.section
+        let index = indexPath.row
+        
+        return remove(at: index, of: section, animated: animated)
     }
     
     @discardableResult
     public func remove(at index: Int, of section: Int = 0, animated: Bool? = nil) -> T? {
         let element = innerSources[section].remove(at: index)
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.deleteElements(elementIndice: [index], section: section, animated: animated ?? self.animated))
+        publisher.onNext(.deleteElements(indexPaths: [IndexPath(row: index, section: section)], animated: animated ?? self.animated))
         
         return element
     }
     
     public func remove(at indice: [Int], of section: Int = 0, animated: Bool? = nil) {
-        innerSources[section].remove(at: indice)
+        remove(at: indice.map { IndexPath(row: $0, section: section) })
+    }
+    
+    public func remove(at indexPaths: [IndexPath], animated: Bool? = nil) {
+        for indexPath in indexPaths {
+            innerSources[indexPath.section].remove(at: indexPath.row)
+        }
+        
         rxInnerSources.accept(innerSources)
-        publisher.onNext(.deleteElements(elementIndice: indice, section: section, animated: animated ?? self.animated))
+        publisher.onNext(.deleteElements(indexPaths: indexPaths, animated: animated ?? self.animated))
+    }
+    
+    public func sort(by predicate: (T, T) throws -> Bool, at section: Int = 0, animated: Bool? = nil) rethrows {
+        let oldElements = innerSources[section].allElements
+        
+        try innerSources[section].sort(by: predicate)
+        
+        let newElements = innerSources[section].allElements
+        
+        var fromIndexPaths: [IndexPath] = []
+        var toIndexPaths: [IndexPath] = []
+        oldElements.enumerated().forEach { (i, element) in
+            if let newIndex = newElements.index(of: element) {
+                toIndexPaths.append(IndexPath(row: newIndex, section: section))
+                fromIndexPaths.append(IndexPath(row: i, section: section))
+            }
+        }
+        
+        if fromIndexPaths.count == toIndexPaths.count {
+            rxInnerSources.accept(innerSources)
+            publisher.onNext(.moveElements(fromIndexPaths: fromIndexPaths, toIndexPaths: toIndexPaths, animated: animated ?? self.animated))
+        }
+    }
+    
+    public func move(from fromIndexPaths: [IndexPath], to toIndexPaths: [IndexPath], animated: Bool? = nil) {
+        guard fromIndexPaths.count == toIndexPaths.count else { return }
+        
+        var validIndice: [Int] = []
+        for (i, fromIndexPath) in fromIndexPaths.enumerated() {
+            let toIndexPath = toIndexPaths[i]
+            if fromIndexPath.section != toIndexPath.section {
+                if let element = innerSources[fromIndexPath.section].remove(at: fromIndexPath.row) {
+                    innerSources[toIndexPath.section].insert(element, at: toIndexPath.row)
+                    validIndice.append(i)
+                }
+            } else {
+                let element = innerSources[fromIndexPath.section][fromIndexPath.row]
+                innerSources[toIndexPath.section].insert(element, at: toIndexPath.row)
+                
+                if fromIndexPath.row < toIndexPath.row {
+                    innerSources[fromIndexPath.section].remove(at: fromIndexPath.row)
+                    validIndice.append(i)
+                } else if fromIndexPath.row > toIndexPath.row {
+                    innerSources[fromIndexPath.section].remove(at: fromIndexPath.row + 1)
+                    validIndice.append(i)
+                }
+            }
+        }
+        
+        if validIndice.count > 0 {
+            rxInnerSources.accept(innerSources)
+            publisher.onNext(.moveElements(fromIndexPaths: validIndice.map { fromIndexPaths[$0] }, toIndexPaths: validIndice.map { toIndexPaths[$0] }, animated: animated ?? self.animated))
+        }
     }
     
     public func asObservable() -> Observable<[SectionList<T>]> {

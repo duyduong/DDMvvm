@@ -15,13 +15,14 @@ import RxCocoa
 class SectionListPage: ListPage<SectionListPageViewModel> {
     
     let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+    let sortBtn = UIBarButtonItem(title: "Sort", style: .plain, target: nil, action: nil)
 
     override func initialize() {
         super.initialize()
         
         enableBackButton = true
         
-        navigationItem.rightBarButtonItem = addBtn
+        navigationItem.rightBarButtonItems = [addBtn, sortBtn]
         
         tableView.register(SectionTextCell.self, forCellReuseIdentifier: SectionTextCell.identifier)
         tableView.register(SectionImageCell.self, forCellReuseIdentifier: SectionImageCell.identifier)
@@ -33,6 +34,7 @@ class SectionListPage: ListPage<SectionListPageViewModel> {
         guard let viewModel = viewModel else { return }
         
         addBtn.rx.bind(to: viewModel.addAction, input: ())
+        sortBtn.rx.bind(to: viewModel.sortAction, input: ())
     }
     
     // Based on type to return correct identifier for cells
@@ -75,6 +77,10 @@ class SectionListPageViewModel: ListViewModel<Model, SuperCellViewModel> {
         return Action() { .just(self.add()) }
     }()
     
+    lazy var sortAction: Action<Void, Void> = {
+        return Action() { .just(self.sort()) }
+    }()
+    
     var tmpBag: DisposeBag?
     
     override func react() {
@@ -115,6 +121,18 @@ class SectionListPageViewModel: ListViewModel<Model, SuperCellViewModel> {
     private func add() {
         let vm = SectionHeaderViewViewModel(model: SimpleModel(withTitle: "Section title #\(itemsSource.count + 1)"))
         itemsSource.appendSection(SectionList<SuperCellViewModel>(vm))
+    }
+    
+    private func sort() {
+        guard itemsSource.count > 0 else { return }
+        
+        let section = Int.random(in: 0..<itemsSource.count)
+        itemsSource.sort(by: { (cvm1, cvm2) -> Bool in
+            if let m1 = cvm1.model as? NumberModel, let m2 = cvm2.model as? NumberModel {
+                return m1.number < m2.number
+            }
+            return false
+        }, at: section)
     }
 }
 
