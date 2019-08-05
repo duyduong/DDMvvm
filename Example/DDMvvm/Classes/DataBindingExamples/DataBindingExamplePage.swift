@@ -99,7 +99,7 @@ class DataBindingExamplePageViewModel: ViewModel<MenuModel> {
             return !e.isNilOrEmpty && !p.isNilOrEmpty
         } ~> rxSubmitButtonEnabled => disposeBag // One-way binding is donated by ~>
         
-        rxEmail.filterNil().map { "Hello, \($0)" } ~> rxHelloText => disposeBag  // One-way binding is donated by ~>
+        rxEmail.filter { $0 != nil }.map { "Hello, \($0!)" } ~> rxHelloText => disposeBag  // One-way binding is donated by ~>
     }
 }
 
