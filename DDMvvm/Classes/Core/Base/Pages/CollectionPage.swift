@@ -97,6 +97,16 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         if changeSet.animated {
             collectionView.performBatchUpdates({
                 switch changeSet {
+                case .reloadSection(let section, _):
+                    if section < 0 {
+                        if collectionView.numberOfSections > 0 {
+                            let sections = Array(0...collectionView.numberOfSections - 1)
+                            collectionView.reloadSections(IndexSet(sections))
+                        }
+                    } else {
+                        collectionView.reloadSections(IndexSet([section]))
+                    }
+                    
                 case .insertSection(let section, _):
                     collectionView.insertSections(IndexSet([section]))
                     

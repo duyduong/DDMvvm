@@ -51,7 +51,7 @@ class ExampleMenuPageViewModel: ListViewModel<MenuModel, ExampleMenuCellViewMode
     
     override func react() {
         let models = getMenuModels()
-        itemsSource.append(models.toCellViewModels())
+        itemsSource.reset([models.toCellViewModels()])
         
         // set page title
         rxPageTitle.accept(model?.title ?? "")

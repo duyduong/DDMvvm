@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 
 public enum ChangeSet {
+    case reloadSection(section: Int, animated: Bool)
     case deleteSection(section: Int, animated: Bool)
     case insertSection(section: Int, animated: Bool)
     case deleteElements(indexPaths: [IndexPath], animated: Bool)
@@ -18,6 +19,7 @@ public enum ChangeSet {
     
     var animated: Bool {
         switch self {
+        case .reloadSection(_, let animated): return animated
         case .deleteSection(_, let animated): return animated
         case .insertSection(_, let animated): return animated
         case .deleteElements(_, let animated): return animated
@@ -179,19 +181,32 @@ public class ReactiveCollection<T> where T: Equatable {
     
     // MARK: - section manipulations
     
-    public func reset(_ sources: [[T]], animated: Bool? = nil) {
-        removeAll(animated: animated)
-        
-        for sectionList in sources {
-            appendSection("", elements: sectionList, animated: animated)
+    public func reload(at section: Int = -1, _ animated: Bool? = nil) {
+        if innerSources.count > 0 && section < innerSources.count {
+            rxInnerSources.accept(innerSources)
+            publisher.onNext(.reloadSection(section: section, animated: animated ?? self.animated))
         }
     }
     
+    public func reset(_ sources: [[T]], animated: Bool? = nil) {
+        reset(sources.map { SectionList("", initialElements: $0) }, animated: animated)
+    }
+    
     public func reset(_ sources: [SectionList<T>], animated: Bool? = nil) {
-        removeAll(animated: animated)
+        innerSources.removeAll()
+        innerSources.append(contentsOf: sources)
         
-        for sectionList in sources {
-            appendSection(sectionList, animated: animated)
+        rxInnerSources.accept(innerSources)
+        publisher.onNext(.reloadSection(section: -1, animated: animated ?? self.animated))
+    }
+    
+    public func replace(_ elements: [T], of section: Int = 0, animated: Bool? = nil) {
+        if section < innerSources.count {
+            innerSources[section].removeAll()
+            innerSources[section].append(elements)
+            
+            rxInnerSources.accept(innerSources)
+            publisher.onNext(.reloadSection(section: section, animated: animated ?? self.animated))
         }
     }
     

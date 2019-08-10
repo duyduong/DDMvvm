@@ -75,9 +75,17 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     
     private func onDataSourceChanged(_ changeSet: ChangeSet) {
         if changeSet.animated {
-            tableView.beginUpdates()
-            
             switch changeSet {
+            case .reloadSection(let section, _):
+                if section < 0 {
+                    if tableView.numberOfSections > 0 {
+                        let sections = IndexSet(0...tableView.numberOfSections - 1)
+                        tableView.reloadSections(sections, with: .automatic)
+                    }
+                } else {
+                    tableView.reloadSections(IndexSet([section]), with: .automatic)
+                }
+                
             case .insertSection(let section, _):
                 tableView.insertSections([section], with: .top)
                 
@@ -98,13 +106,15 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
                 tableView.deleteRows(at: indexPaths, with: .bottom)
                 
             case .moveElements(let fromIndexPaths, let toIndexPaths, _):
+                tableView.beginUpdates()
+                
                 for (i, fromIndexPath) in fromIndexPaths.enumerated() {
                     let toIndexPath = toIndexPaths[i]
                     tableView.moveRow(at: fromIndexPath, to: toIndexPath)
                 }
+                
+                tableView.endUpdates()
             }
-            
-            tableView.endUpdates()
         } else {
             tableView.reloadData()
         }
