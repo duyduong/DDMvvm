@@ -154,7 +154,7 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
     var params: [String: Any] {
         return [
             "method": "flickr.photos.search",
-            "api_key": "4570cc386c279f3d4701616a1ef7ac74", // please provide your API key
+            "api_key": "a581dcb05aa88f62627f78d2797cf0b6", // please provide your API key
             "format": "json",
             "nojsoncallback": 1,
             "page": page,

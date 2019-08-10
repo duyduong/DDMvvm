@@ -76,44 +76,59 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
     private func onDataSourceChanged(_ changeSet: ChangeSet) {
         if changeSet.animated {
             switch changeSet {
-            case .reloadSection(let section, _):
-                if section < 0 {
-                    if tableView.numberOfSections > 0 {
-                        let sections = IndexSet(0...tableView.numberOfSections - 1)
-                        tableView.reloadSections(sections, with: .automatic)
+            case let data as ModifySection:
+                switch data.type {
+                case .insert:
+                    tableView.insertSections([data.section], with: .top)
+                    
+                case .delete:
+                    if data.section < 0 {
+                        if tableView.numberOfSections > 0 {
+                            let sections = IndexSet(0...tableView.numberOfSections - 1)
+                            tableView.deleteSections(sections, with: .bottom)
+                        } else {
+                            tableView.reloadData()
+                        }
+                    } else {
+                        tableView.deleteSections([data.section], with: .bottom)
                     }
-                } else {
-                    tableView.reloadSections(IndexSet([section]), with: .automatic)
+                    
+                default:
+                    if data.section < 0 {
+                        if tableView.numberOfSections > 0 {
+                            let sections = IndexSet(0...tableView.numberOfSections - 1)
+                            tableView.reloadSections(sections, with: .automatic)
+                        } else {
+                            tableView.reloadData()
+                        }
+                    } else {
+                        tableView.reloadSections(IndexSet([data.section]), with: .automatic)
+                    }
+                }
+            case let data as ModifyElements:
+                switch data.type {
+                case .insert:
+                    tableView.insertRows(at: data.indexPaths, with: .top)
+                    
+                case .delete:
+                    tableView.deleteRows(at: data.indexPaths, with: .bottom)
+                    
+                default:
+                    tableView.reloadRows(at: data.indexPaths, with: .automatic)
                 }
                 
-            case .insertSection(let section, _):
-                tableView.insertSections([section], with: .top)
-                
-            case .deleteSection(let section, _):
-                if section < 0 {
-                    if tableView.numberOfSections > 0 {
-                        let sections = IndexSet(0...tableView.numberOfSections - 1)
-                        tableView.deleteSections(sections, with: .bottom)
-                    }
-                } else {
-                    tableView.deleteSections([section], with: .bottom)
-                }
-                
-            case .insertElements(let indexPaths, _):
-                tableView.insertRows(at: indexPaths, with: .top)
-                
-            case .deleteElements(let indexPaths, _):
-                tableView.deleteRows(at: indexPaths, with: .bottom)
-                
-            case .moveElements(let fromIndexPaths, let toIndexPaths, _):
+            case let data as MoveElements:
                 tableView.beginUpdates()
                 
-                for (i, fromIndexPath) in fromIndexPaths.enumerated() {
-                    let toIndexPath = toIndexPaths[i]
+                for (i, fromIndexPath) in data.fromIndexPaths.enumerated() {
+                    let toIndexPath = data.toIndexPaths[i]
                     tableView.moveRow(at: fromIndexPath, to: toIndexPath)
                 }
                 
                 tableView.endUpdates()
+                
+            default:
+                tableView.reloadData()
             }
         } else {
             tableView.reloadData()
