@@ -266,10 +266,7 @@ public class ReactiveCollection<T> where T: Equatable {
     // MARK: - section elements manipulations
     
     public func insert(_ element: T, at indexPath: IndexPath, animated: Bool? = nil) {
-        let section = indexPath.section
-        let index = indexPath.row
-        
-        insert(element, at: index, of: section, animated: animated)
+        insert(element, at: indexPath.row, of: indexPath.section, animated: animated)
     }
     
     public func insert(_ element: T, at index: Int, of section: Int = 0, animated: Bool? = nil) {
@@ -281,14 +278,20 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func insert(_ elements: [T], at index: Int, of section: Int = 0, animated: Bool? = nil) {
+        if section >= innerSources.count {
+            appendSection("", elements: elements, animated: animated)
+            return
+        }
+        
         if innerSources[section].count == 0 {
             innerSources[section].append(elements)
         } else if index < innerSources[section].count {
             innerSources[section].insert(elements, at: index)
         }
         
+        let indexPaths = Array(index..<index + elements.count).map { IndexPath(row: $0, section: section) }
         rxInnerSources.accept(innerSources)
-        publisher.onNext(ModifyElements(type: .insert, indexPaths: [IndexPath(row: index, section: section)], animated: animated ?? self.animated))
+        publisher.onNext(ModifyElements(type: .insert, indexPaths: indexPaths, animated: animated ?? self.animated))
     }
     
     public func append(_ element: T, to section: Int = 0, animated: Bool? = nil) {
@@ -296,7 +299,7 @@ public class ReactiveCollection<T> where T: Equatable {
     }
     
     public func append(_ elements: [T], to section: Int = 0, animated: Bool? = nil) {
-        if innerSources.count == 0 {
+        if section >= innerSources.count {
             appendSection("", elements: elements, animated: animated)
             return
         }
@@ -306,8 +309,7 @@ public class ReactiveCollection<T> where T: Equatable {
             indexPaths = []
         } else {
             let startIndex = innerSources[section].count == 0 ? 0 : innerSources[section].count
-            let endIndex = (startIndex + (elements.count - 1))
-            indexPaths = Array(startIndex...endIndex).map { IndexPath(row: $0, section: section) }
+            indexPaths = Array(startIndex..<startIndex + elements.count).map { IndexPath(row: $0, section: section) }
         }
         
         innerSources[section].append(elements)
