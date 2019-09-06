@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-open class NavigationPage: UINavigationController, ITransitionView, IDestroyable {
+open class NavigationPage: UINavigationController, UIGestureRecognizerDelegate, ITransitionView, IDestroyable {
     
     public var animatorDelegate: AnimatorDelegate?
     
@@ -26,6 +26,7 @@ open class NavigationPage: UINavigationController, ITransitionView, IDestroyable
     open override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
+        interactivePopGestureRecognizer?.delegate = self
     }
     
     public var disposeBag: DisposeBag? = DisposeBag()

@@ -116,6 +116,10 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         viewModel?.rxViewState.accept(.didDisappear)
+        
+        if isMovingFromParent {
+            destroy()
+        }
     }
     
     /**
