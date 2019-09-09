@@ -359,7 +359,7 @@ public class ReactiveCollection<T> where T: Equatable {
         var fromIndexPaths: [IndexPath] = []
         var toIndexPaths: [IndexPath] = []
         oldElements.enumerated().forEach { (i, element) in
-            if let newIndex = newElements.index(of: element) {
+            if let newIndex = newElements.firstIndex(of: element) {
                 toIndexPaths.append(IndexPath(row: newIndex, section: section))
                 fromIndexPaths.append(IndexPath(row: i, section: section))
             }

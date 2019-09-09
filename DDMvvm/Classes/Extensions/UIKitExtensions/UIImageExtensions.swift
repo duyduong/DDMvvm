@@ -26,7 +26,6 @@ public extension UIImage {
         UIGraphicsEndImageContext()
         return image!
     }
-    
 }
 
 

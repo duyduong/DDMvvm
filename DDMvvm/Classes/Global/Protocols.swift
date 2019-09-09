@@ -74,7 +74,6 @@ public protocol IView: IAnyView, IDestroyable {
     
     func initialize()
     func bindViewAndViewModel()
-    func viewModelChanged()
 }
 
 // MARK: - Viewmodel protocols

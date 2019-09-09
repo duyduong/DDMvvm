@@ -20,7 +20,7 @@ class CustomControlExamplePage: Page<CustomControlExamplePageViewModel> {
         enableBackButton = true
         
         view.addSubview(segmentedView)
-        segmentedView.autoPin(toTopLayoutOf: self)
+        segmentedView.autoPinEdge(toSuperviewSafeArea: .top)
         segmentedView.autoPinEdge(toSuperviewEdge: .leading)
         segmentedView.autoPinEdge(toSuperviewEdge: .trailing)
         

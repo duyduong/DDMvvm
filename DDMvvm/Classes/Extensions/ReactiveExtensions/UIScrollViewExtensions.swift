@@ -10,7 +10,7 @@ import RxSwift
 
 public extension Reactive where Base: UIScrollView {
     
-    var endReach: Observable<Void> {
+    func endReach(_ distance: CGFloat) -> Observable<Void> {
         return Observable.create { observer in
             return self.base.rx.contentOffset.subscribe(onNext: { offset in
                 let scrollViewHeight = self.base.frame.size.height
@@ -20,7 +20,7 @@ public extension Reactive where Base: UIScrollView {
                 let scrollSize = scrollOffset + scrollViewHeight
                 
                 // at the bottom
-                if scrollSize >= scrollContentSizeHeight - 50 {
+                if scrollSize >= scrollContentSizeHeight - distance {
                     observer.onNext(())
                 }
             })

@@ -72,10 +72,8 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         collectionView.isHidden = value
     }
 
+    /// Every time the viewModel changed, this method will be called again, so make sure to call super for ListPage to work
     open override func bindViewAndViewModel() {
-        updateCounter()
-        collectionView.reloadData()
-        
         collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged
             .observeOn(Scheduler.shared.mainScheduler)
@@ -188,7 +186,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
         // set index for each cell
-        (cellViewModel as? IndexableCellViewModel)?.setIndexPath(indexPath)
+        (cellViewModel as? IndexableCellViewModel)?.indexPath = indexPath
         
         let identifier = cellIdentifier(cellViewModel)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)

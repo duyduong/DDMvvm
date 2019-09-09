@@ -7,10 +7,10 @@
 
 import UIKit
 
-public extension UINavigationItem {
+extension UINavigationItem {
     
     @discardableResult
-    func setTitle(_ title: String? = nil, textColor: UIColor = .white, alignment: NSTextAlignment = .center, font: UIFont = Font.system.bold(withSize: 18)) -> UILabel {
+    @objc open func setTitle(_ title: String? = nil, textColor: UIColor = .white, alignment: NSTextAlignment = .center, font: UIFont = Font.system.bold(withSize: 18)) -> UILabel {
         let titleLbl = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
         titleLbl.textColor = textColor
         titleLbl.text = title
@@ -20,7 +20,6 @@ public extension UINavigationItem {
     
         return titleLbl
     }
-    
 }
 
 

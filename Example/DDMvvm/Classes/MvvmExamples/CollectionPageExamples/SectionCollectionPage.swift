@@ -29,7 +29,7 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
         navigationItem.rightBarButtonItem = addBtn
         
         (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
-        collectionView.register(SectionHeaderCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: SectionHeaderCell.identifier)
+        collectionView.register(SectionHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCell.identifier)
         collectionView.register(CPTextCell.self, forCellWithReuseIdentifier: CPTextCell.identifier)
         collectionView.register(CPImageCell.self, forCellWithReuseIdentifier: CPImageCell.identifier)
     }
@@ -57,7 +57,7 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
     
     /// Setup section header cell, each header cell will map with key from itemsSource
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionElementKindSectionHeader {
+        if kind == UICollectionView.elementKindSectionHeader {
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderCell.identifier, for: indexPath)
             
             // to set ViewModel for this cell, just casting to IAnyView and set anyViewModel property

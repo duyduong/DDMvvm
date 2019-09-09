@@ -48,6 +48,18 @@ public extension UINavigationController {
         }
     }
     
+    func popToViewController(_ viewController: UIViewController, animated: Bool, completions: (([UIViewController]?) -> Void)?) {
+        if animated {
+            CATransaction.begin()
+            let pages = popToViewController(viewController, animated: animated)
+            CATransaction.setCompletionBlock { completions?(pages) }
+            CATransaction.commit()
+        } else {
+            let pages = popToViewController(viewController, animated: animated)
+            completions?(pages)
+        }
+    }
+    
     func pushViewController(_ viewController: UIViewController, animated: Bool, completions: (() -> Void)?) {
         if animated {
             CATransaction.begin()

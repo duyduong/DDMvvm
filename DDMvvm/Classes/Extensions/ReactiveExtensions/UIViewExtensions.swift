@@ -27,6 +27,10 @@ public extension Reactive where Base: UIView {
         return Binder(base) { $0.layer.borderWidth = $1 }
     }
     
+    var cornerRadius: Binder<CGFloat> {
+        return Binder(base) { $0.cornerRadius = $1 }
+    }
+    
     var tapGesture: ControlEvent<UITapGestureRecognizer> {
         var tap: UITapGestureRecognizer! = base.getGesture()
         if tap == nil {

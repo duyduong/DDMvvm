@@ -48,9 +48,8 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         tableView.removeFromSuperview()
     }
     
+    /// Every time the viewModel changed, this method will be called again, so make sure to call super for ListPage to work
     open override func bindViewAndViewModel() {
-        tableView.reloadData()
-        
         tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged
             .observeOn(Scheduler.shared.mainScheduler)
@@ -167,7 +166,7 @@ open class ListPage<VM: IListViewModel>: Page<VM>, UITableViewDataSource, UITabl
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
         // set index for each cell
-        (cellViewModel as? IndexableCellViewModel)?.setIndexPath(indexPath)
+        (cellViewModel as? IndexableCellViewModel)?.indexPath = indexPath
         
         let identifier = cellIdentifier(cellViewModel)
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)

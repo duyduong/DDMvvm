@@ -119,7 +119,7 @@ class SegmentedView: AbstractControlView {
     }
     
     @objc func buttonPressed(_ sender: UIButton) {
-        if let index = buttons.index(of: sender) {
+        if let index = buttons.firstIndex(of: sender) {
             selectedIndex = index
         }
     }

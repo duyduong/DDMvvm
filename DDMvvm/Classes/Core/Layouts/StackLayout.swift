@@ -170,20 +170,17 @@ public protocol StackItem {
 public struct StackViewItem: StackItem {
     
     public enum Attribute {
-        @available(*, deprecated, renamed: "fill")
-        case margin(insets: UIEdgeInsets)
-        
-        @available(*, deprecated, message: "Pre-condition for centerX is to have a fixed width. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerX")
-        case centerX
-        
-        @available(*, deprecated, message: "Pre-condition for centerY is to have a fixed height. That means it is depended on the setup of StackLayout. Please use constructor with constraintsDefinition closure to define your own centerY")
-        case centerY
-        
-        /// Align left with top, left, bottom insets
+        /// Align left with insets
         case leading(insets: UIEdgeInsets)
         
-        /// Align right with top, right, bottom insets
+        /// Align right with insets
         case trailing(insets: UIEdgeInsets)
+        
+        /// Align top with insets
+        case top(insets: UIEdgeInsets)
+        
+        /// Align bottom with insets
+        case bottom(insets: UIEdgeInsets)
         
         /// Center the view
         case center(insets: UIEdgeInsets)
@@ -205,28 +202,28 @@ public struct StackViewItem: StackItem {
     public init(view: UIView, attribute: Attribute) {
         self.init(view: view) { (view) in
             switch attribute {
-            case .centerX, .centerY:
-                view.autoCenterInSuperview()
-                view.autoPinEdge(toSuperviewEdge: .top, withInset: 0, relation: .greaterThanOrEqual)
-                view.autoPinEdge(toSuperviewEdge: .leading, withInset: 0, relation: .greaterThanOrEqual)
-                view.autoPinEdge(toSuperviewEdge: .bottom, withInset: 0, relation: .greaterThanOrEqual)
-                view.autoPinEdge(toSuperviewEdge: .right, withInset: 0, relation: .greaterThanOrEqual)
-                
             case .leading(let insets):
                 view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .trailing)
+                view.autoPinEdge(toSuperviewEdge: .trailing, withInset: insets.right, relation: .greaterThanOrEqual)
                 
             case .trailing(let insets):
                 view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .leading)
+                view.autoPinEdge(toSuperviewEdge: .leading, withInset: insets.left, relation: .greaterThanOrEqual)
+                
+            case .top(let insets):
+                view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .bottom)
+                view.autoPinEdge(toSuperviewEdge: .bottom, withInset: insets.bottom, relation: .greaterThanOrEqual)
+                
+            case .bottom(let insets):
+                view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .top)
+                view.autoPinEdge(toSuperviewEdge: .top, withInset: insets.top, relation: .greaterThanOrEqual)
                 
             case .center(let insets):
                 view.autoCenterInSuperview()
                 view.autoPinEdge(toSuperviewEdge: .top, withInset: insets.top, relation: .greaterThanOrEqual)
                 view.autoPinEdge(toSuperviewEdge: .leading, withInset: insets.left, relation: .greaterThanOrEqual)
                 view.autoPinEdge(toSuperviewEdge: .bottom, withInset: insets.bottom, relation: .greaterThanOrEqual)
-                view.autoPinEdge(toSuperviewEdge: .right, withInset: insets.right, relation: .greaterThanOrEqual)
-                
-            case .margin(let insets):
-                view.autoPinEdgesToSuperviewEdges(with: insets)
+                view.autoPinEdge(toSuperviewEdge: .trailing, withInset: insets.right, relation: .greaterThanOrEqual)
                 
             case .fill(let insets):
                 view.autoPinEdgesToSuperviewEdges(with: insets)

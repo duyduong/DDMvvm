@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxCocoa
 import DDMvvm
+import RxCocoa
 
 class ContactCell: TableCell<ContactCellViewModel> {
 

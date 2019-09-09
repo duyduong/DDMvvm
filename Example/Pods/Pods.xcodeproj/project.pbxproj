@@ -91,7 +91,6 @@
 		330EDF3321FF9F0C2FBFC10CBA072946 /* ObservableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A4C9E9F395A85A83802B8DEDEBEE2C /* ObservableType.swift */; };
 		332F498B280452BED607D6339EF33D92 /* UITabBarItem+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD22E6A0CAAFCC6E59EF7EEE0766AEC2 /* UITabBarItem+Rx.swift */; };
 		33383E7737ED28CFC0DF45E59284E17B /* UIControlExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D76CD2E2D9369CAD77B6276BA5DCFCE /* UIControlExtensions.swift */; };
-		337A286831050003A75AFA40D7BC9313 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DDB49D639C37A905D0A13B58975CF0 /* OverlayView.swift */; };
 		3443571717518D53B5B83EFB2F48C33F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4447D5A8B740A743EAAA683DE55E68D1 /* Alamofire.framework */; };
 		34B988B6D7105D32432B10BB04099927 /* ImmutableMappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4834B4E18B13697398210574C6432C31 /* ImmutableMappable.swift */; };
 		34DF8A6EA507395CF33DED4A87E4162A /* DrawerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4456E78903BF3C49174925DB090592 /* DrawerPage.swift */; };
@@ -755,7 +754,6 @@
 		4834B4E18B13697398210574C6432C31 /* ImmutableMappable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImmutableMappable.swift; path = Sources/ImmutableMappable.swift; sourceTree = "<group>"; };
 		48F62CF8248B6C65B9848D972AED8EE5 /* TextInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = RxCocoa/Common/TextInput.swift; sourceTree = "<group>"; };
 		492F495C803366805B195AB927057DC3 /* RxCollectionViewReactiveArrayDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RxCollectionViewReactiveArrayDataSource.swift; path = RxCocoa/iOS/DataSources/RxCollectionViewReactiveArrayDataSource.swift; sourceTree = "<group>"; };
-		49DDB49D639C37A905D0A13B58975CF0 /* OverlayView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		4A4E2AC16E3E18BE081CB39AC7A0CAF3 /* NSTextView+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSTextView+Rx.swift"; path = "RxCocoa/macOS/NSTextView+Rx.swift"; sourceTree = "<group>"; };
 		4ABDDEE87BD389EF76D7A059ED3E79AF /* _RXObjCRuntime.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = _RXObjCRuntime.m; path = RxCocoa/Runtime/_RXObjCRuntime.m; sourceTree = "<group>"; };
 		4C1F9F533418C19226EBDA691E70C8A7 /* SerialDisposable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SerialDisposable.swift; path = RxSwift/Disposables/SerialDisposable.swift; sourceTree = "<group>"; };
@@ -1412,7 +1410,6 @@
 			children = (
 				5E10B2E4EA2B73B6AD650AEFFBD50BCD /* AbstractView.swift */,
 				B03B4B1FD5C553DEE08E6565BA237617 /* LocalHud.swift */,
-				49DDB49D639C37A905D0A13B58975CF0 /* OverlayView.swift */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -2950,7 +2947,6 @@
 				9143244208B30A55104FD4F8A0882CAB /* NSErrorExtensions.swift in Sources */,
 				041E631D36843590801288FFE68FB6C5 /* NSObjectExtensions.swift in Sources */,
 				2827A5A8E22215FAE4806E370C229F07 /* OptionalExtensions.swift in Sources */,
-				337A286831050003A75AFA40D7BC9313 /* OverlayView.swift in Sources */,
 				51E8CE0FBCA7E5E05419D16E48446EC6 /* Page.swift in Sources */,
 				E56A8595FC5FA722261B29D2252B1394 /* PresenterPage.swift in Sources */,
 				FC20A03FA457D35A47E7B20864B46A08 /* Protocols.swift in Sources */,

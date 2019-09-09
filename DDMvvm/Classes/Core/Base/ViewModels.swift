@@ -45,6 +45,8 @@ open class ViewModel<M>: NSObject, IViewModel {
     
     required public init(model: M? = nil) {
         _model = model
+        super.init()
+        react()
     }
     
     open func destroy() {
@@ -88,27 +90,17 @@ open class ListViewModel<M, CVM: IGenericViewModel>: ViewModel<M>, IListViewMode
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
 }
 
-protocol Indexable: class {
-    var indexPath: IndexPath? { get }
-    func setIndexPath(_ indexPath: IndexPath?)
-}
-
-protocol IndexableCellViewModel: Indexable {
-    var indexPath: IndexPath? { get set }
-}
-
-extension IndexableCellViewModel {
-    public func setIndexPath(_ indexPath: IndexPath?) {
-        self.indexPath = indexPath
-    }
-}
-
 /**
  A based ViewModel for TableCell and CollectionCell
  
  The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService. Also CellViewModel
  contains its own index
  */
+
+protocol IndexableCellViewModel: class {
+    var indexPath: IndexPath? { get set }
+}
+
 open class CellViewModel<M>: NSObject, IGenericViewModel, IndexableCellViewModel {
     
     public typealias ModelElement = M
@@ -131,6 +123,8 @@ open class CellViewModel<M>: NSObject, IGenericViewModel, IndexableCellViewModel
     
     public required init(model: M? = nil) {
         _model = model
+        super.init()
+        react()
     }
     
     open func destroy() {
@@ -142,9 +136,9 @@ open class CellViewModel<M>: NSObject, IGenericViewModel, IndexableCellViewModel
 }
 
 /// A usefull CellViewModel based class to support ListPage and CollectionPage that have more than one cell identifier
-open class SuperCellViewModel: CellViewModel<Model> {
+open class SuperCellViewModel: CellViewModel<Any> {
     
-    required public init(model: Model? = nil) {
+    required public init(model: Any? = nil) {
         super.init(model: model)
     }
 }

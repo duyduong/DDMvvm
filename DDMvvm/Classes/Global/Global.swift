@@ -7,10 +7,6 @@
 
 import UIKit
 
-public enum ComponentViewPosition {
-    case top(CGFloat), left(CGFloat), bottom(CGFloat), right(CGFloat), center
-}
-
 /// ViewState for binding from ViewModel and View (Life cycle binding)
 public enum ViewState {
     case none, willAppear, didAppear, willDisappear, didDisappear
@@ -21,18 +17,15 @@ public enum ApplicationState {
     case none, resignActive, didEnterBackground, willEnterForeground, didBecomeActive, willTerminate
 }
 
-/// Block type for factory creation
-public typealias FactoryCreationBlock<T> = (() -> T)
-
-/// Block type for destroy a page (mainly to clean up DisposeBag)
-public typealias DestroyPageBlock = ((UIViewController?) -> ())
-
 /// Factory type
 public struct Factory<T> {
     
-    private let creationBlock: FactoryCreationBlock<T>
+    /// Block type for factory creation
+    public typealias Instantiation<T> = (() -> T)
     
-    public init(_ creationBlock: @escaping FactoryCreationBlock<T>) {
+    private let creationBlock: Instantiation<T>
+    
+    public init(_ creationBlock: @escaping Instantiation<T>) {
         self.creationBlock = creationBlock
     }
     
@@ -48,6 +41,9 @@ public struct Factory<T> {
  correctly
  */
 public struct DDConfigurations {
+    
+    /// Block type for destroy a page (mainly to clean up DisposeBag)
+    public typealias DestroyPageBlock = ((UIViewController?) -> ())
     
     /*
      Factory for searching top page in our main window

@@ -86,7 +86,7 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         enableBackButton = true
         
         view.addSubview(scrollView)
-        scrollView.autoPin(toTopLayoutOf: self)
+        scrollView.autoPinEdge(toSuperviewSafeArea: .top)
         scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         
         nameTxt.borderStyle = .roundedRect

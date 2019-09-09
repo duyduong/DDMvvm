@@ -48,7 +48,7 @@ public class PresenterPage: UIViewController, IDestroyable {
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        fatalError("This should not be called")
+        fatalError("PresenterPage is not for Storyboard")
     }
     
     public override func viewDidLoad() {

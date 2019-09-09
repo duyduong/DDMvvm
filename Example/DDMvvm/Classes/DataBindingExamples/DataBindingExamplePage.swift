@@ -26,7 +26,7 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
         enableBackButton = true
         
         view.addSubview(scrollView)
-        scrollView.autoPin(toTopLayoutOf: self)
+        scrollView.autoPinEdge(toSuperviewSafeArea: .top)
         scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         
         helloLbl.font = Font.system.bold(withSize: 18)
