@@ -186,7 +186,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
         // set index for each cell
-        (cellViewModel as? IndexableCellViewModel)?.indexPath = indexPath
+        (cellViewModel as? IIndexable)?.indexPath = indexPath
         
         let identifier = cellIdentifier(cellViewModel)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)

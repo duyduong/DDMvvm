@@ -149,7 +149,7 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
         let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
         
         // set index for each cell
-        (cellViewModel as? IndexableCellViewModel)?.indexPath = indexPath
+        (cellViewModel as? IIndexable)?.indexPath = indexPath
         
         let identifier = cellIdentifier(cellViewModel)
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
