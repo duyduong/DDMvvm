@@ -72,7 +72,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         collectionView.isHidden = value
     }
 
-    /// Every time the viewModel changed, this method will be called again, so make sure to call super for ListPage to work
+    /// Every time the viewModel changed, this method will be called again, so make sure to call super for CollectionPage to work
     open override func bindViewAndViewModel() {
         collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
         viewModel?.itemsSource.collectionChanged

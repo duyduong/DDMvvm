@@ -40,7 +40,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
                 disposeBag = DisposeBag()
                 
                 _viewModel = newValue
-                updateAfterViewModelChanged()
+                viewModelChanged()
             }
         }
     }
@@ -95,7 +95,7 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         self.localHud = localHud
         
         initialize()
-        updateAfterViewModelChanged()
+        viewModelChanged()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -191,9 +191,10 @@ open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
         }
     }
     
-    private func updateAfterViewModelChanged() {
+    private func viewModelChanged() {
         bindLocalHud()
         bindViewAndViewModel()
+        (_viewModel as? IReactable)?.reactIfNeeded()
     }
 }
 

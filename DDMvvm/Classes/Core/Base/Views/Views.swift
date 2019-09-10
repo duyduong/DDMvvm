@@ -24,7 +24,7 @@ open class View<VM: IGenericViewModel>: UIView, IView {
                 disposeBag = DisposeBag()
                 
                 _viewModel = newValue
-                bindViewAndViewModel()
+                viewModelChanged()
             }
         }
     }
@@ -57,7 +57,12 @@ open class View<VM: IGenericViewModel>: UIView, IView {
         backgroundColor = .clear
         
         initialize()
+        viewModelChanged()
+    }
+    
+    private func viewModelChanged() {
         bindViewAndViewModel()
+        (_viewModel as? IReactable)?.reactIfNeeded()
     }
     
     open func destroy() {
@@ -88,7 +93,7 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
                 disposeBag = DisposeBag()
                 
                 _viewModel = newValue
-                bindViewAndViewModel()
+                viewModelChanged()
             }
         }
     }
@@ -113,6 +118,11 @@ open class CollectionCell<VM: IGenericViewModel>: UICollectionViewCell, IView {
     private func setup() {
         backgroundColor = .clear
         initialize()
+    }
+    
+    private func viewModelChanged() {
+        bindViewAndViewModel()
+        (_viewModel as? IReactable)?.reactIfNeeded()
     }
     
     open override func prepareForReuse() {
@@ -148,7 +158,7 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
                 disposeBag = DisposeBag()
                 
                 _viewModel = newValue
-                bindViewAndViewModel()
+                viewModelChanged()
             }
         }
     }
@@ -177,6 +187,11 @@ open class TableCell<VM: IGenericViewModel>: UITableViewCell, IView {
         preservesSuperviewLayoutMargins = false
         
         initialize()
+    }
+    
+    private func viewModelChanged() {
+        bindViewAndViewModel()
+        (_viewModel as? IReactable)?.reactIfNeeded()
     }
     
     open override func prepareForReuse() {
