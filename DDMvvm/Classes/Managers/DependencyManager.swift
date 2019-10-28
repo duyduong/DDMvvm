@@ -7,6 +7,18 @@
 
 import Foundation
 
+fileprivate extension String {
+    
+    static func describing(for type: Any) -> String {
+        var desc = String(describing: type)
+        if desc.hasPrefix("Optional<") {
+            desc = desc.replacingOccurrences(of: "Optional<", with: "")
+                .replacingOccurrences(of: ">", with: "")
+        }
+        return desc
+    }
+}
+
 protocol IMutableDependencyResolver {
     
     func getService(_ type: Any) -> Any?
@@ -32,9 +44,9 @@ class DefaultDependencyResolver: IMutableDependencyResolver {
     private var registry = [String: Factory<Any>]()
     
     func getService(_ type: Any) -> Any? {
-        let k = String(describing: type)
+        let k: String = .describing(for: type)
         for key in registry.keys {
-            if k.contains(key) {
+            if k == key {
                 return registry[key]?.create()
             }
         }
@@ -42,7 +54,7 @@ class DefaultDependencyResolver: IMutableDependencyResolver {
     }
     
     func registerService(_ factory: Factory<Any>, type: Any) {
-        let k = String(describing: type)
+        let k: String = .describing(for: type)
         registry[k] = factory
     }
     
