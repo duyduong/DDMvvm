@@ -67,11 +67,11 @@ public class DecoratorView: AbstractView {
 public extension DecoratorView {
     
     struct Decorator {
-        enum Border {
+        public enum Border {
             case none, solid(width: CGFloat, color: UIColor)
         }
         
-        enum Corner {
+        public enum Corner {
             case none, rounded, only(corners: UIRectCorner, radius: CGFloat)
             
             var corners: UIRectCorner {
@@ -91,5 +91,10 @@ public extension DecoratorView {
         
         let border: Border
         let corner: Corner
+        
+        public init(border: Border, corner: Corner) {
+            self.border = border
+            self.corner = corner
+        }
     }
 }
