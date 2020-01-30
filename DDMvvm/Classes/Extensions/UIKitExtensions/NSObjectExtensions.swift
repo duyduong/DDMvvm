@@ -18,7 +18,7 @@ struct AssociatedKeys {
 extension NSObject {
     
     // A dispose bag to be used exclusively for the instance's rx.action.
-    var actionDisposeBag: DisposeBag {
+    public var actionDisposeBag: DisposeBag {
         var disposeBag: DisposeBag
         
         if let lookup = objc_getAssociatedObject(self, &AssociatedKeys.DisposeBag) as? DisposeBag {

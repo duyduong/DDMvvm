@@ -79,6 +79,10 @@ public func ~><T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disp
     return relay.bind(to: property)
 }
 
+public func ~><T>(lhs: BehaviorRelay<T>, rhs: BehaviorRelay<T>) -> Disposable {
+    return lhs.asObservable().bind(to: rhs)
+}
+
 /// ControlEvent
 public func ~><T>(event: ControlEvent<T>, relay: BehaviorRelay<T>) -> Disposable {
     return event.bind(to: relay)

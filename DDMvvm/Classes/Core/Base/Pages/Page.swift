@@ -27,6 +27,24 @@ extension Reactive where Base: IView {
 
 open class Page<VM: IViewModel>: UIViewController, IView, ITransitionView {
     
+    /// Request to update status bar content color
+    open var statusBarStyle: UIStatusBarStyle = .default {
+        didSet { setNeedsStatusBarAppearanceUpdate() }
+    }
+    
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        return statusBarStyle
+    }
+    
+    /// Request to update status bar hidden state
+    open var statusBarHidden: Bool = false {
+        didSet { setNeedsStatusBarAppearanceUpdate() }
+    }
+    
+    public override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
+    }
+    
     public var disposeBag: DisposeBag? = DisposeBag()
     private var hudBag: DisposeBag? = DisposeBag()
     

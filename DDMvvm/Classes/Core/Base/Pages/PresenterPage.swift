@@ -15,6 +15,14 @@ import Action
  */
 public class PresenterPage: UIViewController, IDestroyable {
     
+    public override var prefersStatusBarHidden: Bool {
+        return contentPage.prefersStatusBarHidden
+    }
+    
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        return contentPage.preferredStatusBarStyle
+    }
+    
     private let contentPage: UIViewController
     private let overlayView = OverlayView()
     

@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let page = ExampleMenuPage(viewModel: HomeMenuPageViewModel())
         let rootPage = NavigationPage(rootViewController: page)
-        rootPage.statusBarStyle = .default
         window?.rootViewController = rootPage
         window?.makeKeyAndVisible()
         

@@ -194,7 +194,8 @@ public class ReactiveCollection<T> where T: Equatable {
         }
     }
     
-    public func reset(_ elements: [T], of section: Int = 0, animated: Bool? = nil) {
+    /// Reset data for specific section only, do nothing if have no section
+    public func reset(_ elements: [T], of section: Int, animated: Bool? = nil) {
         if section < innerSources.count {
             innerSources[section].removeAll()
             innerSources[section].append(elements)

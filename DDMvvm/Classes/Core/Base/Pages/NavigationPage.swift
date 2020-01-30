@@ -12,15 +12,12 @@ open class NavigationPage: UINavigationController, UIGestureRecognizerDelegate, 
     
     public var animatorDelegate: AnimatorDelegate?
     
-    /**
-     Request to update status bar content color
-     */
-    public var statusBarStyle: UIStatusBarStyle = .lightContent {
-        didSet { setNeedsStatusBarAppearanceUpdate() }
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return viewControllers.last?.preferredStatusBarStyle ?? .default
     }
     
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return statusBarStyle
+    open override var prefersStatusBarHidden: Bool {
+        return viewControllers.last?.prefersStatusBarHidden ?? false
     }
     
     open override func viewDidLoad() {

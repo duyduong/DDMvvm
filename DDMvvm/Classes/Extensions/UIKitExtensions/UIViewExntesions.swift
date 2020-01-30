@@ -7,6 +7,8 @@
 
 import UIKit
 
+class GradientLayer: CAGradientLayer {}
+
 public extension UIView {
     
     /// Load Xib from name
@@ -31,13 +33,18 @@ public extension UIView {
     
     /// Clear all subviews, destroy if needed
     func clearAll() {
-        if let stackView = self as? UIStackView {
+        switch self {
+        case let stackView as UIStackView:
             stackView.arrangedSubviews.forEach { view in
                 (view as? IDestroyable)?.destroy()
                 stackView.removeArrangedSubview(view)
                 view.removeFromSuperview()
             }
-        } else {
+            
+        case let scrollLayout as ScrollLayout:
+            scrollLayout.removeAll()
+            
+        default:
             subviews.forEach { view in
                 (view as? IDestroyable)?.destroy()
                 view.removeFromSuperview()
@@ -95,6 +102,134 @@ extension UIView {
         layer.shadowOpacity = opacity
         layer.shadowRadius = blur
         layer.shadowPath = shadowPath.cgPath
+    }
+}
+
+public extension UIView {
+    
+    static func createGradientImage(
+        bounds: CGRect,
+        colors: [UIColor],
+        locations: [Double] = [0, 1],
+        startPoint: CGPoint? = nil,
+        endPoint: CGPoint? = nil,
+        transform: CGAffineTransform? = nil,
+        insetBy: (dx: CGFloat, dy: CGFloat)? = nil
+    ) -> UIImage? {
+        var canvasBounds = bounds
+        if let insetBy = insetBy {
+            canvasBounds = bounds.insetBy(dx: insetBy.dx*bounds.width, dy: insetBy.dy*bounds.height)
+        }
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = canvasBounds
+        gradientLayer.colors = colors.map { $0.cgColor }
+        gradientLayer.locations = locations.map { NSNumber(value: $0) }
+        
+        if let startPoint = startPoint {
+            gradientLayer.startPoint = startPoint
+        }
+        
+        if let endPoint = endPoint {
+            gradientLayer.endPoint = endPoint
+        }
+        
+        if let transform = transform {
+            gradientLayer.transform = CATransform3DMakeAffineTransform(transform)
+        }
+        return gradientLayer.image
+    }
+    
+    @discardableResult
+    func setLinearGradient(
+        colors: [UIColor],
+        locations: [Double] = [0, 1],
+        startPoint: CGPoint? = nil,
+        endPoint: CGPoint? = nil,
+        transform: CGAffineTransform? = nil,
+        insetBy: (dx: CGFloat, dy: CGFloat)? = nil
+    ) -> CAGradientLayer {
+        let gradientLayer = createGradientLayer(
+            withColors: colors,
+            locations: locations,
+            startPoint: startPoint,
+            endPoint: endPoint,
+            transform: transform,
+            insetBy: insetBy)
+        
+        // Remove old gradient layer if any
+        if let sublayer = layer.sublayers?.first as? GradientLayer {
+            sublayer.removeFromSuperlayer()
+        }
+        layer.insertSublayer(gradientLayer, at: 0)
+        
+        return gradientLayer
+    }
+    
+    func createGradientLayer(
+        withColors colors: [UIColor],
+        locations: [Double],
+        startPoint: CGPoint? = nil,
+        endPoint: CGPoint? = nil,
+        transform: CGAffineTransform? = nil,
+        insetBy: (dx: CGFloat, dy: CGFloat)? = nil
+    ) -> CAGradientLayer {
+        var canvasBounds = bounds
+        if let insetBy = insetBy {
+            canvasBounds = bounds.insetBy(dx: insetBy.dx*bounds.width, dy: insetBy.dy*bounds.height)
+        }
+        
+        let gradientLayer = GradientLayer()
+        gradientLayer.frame = canvasBounds
+        gradientLayer.colors = colors.map { $0.cgColor }
+        gradientLayer.locations = locations.map { NSNumber(value: $0) }
+        
+        if let startPoint = startPoint {
+            gradientLayer.startPoint = startPoint
+        }
+        
+        if let endPoint = endPoint {
+            gradientLayer.endPoint = endPoint
+        }
+        
+        if let transform = transform {
+            gradientLayer.transform = CATransform3DMakeAffineTransform(transform)
+        }
+        
+        return gradientLayer
+    }
+    
+    var image: UIImage? {
+        if #available(iOS 10.0, *) {
+            let renderer = UIGraphicsImageRenderer(bounds: bounds)
+            return renderer.image { layer.render(in: $0.cgContext) }
+        } else {
+            defer { UIGraphicsEndImageContext() }
+            
+            guard let context = UIGraphicsGetCurrentContext() else { return nil }
+            
+            UIGraphicsBeginImageContext(bounds.size)
+            layer.render(in: context)
+            return UIGraphicsGetImageFromCurrentImageContext()
+        }
+    }
+    
+    @discardableResult
+    func autoPin(toTopLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
+        if #available(iOS 11.0, *) {
+            return autoPinEdge(toSuperviewSafeArea: .top, withInset: inset)
+        } else {
+            return autoPin(toTopLayoutGuideOf: viewController, withInset: inset)
+        }
+    }
+    
+    @discardableResult
+    func autoPin(toBottomLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
+        if #available(iOS 11.0, *) {
+            return autoPinEdge(toSuperviewSafeArea: .bottom, withInset: inset)
+        } else {
+            return autoPin(toTopLayoutGuideOf: viewController, withInset: inset)
+        }
     }
 }
 
