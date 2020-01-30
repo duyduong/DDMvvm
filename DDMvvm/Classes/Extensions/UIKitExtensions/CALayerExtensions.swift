@@ -12,6 +12,8 @@ public extension CALayer {
     var image: UIImage? {
         defer { UIGraphicsEndImageContext() }
         
+        UIGraphicsBeginImageContextWithOptions(bounds.size, true, 0.0)
+        
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         
         render(in: context)
