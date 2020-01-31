@@ -59,7 +59,7 @@ class ExampleMenuPageViewModel: ListViewModel<MenuModel, ExampleMenuCellViewMode
     
     override func selectedItemDidChange(_ cellViewModel: ExampleMenuCellViewModel) {
         if let page = pageToNavigate(cellViewModel) {
-            navigationService.push(to: page, options: .defaultOptions)
+            navigationService.push(to: page)
         }
     }
     

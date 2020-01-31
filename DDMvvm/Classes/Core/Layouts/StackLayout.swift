@@ -42,8 +42,8 @@ import UIKit
      .direction(.vertical)
      .alignItems(.center)
      .children([
-         StackViewItem(view: view1, attribute: .centerX),
-         StackViewItem(view: view2, attribute: .margin(.only(top: 20))),
+         StackViewItem(view: view1, attribute: .center(insets: .all(5))),
+         StackViewItem(view: view2, attribute: .fill(.only(top: 20))),
          view3,
          ...
     ])
@@ -145,7 +145,7 @@ public extension StackLayout {
 }
 
 /// Basic protocol for item inside a stack layout
-public protocol StackItem {
+public protocol StackItem where Self: UIView {
     func build(with layout: StackLayout) -> UIView
 }
 
@@ -164,10 +164,10 @@ public protocol StackItem {
  }
  
  // Using attribute
- StackViewItem(view: logoView, attribute: .centerX)
+ StackViewItem(view: logoView, attribute: .center(insets: .all(5)))
  ```
  */
-public struct StackViewItem: StackItem {
+public class StackViewItem: UIView, StackItem {
     
     public enum Attribute {
         /// Align left with insets
@@ -196,11 +196,13 @@ public struct StackViewItem: StackItem {
     public init(view: UIView, constraintsDefinition: @escaping ((UIView) -> ())) {
         self.originalView = view
         self.constraintsDefinition = constraintsDefinition
+        super.init(frame: .zero)
     }
     
     /// Constructor with custom attribute
     public init(view: UIView, attribute: Attribute) {
-        self.init(view: view) { (view) in
+        self.originalView = view
+        self.constraintsDefinition = { (view) in
             switch attribute {
             case .leading(let insets):
                 view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .trailing)
@@ -229,45 +231,44 @@ public struct StackViewItem: StackItem {
                 view.autoPinEdgesToSuperviewEdges(with: insets)
             }
         }
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     public func build(with layout: StackLayout) -> UIView {
-        let wrapperView = UIView()
-        wrapperView.addSubview(originalView)
+        addSubview(originalView)
         constraintsDefinition(originalView)
-        
-        return wrapperView
+        return self
     }
 }
 
 /// Custom spacing between stack items
-public struct StackSpaceItem: StackItem {
-    
-    private let width: CGFloat
-    private let height: CGFloat
+public class StackSpaceItem: UIView, StackItem {
     
     /// Constructor with both width and height the same size
     public init(size: CGFloat) {
-        width = size
-        height = size
+        super.init(frame: CGRect(origin: .zero, size: .square(size)))
     }
     
     /// Constructor with width only, mostly use in horizontal stack layout
     public init(width: CGFloat) {
-        self.width = width
-        self.height = 0
+        super.init(frame: CGRect(origin: .zero, size: CGSize(width: width, height: 0)))
     }
     
     /// Construtor with height only, mostly use in vertical stack layout
     public init(height: CGFloat) {
-        self.width = 0
-        self.height = height
+        super.init(frame: CGRect(origin: .zero, size: CGSize(width: 0, height: height)))
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
     
     public func build(with layout: StackLayout) -> UIView {
-        let view = UIView()
-        view.autoSetDimensions(to: CGSize(width: width, height: height))
-        
-        return view
+        autoSetDimensions(to: CGSize(width: frame.width, height: frame.height))
+        return self
     }
 }

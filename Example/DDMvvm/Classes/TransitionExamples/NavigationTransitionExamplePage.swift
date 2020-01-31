@@ -69,9 +69,9 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
         let animator = FlipAnimator()
         if usingModal {
             let navPage = NavigationPage(rootViewController: page)
-            navigationService.push(to: navPage, options: .modal(animator: animator))
+            navigationService.push(to: navPage, type: .modally(presentationStyle: .fullScreen, animated: true, animator: animator))
         } else {
-            navigationService.push(to: page, options: .push(with: animator))
+            navigationService.push(to: page, type: .push(animated: true, animator: animator))
         }
     }
     
@@ -80,9 +80,9 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
         let animator = ZoomAnimator()
         if usingModal {
             let navPage = NavigationPage(rootViewController: page)
-            navigationService.push(to: navPage, options: .modal(animator: animator))
+            navigationService.push(to: navPage, type: .modally(presentationStyle: .fullScreen, animated: true, animator: animator))
         } else {
-            navigationService.push(to: page, options: .push(with: animator))
+            navigationService.push(to: page, type: .push(animated: true, animator: animator))
         }
     }
 }
@@ -100,7 +100,7 @@ class FlipPage: Page<ViewModel<Model>> {
     
     override func onBack() {
         if navigationController?.presentingViewController != nil {
-           navigationService.pop(with: PopOptions(popType: .dismiss, animated: true))
+            navigationService.pop(with: .dismiss(animated: true))
         } else {
             super.onBack()
         }
@@ -120,7 +120,7 @@ class ZoomPage: Page<ViewModel<Model>> {
     
     override func onBack() {
         if navigationController?.presentingViewController != nil {
-            navigationService.pop(with: PopOptions(popType: .dismiss, animated: true))
+            navigationService.pop(with: .dismiss(animated: true))
         } else {
             super.onBack()
         }

@@ -145,14 +145,14 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
     }
     
     override func onBack() {
-        navigationService.pop(with: PopOptions(popType: .dismissPopup))
+        navigationService.pop(with: .dismissPopup)
     }
 }
 
 class ContactEditPageViewModel: ViewModel<ContactModel> {
     
     lazy var cancelAction: Action<Void, Void> = {
-        return Action() { .just(self.navigationService.pop(with: PopOptions(popType: .dismissPopup))) }
+        return Action() { .just(self.navigationService.pop(with: .dismissPopup)) }
     }()
     
     lazy var saveAction: Action<Void, ContactModel> = {
@@ -179,7 +179,9 @@ class ContactEditPageViewModel: ViewModel<ContactModel> {
         contact.name = rxName.value ?? ""
         contact.phone = rxPhone.value ?? ""
         
-        navigationService.pop(with: PopOptions(popType: .dismissPopup))
+        navigationService.pop(with: .dismissPopup) {
+            print("============ ContactEditPage did hide")
+        }
         
         return .just(contact)
     }

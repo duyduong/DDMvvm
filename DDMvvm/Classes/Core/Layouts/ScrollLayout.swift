@@ -101,7 +101,7 @@ public extension ScrollLayout {
         return self
     }
     
-    /// Remove all children inside the layout
+    /// Update paddings around the layout
     @discardableResult
     func paddings(_ insets: UIEdgeInsets = .zero) -> ScrollLayout {
         updatePaddings(insets)

@@ -114,9 +114,10 @@ public extension UIView {
         } else {
             defer { UIGraphicsEndImageContext() }
             
+            UIGraphicsBeginImageContext(bounds.size)
+            
             guard let context = UIGraphicsGetCurrentContext() else { return nil }
             
-            UIGraphicsBeginImageContext(bounds.size)
             layer.render(in: context)
             return UIGraphicsGetImageFromCurrentImageContext()
         }

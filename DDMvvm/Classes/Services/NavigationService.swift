@@ -9,117 +9,35 @@
 import UIKit
 
 public enum PushType {
-    case auto, push, modally(UIModalPresentationStyle), popup(PopupOptions)
+    case auto(animated: Bool, animator: Animator?)
+    case push(animated: Bool, animator: Animator?)
+    case modally(presentationStyle: UIModalPresentationStyle, animated: Bool, animator: Animator?)
+    case popup(shouldDismissOnTapOutside: Bool, overlayColor: UIColor)
 }
 
 public enum PopType {
-    case auto, pop, popToRoot, popTo(index: Int), dismiss, dismissPopup
-}
-
-/// Popup options, allow to change overlay color and enable dimiss when tap outside the popup
-public struct PopupOptions {
-    
-    public let shouldDismissOnTapOutside: Bool
-    public let overlayColor: UIColor
-    
-    public init(shouldDismissOnTapOutside: Bool = true, overlayColor: UIColor = UIColor(r: 0, g: 0, b: 0, a: 0.7)) {
-        self.shouldDismissOnTapOutside = shouldDismissOnTapOutside
-        self.overlayColor = overlayColor
-    }
-    
-    public static var defaultOptions: PopupOptions {
-        return PopupOptions()
-    }
-}
-
-/// Push options for pushing new page, including push, modally or popup
-public struct PushOptions {
-    
-    public let pushType: PushType
-    public let animator: Animator?
-    public let animated: Bool
-    
-    public init(pushType: PushType = .auto, animator: Animator? = nil, animated: Bool = true) {
-        self.pushType = pushType
-        self.animator = animator
-        self.animated = animated
-    }
-    
-    public static var defaultOptions: PushOptions {
-        return PushOptions()
-    }
-    
-    public static var auto: PushOptions {
-        return PushOptions(pushType: .auto)
-    }
-    
-    public static func push(with animator: Animator? = nil) -> PushOptions {
-        return PushOptions(pushType: .push, animator: animator)
-    }
-    
-    public static func modal(presentationStyle: UIModalPresentationStyle = .currentContext, animator: Animator? = nil) -> PushOptions {
-        return PushOptions(pushType: .modally(presentationStyle), animator: animator)
-    }
-    
-    public static func popup(_ options: PopupOptions = .defaultOptions) -> PushOptions {
-        return PushOptions(pushType: .popup(options))
-    }
-}
-
-/// Pop options for poping/dismissing current active page
-public struct PopOptions {
-    
-    public let popType: PopType
-    public let animated: Bool
-    
-    public init(popType: PopType = .auto, animated: Bool = true) {
-        self.popType = popType
-        self.animated = animated
-    }
-    
-    public static var defaultOptions: PopOptions {
-        return PopOptions()
-    }
-    
-    public static var auto: PopOptions {
-        return PopOptions(popType: .auto)
-    }
-    
-    public static var pop: PopOptions {
-        return PopOptions(popType: .pop)
-    }
-    
-    public static var popToRoot: PopOptions {
-        return PopOptions(popType: .popToRoot)
-    }
-    
-    public static func popTo(index: Int) -> PopOptions {
-        return PopOptions(popType: .popTo(index: index))
-    }
-    
-    public static var dismiss: PopOptions {
-        return PopOptions(popType: .dismiss)
-    }
-    
-    public static var dismissPopup: PopOptions {
-        return PopOptions(popType: .dismissPopup)
-    }
+    case auto(animated: Bool)
+    case pop(animated: Bool)
+    case popToRoot(animated: Bool)
+    case popTo(index: Int, animated: Bool)
+    case dismiss(animated: Bool)
+    case dismissPopup
 }
 
 public protocol INavigationService {
     
-    func push(to page: UIViewController, options: PushOptions, completion: (() -> Void)?)
-    func pop(with options: PopOptions, completion: (() -> Void)?)
+    func push(to page: UIViewController, type: PushType, completion: (() -> Void)?)
+    func pop(with type: PopType, completion: (() -> Void)?)
 }
 
 extension INavigationService {
     
-    public func push(to page: UIViewController, options: PushOptions = .defaultOptions, completion: (() -> Void)? = nil) {
-        push(to: page, options: options, completion: completion)
+    public func push(to page: UIViewController, type: PushType = .auto(animated: true, animator: nil), completion: (() -> Void)? = nil) {
+        push(to: page, type: type, completion: completion)
     }
     
-    public func pop(with options: PopOptions = .defaultOptions, completion: (() -> Void)? = nil) {
-        pop(with: options, completion: completion)
+    public func pop(with type: PopType = .auto(animated: true), completion: (() -> Void)? = nil) {
+        pop(with: type, completion: completion)
     }
 }
 
@@ -131,20 +49,21 @@ public class NavigationService: INavigationService {
     
     // MARK: - Push functions
     
-    public func push(to page: UIViewController, options: PushOptions, completion: (() -> Void)? = nil) {
+    public func push(to page: UIViewController, type: PushType, completion: (() -> Void)? = nil) {
         guard let topPage = topPage else { return }
         
-        let handlePush = {
-            if let animator = options.animator {
+        let handlePush = { (animated: Bool, animator: Animator?) in
+            if let animator = animator {
                 // attach animtor to destination page
                 (page as? ITransitionView)?.animatorDelegate = AnimatorDelegate(withAnimator: animator)
             }
             
-            topPage.navigationController?.pushViewController(page, animated: options.animated, completions: completion)
+            DDConfigurations.beforePush?()
+            topPage.navigationController?.pushViewController(page, animated: animated, completions: completion)
         }
         
-        let handleModal = { (presentationStyle: UIModalPresentationStyle) in
-            if let animator = options.animator {
+        let handleModal = { (presentationStyle: UIModalPresentationStyle, animated: Bool, animator: Animator?) in
+            if let animator = animator {
                 let delegate = AnimatorDelegate(withAnimator: animator)
                 (page as? ITransitionView)?.animatorDelegate = delegate
                 page.transitioningDelegate = delegate
@@ -153,23 +72,29 @@ public class NavigationService: INavigationService {
                 page.modalPresentationStyle = presentationStyle
             }
             
-            topPage.present(page, animated: options.animated, completion: completion)
+            DDConfigurations.beforePresent?()
+            topPage.present(page, animated: animated, completion: completion)
         }
         
-        switch options.pushType {
-        case .auto:
+        switch type {
+        case .auto(let animated, let animator):
             if topPage.navigationController != nil {
-                handlePush()
+                handlePush(animated, animator)
             } else {
-                handleModal(.fullScreen)
+                handleModal(.fullScreen, animated, animator)
             }
             
-        case .push: handlePush()
+        case .push(let animated, let animator):
+            handlePush(animated, animator)
             
-        case .modally(let presentationStyle): handleModal(presentationStyle)
+        case .modally(let presentationStyle, let animated, let animator):
+            handleModal(presentationStyle, animated, animator)
             
-        case .popup(let options):
-            let presenterPage = PresenterPage(contentPage: page, options: options)
+        case .popup(let shouldDismissOnTapOutside, let overlayColor):
+            let presenterPage = PresenterPage(contentPage: page)
+            presenterPage.shouldDismissOnTapOutside = shouldDismissOnTapOutside
+            presenterPage.overlayColor = overlayColor
+            presenterPage.showCompletion = completion
             presenterPage.modalPresentationStyle = .overFullScreen
             topPage.present(presenterPage, animated: false)
         }
@@ -177,12 +102,12 @@ public class NavigationService: INavigationService {
     
     // MARK: - Pop functions
     
-    public func pop(with options: PopOptions, completion: (() -> Void)? = nil) {
+    public func pop(with type: PopType, completion: (() -> Void)? = nil) {
         guard let topPage = topPage else { return }
         
         let destroyPageBlock = DDConfigurations.destroyPageBlock
-        let handleDismiss = {
-            topPage.dismiss(animated: options.animated) {
+        let handleDismiss = { (animated: Bool) in
+            topPage.dismiss(animated: animated) {
                 destroyPageBlock(topPage)
                 destroyPageBlock(topPage.navigationController)
                 destroyPageBlock(topPage.tabBarController)
@@ -191,41 +116,41 @@ public class NavigationService: INavigationService {
             }
         }
         
-        switch options.popType {
-        case .auto:
+        switch type {
+        case .auto(let animated):
             if let navPage = topPage.navigationController {
-                navPage.popViewController(animated: options.animated) {
+                navPage.popViewController(animated: animated) {
                     destroyPageBlock($0)
                     completion?()
                 }
             } else {
-                handleDismiss()
+                handleDismiss(animated)
             }
             
-        case .pop:
-            topPage.navigationController?.popViewController(animated: options.animated) {
+        case .pop(let animated):
+            topPage.navigationController?.popViewController(animated: animated) {
                 destroyPageBlock($0)
                 completion?()
             }
             
-        case .popToRoot:
-            topPage.navigationController?.popToRootViewController(animated: options.animated) { pages in
+        case .popToRoot(let animated):
+            topPage.navigationController?.popToRootViewController(animated: animated) { pages in
                 pages?.forEach { destroyPageBlock($0) }
                 completion?()
             }
             
-        case .popTo(let index):
-            topPage.navigationController?.popToViewController(at: index, animated: options.animated) { pages in
+        case .popTo(let index, let animated):
+            topPage.navigationController?.popToViewController(at: index, animated: animated) { pages in
                 pages?.forEach { destroyPageBlock($0) }
                 completion?()
             }
             
-        case .dismiss:
-            handleDismiss()
+        case .dismiss(let animated):
+            handleDismiss(animated)
             
         case .dismissPopup:
             let presenterPage = topPage.navigationController?.parent ?? topPage.tabBarController?.parent ?? topPage.parent ?? topPage
-            presenterPage.dismiss(animated: false)
+            presenterPage.dismiss(animated: false, completion: completion)
         }
     }
 }

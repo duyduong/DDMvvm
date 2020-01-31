@@ -135,6 +135,20 @@ public struct DDConfigurations {
         barButton.title = "\u{2190}"
         return barButton
     }
+    
+    /*
+     Before push to new page
+     
+     Use in NavigationService to inject additional action when pushing new page
+     */
+    public static var beforePush: (() -> Void)?
+    
+    /*
+    Before push to new page
+    
+    Use in NavigationService to inject additional action when present new page
+    */
+    public static var beforePresent: (() -> Void)?
 }
 
 

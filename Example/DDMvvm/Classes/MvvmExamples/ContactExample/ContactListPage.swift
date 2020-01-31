@@ -78,7 +78,9 @@ class ContactListPageViewModel: ListViewModel<Model, ContactCellViewModel> {
         }) => disposeBag
         
         let navPage = WrapperPage(rootViewController: page)
-        navigationService.push(to: navPage, options: PushOptions(pushType: .popup(.defaultOptions)))
+        navigationService.push(to: navPage, type: .popup(shouldDismissOnTapOutside: true, overlayColor: UIColor.black.withAlphaComponent(0.5))) {
+            print("============ ContactEditPage did show")
+        }
     }
 }
 

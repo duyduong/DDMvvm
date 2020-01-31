@@ -31,8 +31,9 @@ public class PresenterPage: UIViewController, IDestroyable {
     var widthConstraint: NSLayoutConstraint!
     var heightConstraint: NSLayoutConstraint!
     
-    private let shouldDismissOnTapOutside: Bool
-    private let overlayColor: UIColor
+    var shouldDismissOnTapOutside: Bool = true
+    var overlayColor: UIColor = .clear
+    var showCompletion: (() -> Void)?
     
     private var isShown = false
     
@@ -46,12 +47,8 @@ public class PresenterPage: UIViewController, IDestroyable {
         }
     }()
     
-    public init(contentPage: UIViewController, options: PopupOptions) {
+    public init(contentPage: UIViewController) {
         self.contentPage = contentPage
-        
-        shouldDismissOnTapOutside = options.shouldDismissOnTapOutside
-        overlayColor = options.overlayColor
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -141,11 +138,15 @@ public class PresenterPage: UIViewController, IDestroyable {
         isShown = true
         
         if let popupView = contentPage as? IPopupView {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock(showCompletion)
             popupView.show(overlayView: overlayView)
+            CATransaction.commit()
         } else {
             adjustContainerSize()
             overlayView.alpha = 1
             contentPage.view.isHidden = false
+            showCompletion?()
         }
     }
 
