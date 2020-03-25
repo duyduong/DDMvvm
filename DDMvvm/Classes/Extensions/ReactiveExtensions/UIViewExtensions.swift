@@ -11,16 +11,16 @@ import RxCocoa
 
 public extension Reactive where Base: UIView {
     
-    var backgroundColor: Binder<UIColor> {
+    var backgroundColor: Binder<UIColor?> {
         return Binder(base) { $0.backgroundColor = $1 }
     }
     
-    var tintColor: Binder<UIColor> {
+    var tintColor: Binder<UIColor?> {
         return Binder(base) { $0.tintColor = $1 }
     }
     
-    var borderColor: Binder<UIColor> {
-        return Binder(base) { $0.layer.borderColor = $1.cgColor }
+    var borderColor: Binder<UIColor?> {
+        return Binder(base) { $0.layer.borderColor = $1?.cgColor }
     }
     
     var borderWidth: Binder<CGFloat> {

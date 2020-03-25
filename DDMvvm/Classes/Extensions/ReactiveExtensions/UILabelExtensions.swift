@@ -11,7 +11,7 @@ import RxCocoa
 
 public extension Reactive where Base: UILabel {
     
-    var textColor: Binder<UIColor> {
+    var textColor: Binder<UIColor?> {
         return Binder(self.base) { $0.textColor = $1 }
     }
     

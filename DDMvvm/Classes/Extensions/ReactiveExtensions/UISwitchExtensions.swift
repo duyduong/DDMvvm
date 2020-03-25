@@ -11,7 +11,7 @@ import RxCocoa
 
 public extension Reactive where Base: UISwitch {
     
-    var onTintColor: Binder<UIColor> {
+    var onTintColor: Binder<UIColor?> {
         return Binder(base) { $0.onTintColor = $1 }
     }
 }
