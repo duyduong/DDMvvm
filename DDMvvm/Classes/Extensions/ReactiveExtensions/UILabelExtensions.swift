@@ -11,10 +11,6 @@ import RxCocoa
 
 public extension Reactive where Base: UILabel {
     
-    var attributedText: Binder<NSAttributedString> {
-        return Binder(self.base) { $0.attributedText = $1 }
-    }
-    
     var textColor: Binder<UIColor> {
         return Binder(self.base) { $0.textColor = $1 }
     }

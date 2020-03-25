@@ -37,7 +37,6 @@ public extension UIView {
         case let stackView as UIStackView:
             stackView.arrangedSubviews.forEach { view in
                 (view as? IDestroyable)?.destroy()
-                stackView.removeArrangedSubview(view)
                 view.removeFromSuperview()
             }
             

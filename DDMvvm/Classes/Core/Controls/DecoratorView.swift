@@ -16,20 +16,55 @@ public extension Reactive where Base: DecoratorView {
     }
 }
 
-public class DecoratorView: AbstractView {
+open class DecoratorView: AbstractView {
     
-    public var decorator: Decorator? = nil {
+    open var colors: [UIColor] = [] {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var locations: [Double] = [0, 1] {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var startPoint: CGPoint? {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var endPoint: CGPoint? {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var gradientTransform: CGAffineTransform? {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var insetBy: (dx: CGFloat, dy: CGFloat)? {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var decorator: Decorator? = nil {
         didSet { setNeedsLayout() }
     }
     
     private var borderLayer: CAShapeLayer!
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         updateLayout()
+        
+        if colors.count > 0 {
+            setLinearGradient(
+                colors: colors,
+                locations: locations,
+                startPoint: startPoint,
+                endPoint: endPoint,
+                transform: gradientTransform,
+                insetBy: insetBy
+            )
+        }
     }
     
-    private func updateLayout() {
+    open func updateLayout() {
         guard let decorator = decorator, bounds != .zero else { return }
         layer.masksToBounds = false
         
@@ -89,8 +124,8 @@ public extension DecoratorView {
             }
         }
         
-        let border: Border
-        let corner: Corner
+        public let border: Border
+        public let corner: Corner
         
         public init(border: Border, corner: Corner) {
             self.border = border

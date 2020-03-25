@@ -60,5 +60,3 @@ class FlickrImageCellViewModel: CellViewModel<FlickrPhotoModel> {
 
 
 
-
-

@@ -98,9 +98,9 @@ open class ListViewModel<M, CVM: IGenericViewModel>: ViewModel<M>, IListViewMode
         super.destroy()
         
         itemsSource.forEach { (_, sectionList) in
-            sectionList.forEach({ (_, cvm) in
+            sectionList.forEach { (_, cvm) in
                 cvm.destroy()
-            })
+            }
         }
     }
     

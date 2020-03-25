@@ -31,9 +31,13 @@ public class PresenterPage: UIViewController, IDestroyable {
     var widthConstraint: NSLayoutConstraint!
     var heightConstraint: NSLayoutConstraint!
     
-    var shouldDismissOnTapOutside: Bool = true
-    var overlayColor: UIColor = .clear
-    var showCompletion: (() -> Void)?
+    public var shouldDismissOnTapOutside: Bool = true
+    
+    public var overlayColor: UIColor = .clear {
+        didSet { overlayView.backgroundColor = overlayColor }
+    }
+    
+    public var showCompletion: (() -> Void)?
     
     private var isShown = false
     
@@ -86,7 +90,6 @@ public class PresenterPage: UIViewController, IDestroyable {
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         show()
     }
     
@@ -120,13 +123,11 @@ public class PresenterPage: UIViewController, IDestroyable {
         (contentPage as? IDestroyable)?.destroy()
         disposeBag = DisposeBag()
         
-        contentPage.view.removeFromSuperview()
         contentPage.removeFromParent()
         
         // if this presenter page is added as a child on another controller
         // then remove it
         if let _ = parent {
-            view.removeFromSuperview()
             removeFromParent()
         }
     }
