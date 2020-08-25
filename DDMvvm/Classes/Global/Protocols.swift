@@ -24,7 +24,7 @@ public extension IDestroyable {
 }
 
 /// PopView type for Page to implement as a pop view
-public protocol IPopupView where Self: UIViewController {
+public protocol IPopupView: class {
     
     /*
      Setup popup layout
@@ -55,7 +55,7 @@ public protocol IPopupView where Self: UIViewController {
 }
 
 /// TransitionView type to create custom transitioning between pages
-public protocol ITransitionView where Self: UIViewController {
+public protocol ITransitionView: class {
     
     /**
      Keep track of animator delegate for custom transitioning
