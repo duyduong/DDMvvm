@@ -106,20 +106,17 @@ extension UIView {
 
 public extension UIView {
     
-    var image: UIImage? {
-        if #available(iOS 10.0, *) {
-            let renderer = UIGraphicsImageRenderer(bounds: bounds)
-            return renderer.image { layer.render(in: $0.cgContext) }
-        } else {
-            defer { UIGraphicsEndImageContext() }
-            
-            UIGraphicsBeginImageContext(bounds.size)
-            
-            guard let context = UIGraphicsGetCurrentContext() else { return nil }
-            
-            layer.render(in: context)
-            return UIGraphicsGetImageFromCurrentImageContext()
-        }
+    var image: UIImage? { toImage() }
+    
+    func toImage(_ isOpaque: Bool = false) -> UIImage? {
+        defer { UIGraphicsEndImageContext() }
+        
+        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0)
+        
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        layer.render(in: context)
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
     
     static func createGradientImage(
