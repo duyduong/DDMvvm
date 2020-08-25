@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import DiffableDataSources
 
 /// Destroyable type for handling dispose bag and destroy it
 public protocol IDestroyable: class {
@@ -16,8 +17,14 @@ public protocol IDestroyable: class {
     func destroy()
 }
 
+public extension IDestroyable {
+    func destroy() {
+        disposeBag = DisposeBag()
+    }
+}
+
 /// PopView type for Page to implement as a pop view
-public protocol IPopupView: class {
+public protocol IPopupView where Self: UIViewController {
     
     /*
      Setup popup layout
@@ -48,7 +55,7 @@ public protocol IPopupView: class {
 }
 
 /// TransitionView type to create custom transitioning between pages
-public protocol ITransitionView: class {
+public protocol ITransitionView where Self: UIViewController {
     
     /**
      Keep track of animator delegate for custom transitioning
@@ -78,9 +85,8 @@ public protocol IView: IAnyView, IDestroyable {
 
 // MARK: - Viewmodel protocols
 
-/// Base generic viewModel type, implement Destroyable and Equatable
-public protocol IGenericViewModel: IDestroyable, Equatable {
-    
+/// Base ViewModel type for Page (UIViewController), View (UIVIew)
+public protocol IViewModel: IDestroyable, Hashable {
     associatedtype ModelElement
     
     var model: ModelElement? { get set }
@@ -88,23 +94,46 @@ public protocol IGenericViewModel: IDestroyable, Equatable {
     init(model: ModelElement?)
 }
 
-/// Base ViewModel type for Page (UIViewController), View (UIVIew)
-public protocol IViewModel: IGenericViewModel {
+public protocol IPageViewModel: IViewModel {
     var rxViewState: BehaviorRelay<ViewState> { get }
-    var rxShowLocalHud: BehaviorRelay<Bool> { get }
-    
-    var navigationService: INavigationService { get }
 }
 
-public protocol IListViewModel: IViewModel {
+// MARK: - ListViewModel
+
+public struct ItemSource<S: Hashable, CVM: IViewModel> {
     
-    associatedtype CellViewModelElement: IGenericViewModel
+    /// Snapshot data wraper
+    public struct Snapshot {
+        public let snapshot: DiffableDataSourceSnapshot<S, CVM>
+        public let animated: Bool
+    }
     
-    var itemsSource: ReactiveCollection<CellViewModelElement> { get }
-    var rxSelectedItem: BehaviorRelay<CellViewModelElement?> { get }
+    let rxSnapshot = BehaviorRelay<Snapshot?>(value: nil)
+    
+    /// Current snapshot
+    public var snapshot: DiffableDataSourceSnapshot<S, CVM>? { rxSnapshot.value?.snapshot }
+    
+    /// Snapshot change observable
+    public var snapshotChanged: Observable<Snapshot?> { rxSnapshot.asObservable() }
+    
+    /// Update itemsSource with new snapshot
+    public func update(animated: Bool = true, block: ((inout DiffableDataSourceSnapshot<S, CVM>) -> Void)) {
+        var snapshot = self.snapshot ?? DiffableDataSourceSnapshot<S, CVM>()
+        block(&snapshot)
+        rxSnapshot.accept(Snapshot(snapshot: snapshot, animated: animated))
+    }
+}
+
+public protocol IListViewModel: IPageViewModel {
+    
+    associatedtype SectionElement: Hashable
+    associatedtype CellElement: IViewModel
+    
+    var itemsSource: ItemSource<SectionElement, CellElement> { get }
+    var rxSelectedItem: BehaviorRelay<CellElement?> { get }
     var rxSelectedIndex: BehaviorRelay<IndexPath?> { get }
     
-    func selectedItemDidChange(_ cellViewModel: CellViewModelElement)
+    func selectedItemDidChange(_ cellViewModel: CellElement)
 }
 
 

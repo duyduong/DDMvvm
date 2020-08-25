@@ -10,6 +10,10 @@ import UIKit
 import RxCocoa
 import DDMvvm
 
+enum SingleSection {
+    case main
+}
+
 class ExampleMenuPage: ListPage<ExampleMenuPageViewModel> {
 
     override func initialize() {
@@ -45,13 +49,16 @@ class ExampleMenuPage: ListPage<ExampleMenuPageViewModel> {
     }
 }
 
-class ExampleMenuPageViewModel: ListViewModel<MenuModel, ExampleMenuCellViewModel> {
+class ExampleMenuPageViewModel: ListViewModel<MenuModel, SingleSection, ExampleMenuCellViewModel> {
     
     let rxPageTitle = BehaviorRelay(value: "")
     
     override func react() {
         let models = getMenuModels()
-        itemsSource.reset([models.toCellViewModels()])
+        itemsSource.update { snapshot in
+            snapshot.appendSections([.main])
+            snapshot.appendItems(models.toCellViewModels())
+        }
         
         // set page title
         rxPageTitle.accept(model?.title ?? "")

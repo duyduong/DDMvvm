@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import DiffableDataSources
 
 protocol IReactable {
     var isReacted: Bool { get set }
@@ -16,7 +17,7 @@ protocol IReactable {
     func react()
 }
 
-extension Reactive where Base: IGenericViewModel {
+extension Reactive where Base: IViewModel {
     
     public typealias ModelElement = Base.ModelElement
     
@@ -26,7 +27,7 @@ extension Reactive where Base: IGenericViewModel {
 }
 
 /// A master based ViewModel for all
-open class ViewModel<M>: NSObject, IViewModel, IReactable {
+open class ViewModel<M>: NSObject, IPageViewModel, IReactable {
     
     public typealias ModelElement = M
     
@@ -40,9 +41,7 @@ open class ViewModel<M>: NSObject, IViewModel, IReactable {
     }
     
     public var disposeBag: DisposeBag? = DisposeBag()
-    
-    public let rxViewState = BehaviorRelay<ViewState>(value: .none)
-    public let rxShowLocalHud = BehaviorRelay(value: false)
+    public var rxViewState = BehaviorRelay<ViewState>(value: .none)
     
     public let navigationService: INavigationService = DependencyManager.shared.getService()
     
@@ -80,45 +79,31 @@ open class ViewModel<M>: NSObject, IViewModel, IReactable {
  The idea for ListViewModel is that it will contain a list of CellViewModels
  By using this list, ListPage will render the cell and assign ViewModel to it respectively
  */
-open class ListViewModel<M, CVM: IGenericViewModel>: ViewModel<M>, IListViewModel {
+open class ListViewModel<M, S: Hashable, CVM: IViewModel>: ViewModel<M>, IListViewModel {
     
+    public typealias SectionElement = S
     public typealias CellViewModelElement = CVM
     
-    public typealias ItemsSourceType = [SectionList<CVM>]
-    
-    public let itemsSource = ReactiveCollection<CVM>()
+    public let itemsSource = ItemSource<S, CVM>()
     public let rxSelectedItem = BehaviorRelay<CVM?>(value: nil)
     public let rxSelectedIndex = BehaviorRelay<IndexPath?>(value: nil)
     
     required public init(model: M? = nil) {
-        super.init(model: model)
-    }
-    
-    open override func destroy() {
-        super.destroy()
-        
-        itemsSource.forEach { (_, sectionList) in
-            sectionList.forEach { (_, cvm) in
-                cvm.destroy()
-            }
+        // Initially set empty first
+        itemsSource.update { snapshot in
+            snapshot.appendSections([])
         }
+        super.init(model: model)
     }
     
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
 }
 
-/**
- A based ViewModel for TableCell and CollectionCell
- 
- The difference between ViewModel and CellViewModel is that CellViewModel does not contain NavigationService. Also CellViewModel
- contains its own index
- */
-
 protocol IIndexable: class {
     var indexPath: IndexPath? { get set }
 }
 
-open class CellViewModel<M>: NSObject, IGenericViewModel, IIndexable, IReactable {
+open class CellViewModel<M>: NSObject, IViewModel, IIndexable, IReactable {
     
     public typealias ModelElement = M
     
@@ -162,7 +147,7 @@ open class CellViewModel<M>: NSObject, IGenericViewModel, IIndexable, IReactable
 /// A usefull CellViewModel based class to support ListPage and CollectionPage that have more than one cell identifier
 open class SuperCellViewModel: CellViewModel<Any> {
     
-    required public init(model: Any? = nil) {
+    public required init(model: Any? = nil) {
         super.init(model: model)
     }
 }

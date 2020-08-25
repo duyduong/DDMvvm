@@ -14,6 +14,10 @@ public extension Reactive where Base: DecoratorView {
     var decorator: Binder<DecoratorView.Decorator?> {
         return Binder(base) { $0.decorator = $1 }
     }
+    
+    var shadow: Binder<DecoratorView.Shadow?> {
+        return Binder(base) { $0.shadow = $1 }
+    }
 }
 
 open class DecoratorView: AbstractView {
@@ -42,7 +46,11 @@ open class DecoratorView: AbstractView {
         didSet { setNeedsLayout() }
     }
     
-    open var decorator: Decorator? = nil {
+    open var decorator: Decorator? {
+        didSet { setNeedsLayout() }
+    }
+    
+    open var shadow: Shadow? {
         didSet { setNeedsLayout() }
     }
     
@@ -50,21 +58,12 @@ open class DecoratorView: AbstractView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        updateLayout()
-        
-        if colors.count > 0 {
-            setLinearGradient(
-                colors: colors,
-                locations: locations,
-                startPoint: startPoint,
-                endPoint: endPoint,
-                transform: gradientTransform,
-                insetBy: insetBy
-            )
-        }
+        updateBorder()
+        updateShadow()
+        updateGradient()
     }
     
-    open func updateLayout() {
+    open func updateBorder() {
         guard let decorator = decorator, bounds != .zero else { return }
         layer.masksToBounds = false
         
@@ -97,6 +96,35 @@ open class DecoratorView: AbstractView {
             borderLayer?.removeFromSuperlayer()
         }
     }
+    
+    open func updateShadow() {
+        guard let shadow = shadow else { return }
+        
+        cornerRadius = shadow.cornerRadius
+        setShadow(
+            offset: shadow.offset,
+            color: shadow.color,
+            opacity: shadow.opacity,
+            blur: shadow.blur
+        )
+    }
+    
+    open func updateGradient() {
+        guard colors.count > 0 else { return }
+        var colors = self.colors
+        if colors.count == 1 {
+            colors.append(colors[0])
+        }
+        
+        setLinearGradient(
+            colors: colors,
+            locations: locations,
+            startPoint: startPoint,
+            endPoint: endPoint,
+            transform: gradientTransform,
+            insetBy: insetBy
+        )
+    }
 }
 
 public extension DecoratorView {
@@ -109,14 +137,14 @@ public extension DecoratorView {
         public enum Corner {
             case none, rounded, only(corners: UIRectCorner, radius: CGFloat)
             
-            var corners: UIRectCorner {
+            public var corners: UIRectCorner {
                 switch self {
                 case .none, .rounded: return .allCorners
                 case .only(let corners, _): return corners
                 }
             }
             
-            var radius: CGFloat {
+            public var radius: CGFloat {
                 switch self {
                 case .none, .rounded: return 0
                 case .only(_, let radius): return radius
@@ -130,6 +158,22 @@ public extension DecoratorView {
         public init(border: Border, corner: Corner) {
             self.border = border
             self.corner = corner
+        }
+    }
+    
+    struct Shadow {
+        public let offset: CGSize
+        public let color: UIColor
+        public let opacity: Float
+        public let blur: CGFloat
+        public let cornerRadius: CGFloat
+        
+        public init(offset: CGSize, color: UIColor, opacity: Float, blur: CGFloat, cornerRadius: CGFloat) {
+            self.offset = offset
+            self.color = color
+            self.opacity = opacity
+            self.blur = blur
+            self.cornerRadius = cornerRadius
         }
     }
 }

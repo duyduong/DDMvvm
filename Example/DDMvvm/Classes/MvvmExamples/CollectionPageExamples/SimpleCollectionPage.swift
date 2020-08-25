@@ -15,7 +15,7 @@ import DDMvvm
  Even the cell, it reused SimpleListPageCellViewModel
  This should be the characteristic of ViewModel, decoupling with View
  */
-class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
+class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel>, UICollectionViewDelegateFlowLayout {
 
     let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     
@@ -30,6 +30,7 @@ class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
         
         navigationItem.rightBarButtonItem = addBtn
         
+        collectionView.delegate = self
         collectionView.register(SimpleCollectionPageCell.self, forCellWithReuseIdentifier: SimpleCollectionPageCell.identifier)
     }
     
@@ -45,7 +46,7 @@ class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
         return SimpleCollectionPageCell.identifier
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let viewWidth = collectionView.frame.width
         
         let numOfCols: CGFloat
@@ -64,15 +65,15 @@ class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
         return CGSize(width: width, height: 60)
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return padding
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return padding
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .all(padding)
     }
 }

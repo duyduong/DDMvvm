@@ -7,11 +7,23 @@
 
 import UIKit
 
-open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITableViewDelegate {
+open class ListView<VM: IListViewModel>: View<VM> {
 
-    public typealias CVM = VM.CellViewModelElement
+    public typealias S = VM.SectionElement
+    public typealias CVM = VM.CellElement
     
     public let tableView: UITableView
+    
+    private lazy var dataSource = ListDataSource<S, CVM>(
+        tableView: tableView,
+        cellProvider: prepareCell,
+        titleForHeaderInSection: titleForHeader,
+        titleForFooterInSection: titleForFooter,
+        canEditRowAtIndexPath: canEdit,
+        canMoveRowAtIndexPath: canMove,
+        sectionIndexTitles: sectionIndexTitles,
+        sectionForSectionIndexTitle: sectionForSectionIndexTitle
+    )
     
     public init(viewModel: VM? = nil, style: UITableView.Style = .plain) {
         tableView = UITableView(frame: .zero, style: style)
@@ -24,8 +36,6 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
     }
     
     override func setup() {
-        tableView.dataSource = self
-        tableView.delegate = self
         tableView.backgroundColor = .clear
         addSubview(tableView)
         
@@ -43,84 +53,28 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
     
     /// Every time the viewModel changed, this method will be called again, so make sure to call super for ListPage to work
     open override func bindViewAndViewModel() {
-        tableView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
-        viewModel?.itemsSource.collectionChanged
+        tableView.rx.itemSelected.subscribe(onNext: itemSelected) => disposeBag
+        viewModel?.itemsSource.snapshotChanged
             .observeOn(Scheduler.shared.mainScheduler)
-            .subscribe(onNext: onDataSourceChanged) => disposeBag
+            .subscribe(onNext: snapshotChanged) => disposeBag
     }
     
-    private func onItemSelected(_ indexPath: IndexPath) {
-        guard let viewModel = self.viewModel else { return }
-        let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
-        
+    private func itemSelected(_ indexPath: IndexPath) {
+        guard let viewModel = viewModel, let cellViewModel = dataSource[indexPath] else { return }
+
         viewModel.rxSelectedItem.accept(cellViewModel)
         viewModel.rxSelectedIndex.accept(indexPath)
-        
+
         viewModel.selectedItemDidChange(cellViewModel)
-        
+
         selectedItemDidChange(cellViewModel)
     }
     
-    private func onDataSourceChanged(_ changeSet: ChangeSet) {
-        if changeSet.animated {
-            switch changeSet {
-            case let data as ModifySection:
-                switch data.type {
-                case .insert:
-                    tableView.insertSections([data.section], with: .top)
-                    
-                case .delete:
-                    if data.section < 0 {
-                        if tableView.numberOfSections > 0 {
-                            let sections = IndexSet(0...tableView.numberOfSections - 1)
-                            tableView.deleteSections(sections, with: .bottom)
-                        } else {
-                            tableView.reloadData()
-                        }
-                    } else {
-                        tableView.deleteSections([data.section], with: .bottom)
-                    }
-                    
-                default:
-                    if data.section < 0 {
-                        if tableView.numberOfSections > 0 {
-                            let sections = IndexSet(0...tableView.numberOfSections - 1)
-                            tableView.reloadSections(sections, with: .automatic)
-                        } else {
-                            tableView.reloadData()
-                        }
-                    } else {
-                        tableView.reloadSections(IndexSet([data.section]), with: .automatic)
-                    }
-                }
-            case let data as ModifyElements:
-                switch data.type {
-                case .insert:
-                    tableView.insertRows(at: data.indexPaths, with: .top)
-                    
-                case .delete:
-                    tableView.deleteRows(at: data.indexPaths, with: .bottom)
-                    
-                default:
-                    tableView.reloadRows(at: data.indexPaths, with: .automatic)
-                }
-                
-            case let data as MoveElements:
-                tableView.beginUpdates()
-                
-                for (i, fromIndexPath) in data.fromIndexPaths.enumerated() {
-                    let toIndexPath = data.toIndexPaths[i]
-                    tableView.moveRow(at: fromIndexPath, to: toIndexPath)
-                }
-                
-                tableView.endUpdates()
-                
-            default:
-                tableView.reloadData()
-            }
-        } else {
-            tableView.reloadData()
-        }
+    private func snapshotChanged(_ data: ItemSource<S, CVM>.Snapshot?) {
+        guard let data = data else { return }
+        let snapshot = data.snapshot
+        let animated = data.animated
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     // MARK: - Abstract for subclasses
@@ -133,21 +87,7 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
     
     // MARK: - Table view datasources
     
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel?.itemsSource.count ?? 0
-    }
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.itemsSource.countElements(at: section) ?? 0
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let viewModel = viewModel else {
-            return UITableViewCell(style: .default, reuseIdentifier: "Cell")
-        }
-        
-        let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
-        
+    public func prepareCell(for tableView: UITableView, at indexPath: IndexPath, cellViewModel: CVM) -> UITableViewCell {
         // set index for each cell
         (cellViewModel as? IIndexable)?.indexPath = indexPath
         
@@ -156,30 +96,31 @@ open class ListView<VM: IListViewModel>: View<VM>, UITableViewDataSource, UITabl
         if let cell = cell as? IAnyView {
             cell.anyViewModel = cellViewModel
         }
+        
         return cell
     }
     
-    open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) { }
+    open func titleForHeader(_ dataSource: ListDataSource<S, CVM>, section: Int) -> String? {
+        return nil
+    }
     
-    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    open func titleForFooter(_ dataSource: ListDataSource<S, CVM>, section: Int) -> String? {
+        return nil
+    }
+    
+    open func canEdit(_ dataSource: ListDataSource<S, CVM>, indexPath: IndexPath) -> Bool {
         return false
     }
     
-    // MARK: - Table view delegates
-    
-    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open func canMove(_ dataSource: ListDataSource<S, CVM>, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+
+    open func sectionIndexTitles(dataSource: ListDataSource<S, CVM>) -> [String]? {
         return nil
     }
     
-    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func sectionForSectionIndexTitle(_ dataSource: ListDataSource<S, CVM>, title: String, at index: Int) -> Int {
         return 0
-    }
-    
-    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    open func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return nil
     }
 }

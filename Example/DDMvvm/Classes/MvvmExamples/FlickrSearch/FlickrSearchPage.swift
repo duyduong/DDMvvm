@@ -13,7 +13,7 @@ import Alamofire
 import Action
 import DDMvvm
 
-class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
+class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel>, UICollectionViewDelegateFlowLayout {
     
     let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 400, height: 30))
     let indicatorView = UIActivityIndicatorView(style: .gray)
@@ -47,6 +47,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
         loadMoreIndicator.autoPinEdge(toSuperviewEdge: .bottom, withInset: 10)
         
         // setup collection view
+        collectionView.delegate = self
         collectionView.register(FlickrImageCell.self, forCellWithReuseIdentifier: FlickrImageCell.identifier)
     }
     
@@ -100,7 +101,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
         return FlickrImageCell.identifier
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let viewWidth = collectionView.frame.width
         
         let numOfCols: CGFloat
@@ -120,20 +121,20 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
         return CGSize(width: width, height: 4 * width / 3)
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return padding
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return padding
     }
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .all(padding)
     }
 }
 
-class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewModel> {
+class FlickrSearchPageViewModel: ListViewModel<MenuModel, SingleSection, FlickrImageCellViewModel> {
     
     // Json service injection
     let jsonService: IJsonService = DependencyManager.shared.getService()
@@ -163,9 +164,7 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
         ]
     }
     
-    lazy var loadMoreAction: Action<Void, Void> = {
-        return Action() { .just(self.loadMore()) }
-    }()
+    lazy var loadMoreAction: Action<Void, Void> = Action() { .just(self.loadMore()) }
     
     override func react() {
         // Whenever text changed
@@ -191,13 +190,20 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
                 return .just([])
             }
             .subscribe(onNext: { cvms in
-                self.itemsSource.reset([cvms])
+                self.itemsSource.update { snapshot in
+                    if snapshot.numberOfSections == 0 {
+                        snapshot.appendSections([.main])
+                    }
+                    
+                    snapshot.appendItems(cvms)
+                }
                 self.rxIsSearching.accept(false)
             }) => disposeBag
     }
     
     private func loadMore() {
-        if itemsSource.countElements() <= 0 || done || rxIsLoadingMore.value { return }
+        let numberOfItems = itemsSource.snapshot?.numberOfItems ?? 0
+        if numberOfItems <= 0 || done || rxIsLoadingMore.value { return }
         
         tmpBag = DisposeBag()
         
@@ -206,7 +212,13 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, FlickrImageCellViewMod
         
         let obs: Single<FlickrSearchResponse> = jsonService.get("", params: params, parameterEncoding: URLEncoding.queryString)
         obs.map(prepareSources).subscribe(onSuccess: { cvms in
-            self.itemsSource.append(cvms)
+            self.itemsSource.update { snapshot in
+                if snapshot.numberOfSections == 0 {
+                    snapshot.appendSections([.main])
+                }
+                
+                snapshot.appendItems(cvms)
+            }
             
             self.rxIsLoadingMore.accept(false)
         }, onError: { error in

@@ -9,20 +9,23 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+open class CollectionPage<VM: IListViewModel>: Page<VM> {
 
-    public typealias CVM = VM.CellViewModelElement
+    public typealias S = VM.SectionElement
+    public typealias CVM = VM.CellElement
 
     public lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
         return collectionView
     }()
     
-    private var counter = [Int: Int]()
+    private lazy var dataSource = CollectionDataSource<S, CVM>(
+        collectionView: collectionView,
+        cellProvider: prepareCell,
+        supplementaryViewProvider: viewForSupplementaryElement,
+        canMoveRowAtIndexPath: canMoveItem
+    )
     
     public override init(viewModel: VM? = nil) {
         super.init(viewModel: viewModel)
@@ -68,21 +71,16 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         collectionView.removeFromSuperview()
     }
 
-    open override func localHudToggled(_ value: Bool) {
-        collectionView.isHidden = value
-    }
-
     /// Every time the viewModel changed, this method will be called again, so make sure to call super for CollectionPage to work
     open override func bindViewAndViewModel() {
-        collectionView.rx.itemSelected.asObservable().subscribe(onNext: onItemSelected) => disposeBag
-        viewModel?.itemsSource.collectionChanged
+        collectionView.rx.itemSelected.subscribe(onNext: itemSelected) => disposeBag
+        viewModel?.itemsSource.snapshotChanged
             .observeOn(Scheduler.shared.mainScheduler)
-            .subscribe(onNext: onDataSourceChanged) => disposeBag
+            .subscribe(onNext: snapshotChanged) => disposeBag
     }
 
-    private func onItemSelected(_ indexPath: IndexPath) {
-        guard let viewModel = viewModel else { return }
-        let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
+    private func itemSelected(_ indexPath: IndexPath) {
+        guard let viewModel = viewModel, let cellViewModel = dataSource[indexPath] else { return }
         
         viewModel.rxSelectedItem.accept(cellViewModel)
         viewModel.rxSelectedIndex.accept(indexPath)
@@ -91,67 +89,11 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         selectedItemDidChange(cellViewModel)
     }
     
-    private func onDataSourceChanged(_ changeSet: ChangeSet) {
-        if !changeSet.animated || (changeSet.type == .reload && collectionView.numberOfSections == 0) {
-            updateCounter()
-            collectionView.reloadData()
-        } else {
-            collectionView.performBatchUpdates({
-                switch changeSet {
-                case let data as ModifySection:
-                    switch data.type {
-                    case .insert:
-                        collectionView.insertSections(IndexSet([data.section]))
-                    
-                    case .delete:
-                        if data.section < 0 {
-                            let sections = Array(0...collectionView.numberOfSections - 1)
-                            collectionView.deleteSections(IndexSet(sections))
-                        } else {
-                            collectionView.deleteSections(IndexSet([data.section]))
-                        }
-                        
-                    default:
-                        if data.section < 0 {
-                            let sections = Array(0...collectionView.numberOfSections - 1)
-                            collectionView.reloadSections(IndexSet(sections))
-                        } else {
-                            collectionView.reloadSections(IndexSet([data.section]))
-                        }
-                    }
-                    
-                case let data as ModifyElements:
-                    switch data.type {
-                    case .insert:
-                        collectionView.insertItems(at: data.indexPaths)
-                        
-                    case .delete:
-                        collectionView.deleteItems(at: data.indexPaths)
-                        
-                    default:
-                        collectionView.reloadItems(at: data.indexPaths)
-                    }
-                    
-                case let data as MoveElements:
-                    for (i, fromIndexPath) in data.fromIndexPaths.enumerated() {
-                        let toIndexPath = data.toIndexPaths[i]
-                        collectionView.moveItem(at: fromIndexPath, to: toIndexPath)
-                    }
-                    
-                default:
-                    updateCounter()
-                    collectionView.reloadData()
-                }
-                
-                // update counter
-                updateCounter()
-            }, completion: nil)
-        }
-    }
-    
-    private func updateCounter() {
-        counter.removeAll()
-        viewModel?.itemsSource.forEach { counter[$0] = $1.count }
+    private func snapshotChanged(_ itemSource: ItemSource<S, CVM>.Snapshot?) {
+        guard let itemSource = itemSource else { return }
+        let snapshot = itemSource.snapshot
+        let animated = itemSource.animated
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     // MARK: - Abstract for subclasses
@@ -170,22 +112,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
     
     // MARK: - Collection view datasources
     
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return counter.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return counter[section] ?? 0
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let viewModel = viewModel else {
-            return UICollectionViewCell(frame: .zero)
-        }
-        
-        let cellViewModel = viewModel.itemsSource[indexPath.row, indexPath.section]
-        
-        // set index for each cell
+    func prepareCell(for collectionView: UICollectionView, at indexPath: IndexPath, cellViewModel: CVM) -> UICollectionViewCell {
         (cellViewModel as? IIndexable)?.indexPath = indexPath
         
         let identifier = cellIdentifier(cellViewModel)
@@ -196,32 +123,12 @@ open class CollectionPage<VM: IListViewModel>: Page<VM>, UICollectionViewDataSou
         return cell
     }
     
-    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    open func viewForSupplementaryElement(for collectionView: UICollectionView, kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         return (nil as UICollectionReusableView?)!
     }
     
-    // MARK: - Collection view delegates
-    
-    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) { }
-    
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return .zero
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .zero
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .zero
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    open func canMoveItem(_ dataSource: CollectionDataSource<S, CVM>, at indexPath: IndexPath) -> Bool {
+        return false
     }
 }
 

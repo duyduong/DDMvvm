@@ -11,7 +11,7 @@ import Action
 import DDMvvm
 
 class ContactListPage: ListPage<ContactListPageViewModel> {
-
+    
     let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     
     override func initialize() {
@@ -48,11 +48,9 @@ class ContactListPage: ListPage<ContactListPageViewModel> {
     }
 }
 
-class ContactListPageViewModel: ListViewModel<Model, ContactCellViewModel> {
+class ContactListPageViewModel: ListViewModel<Model, SingleSection, ContactCellViewModel> {
     
-    lazy var addAction: Action<Void, Void> = {
-        return Action() { .just(self.add()) }
-    }()
+    lazy var addAction: Action<Void, Void> = Action() { .just(self.add()) }
     
     override func selectedItemDidChange(_ cellViewModel: ContactCellViewModel) {
         handleContactModification(cellViewModel.model)
@@ -71,7 +69,12 @@ class ContactListPageViewModel: ListViewModel<Model, ContactCellViewModel> {
         vm.saveAction.executionObservables.switchLatest().subscribe(onNext: { contactModel in
             if model == nil {
                 let cvm = ContactCellViewModel(model: contactModel)
-                self.itemsSource.append(cvm)
+                self.itemsSource.update { snapshot in
+                    if snapshot.numberOfSections == 0 {
+                        snapshot.appendSections([.main])
+                    }                    
+                    snapshot.appendItems([cvm])
+                }
             } else if let cvm = self.rxSelectedItem.value {
                 cvm.model = contactModel
             }
