@@ -5,18 +5,18 @@ PODS:
   - Alamofire (5.1.0)
   - AlamofireImage (4.1.0):
     - Alamofire (~> 5.1)
-  - DDMvvm (1.7.0):
+  - DDMvvm (1.8.1):
     - Action
     - Alamofire
     - AlamofireImage
-    - DiffableDataSources
+    - DifferenceKit
     - ObjectMapper
     - PureLayout
     - RxCocoa
     - RxSwift
-  - DiffableDataSources (0.4.0):
-    - DifferenceKit/AppKitExtension (~> 1.1)
-    - DifferenceKit/UIKitExtension (~> 1.1)
+  - DifferenceKit (1.1.5):
+    - DifferenceKit/Core (= 1.1.5)
+    - DifferenceKit/UIKitExtension (= 1.1.5)
   - DifferenceKit/Core (1.1.5)
   - DifferenceKit/UIKitExtension (1.1.5):
     - DifferenceKit/Core
@@ -37,7 +37,6 @@ SPEC REPOS:
     - Action
     - Alamofire
     - AlamofireImage
-    - DiffableDataSources
     - DifferenceKit
     - ObjectMapper
     - PureLayout
@@ -53,8 +52,7 @@ SPEC CHECKSUMS:
   Action: 0d14986aad0f1330aa27ce65d0cdeaacbb63d91c
   Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
   AlamofireImage: c4a2ba349885fb3064feb74d2e547bd42ce9be10
-  DDMvvm: 803c79a3055f0b4d10127fb1782b1d065230ffdb
-  DiffableDataSources: 80396cec405c9b29e1e07b55c9be7d11b46c8741
+  DDMvvm: 0acd4b4ec47b88147ccd6bdf55151fe1a801ec51
   DifferenceKit: 516f12e336ed65a3a0665847b5c3cb5cad4bd4ea
   ObjectMapper: b53ae947d370bf89423e86be7d4e2d2b2a8d3f40
   PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a

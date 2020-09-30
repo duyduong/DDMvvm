@@ -45,9 +45,7 @@ open class TableViewDiffableDataSource<SectionIdentifierType: Hashable, ItemIden
             animatingDifferences: animatingDifferences,
             performUpdates: { tableView, changeset, setSections in
                 tableView.reload(using: changeset, with: self.defaultRowAnimation, setData: setSections)
-        },
-            completion: completion
-        )
+            }, completion: completion)
     }
 
     /// Returns a new snapshot object of current state.

@@ -8,7 +8,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import DiffableDataSources
 
 open class ListPage<VM: IListViewModel>: Page<VM> {
     

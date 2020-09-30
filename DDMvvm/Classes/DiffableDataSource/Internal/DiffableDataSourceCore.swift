@@ -2,6 +2,18 @@ import Foundation
 import QuartzCore
 import DifferenceKit
 
+protocol Reloadable where Self: UIView {
+    func reload()
+}
+
+extension UITableView: Reloadable {
+    func reload() { reloadData() }
+}
+
+extension UICollectionView: Reloadable {
+    func reload() { reloadData() }
+}
+
 final class DiffableDataSourceCore<SectionIdentifierType: Hashable, ItemIdentifierType: Hashable> {
     typealias Section = SnapshotStructure<SectionIdentifierType, ItemIdentifierType>.Section
 
@@ -9,13 +21,13 @@ final class DiffableDataSourceCore<SectionIdentifierType: Hashable, ItemIdentifi
     private var currentSnapshot = DiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>()
     private var sections: [Section] = []
 
-    func apply<View: AnyObject>(
+    func apply<View: Reloadable>(
         _ snapshot: DiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>,
         view: View?,
         animatingDifferences: Bool,
         performUpdates: @escaping (View, StagedChangeset<[Section]>, @escaping ([Section]) -> Void) -> Void,
         completion: (() -> Void)?
-        ) {
+    ) {
         dispatcher.dispatch { [weak self] in
             guard let self = self else {
                 return
@@ -29,25 +41,26 @@ final class DiffableDataSourceCore<SectionIdentifierType: Hashable, ItemIdentifi
                 return self.sections = newSections
             }
 
+            let changeset = StagedChangeset(source: self.sections, target: newSections)
+            
             func performDiffingUpdates() {
-                let changeset = StagedChangeset(source: self.sections, target: newSections)
                 performUpdates(view, changeset) { sections in
                     self.sections = sections
                 }
             }
-
-            CATransaction.begin()
-            CATransaction.setCompletionBlock(completion)
-
+            
             if animatingDifferences {
+                CATransaction.begin()
+                CATransaction.setCompletionBlock(completion)
                 performDiffingUpdates()
+                CATransaction.commit()
+            } else {
+                if let data = changeset.last?.data {
+                    self.sections = data
+                }
+                view.reload()
+                completion?()
             }
-            else {
-                CATransaction.setDisableActions(true)
-                performDiffingUpdates()
-            }
-
-            CATransaction.commit()
         }
     }
 

@@ -8,11 +8,9 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import DiffableDataSources
 
 /// Destroyable type for handling dispose bag and destroy it
 public protocol IDestroyable: class {
-    
     var disposeBag: DisposeBag? { get set }
     func destroy()
 }
@@ -24,7 +22,7 @@ public extension IDestroyable {
 }
 
 /// PopView type for Page to implement as a pop view
-public protocol IPopupView: class {
+public protocol IPopupView where Self: UIViewController {
     
     /*
      Setup popup layout
@@ -55,7 +53,7 @@ public protocol IPopupView: class {
 }
 
 /// TransitionView type to create custom transitioning between pages
-public protocol ITransitionView: class {
+public protocol ITransitionView where Self: UIViewController {
     
     /**
      Keep track of animator delegate for custom transitioning
@@ -117,7 +115,7 @@ public struct ItemSource<S: Hashable, CVM: IViewModel> {
     public var snapshotChanged: Observable<Snapshot?> { rxSnapshot.asObservable() }
     
     /// Update itemsSource with new snapshot
-    public func update(animated: Bool = true, block: ((inout DiffableDataSourceSnapshot<S, CVM>) -> Void)) {
+    public func update(animated: Bool = false, block: ((inout DiffableDataSourceSnapshot<S, CVM>) -> Void)) {
         var snapshot = self.snapshot ?? DiffableDataSourceSnapshot<S, CVM>()
         block(&snapshot)
         rxSnapshot.accept(Snapshot(snapshot: snapshot, animated: animated))

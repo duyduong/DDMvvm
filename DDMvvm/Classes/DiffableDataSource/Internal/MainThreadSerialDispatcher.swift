@@ -2,6 +2,7 @@ import Foundation
 
 final class MainThreadSerialDispatcher {
     private let executingCount = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+    private let serialQueue = DispatchQueue(label: "elsa.serial.queue")
 
     init() {
         executingCount.initialize(to: 0)
@@ -18,13 +19,9 @@ final class MainThreadSerialDispatcher {
         if Thread.isMainThread && count == 1 {
             action()
             OSAtomicDecrement32(executingCount)
-        }
-        else {
+        } else {
             DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-
+                guard let `self` = self else { return }
                 action()
                 OSAtomicDecrement32(self.executingCount)
             }

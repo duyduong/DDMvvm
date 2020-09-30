@@ -5,7 +5,7 @@
 //  Created by Dao Duy Duong on 8/25/20.
 //
 
-import DiffableDataSources
+import UIKit
 
 public class ListDataSource<S: Hashable, I: Hashable>: TableViewDiffableDataSource<S, I> {
     

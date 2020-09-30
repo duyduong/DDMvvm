@@ -8,7 +8,6 @@
 import Foundation
 import RxSwift
 import RxCocoa
-import DiffableDataSources
 
 protocol IReactable {
     var isReacted: Bool { get set }
