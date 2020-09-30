@@ -54,12 +54,9 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            if _viewModel != newValue {
-                disposeBag = DisposeBag()
-                
-                _viewModel = newValue
-                viewModelChanged()
-            }
+            disposeBag = DisposeBag()
+            _viewModel = newValue
+            viewModelChanged()
         }
     }
     
