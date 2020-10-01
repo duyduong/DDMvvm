@@ -2,6 +2,12 @@ import Foundation
 import QuartzCore
 import DifferenceKit
 
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return index >= 0 && index < count ? self[index] : nil
+    }
+}
+
 protocol Reloadable where Self: UIView {
     func reload()
 }
@@ -74,14 +80,12 @@ final class DiffableDataSourceCore<SectionIdentifierType: Hashable, ItemIdentifi
         guard 0..<sections.endIndex ~= indexPath.section else {
             return nil
         }
-
-        let items = sections[indexPath.section].elements
-
-        guard 0..<items.endIndex ~= indexPath.item else {
+        
+        guard let items = sections[safe: indexPath.section]?.elements, 0..<items.endIndex ~= indexPath.item else {
             return nil
         }
 
-        return items[indexPath.item].differenceIdentifier
+        return items[safe: indexPath.item]?.differenceIdentifier
     }
 
     func unsafeItemIdentifier(for indexPath: IndexPath, file: StaticString = #file, line: UInt = #line) -> ItemIdentifierType {
@@ -110,6 +114,6 @@ final class DiffableDataSourceCore<SectionIdentifierType: Hashable, ItemIdentifi
     }
 
     func numberOfItems(inSection section: Int) -> Int {
-        return sections[section].elements.count
+        return sections[safe: section]?.elements.count ?? 0
     }
 }
