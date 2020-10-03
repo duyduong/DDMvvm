@@ -20,6 +20,7 @@ open class View<VM: IViewModel>: UIView, IView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
+            guard _viewModel != newValue else { return }
             _viewModel = newValue
             disposeBag = DisposeBag()
             viewModelChanged()
@@ -59,7 +60,7 @@ open class View<VM: IViewModel>: UIView, IView {
     
     private func viewModelChanged() {
         bindViewAndViewModel()
-        (_viewModel as? IReactable)?.reactIfNeeded()
+        (_viewModel as? IReactable)?.reactIfNeeded
     }
     
     open func destroy() {
@@ -86,6 +87,7 @@ open class CollectionCell<VM: IViewModel>: UICollectionViewCell, IView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
+            guard _viewModel != newValue else { return }
             _viewModel = newValue
             disposeBag = DisposeBag()
             viewModelChanged()
@@ -116,11 +118,12 @@ open class CollectionCell<VM: IViewModel>: UICollectionViewCell, IView {
     
     private func viewModelChanged() {
         bindViewAndViewModel()
-        (_viewModel as? IReactable)?.reactIfNeeded()
+        (_viewModel as? IReactable)?.reactIfNeeded
     }
     
     open override func prepareForReuse() {
         super.prepareForReuse()
+        disposeBag = DisposeBag()
         _viewModel = nil
     }
     
@@ -148,6 +151,7 @@ open class TableCell<VM: IViewModel>: UITableViewCell, IView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
+            guard _viewModel != newValue else { return }
             _viewModel = newValue
             disposeBag = DisposeBag()
             viewModelChanged()
@@ -182,11 +186,12 @@ open class TableCell<VM: IViewModel>: UITableViewCell, IView {
     
     private func viewModelChanged() {
         bindViewAndViewModel()
-        (_viewModel as? IReactable)?.reactIfNeeded()
+        (_viewModel as? IReactable)?.reactIfNeeded
     }
     
     open override func prepareForReuse() {
         super.prepareForReuse()
+        disposeBag = DisposeBag()
         _viewModel = nil
     }
     

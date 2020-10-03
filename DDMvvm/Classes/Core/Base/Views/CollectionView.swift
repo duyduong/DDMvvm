@@ -54,6 +54,11 @@ open class CollectionView<VM: IListViewModel>: View<VM> {
     open override func destroy() {
         super.destroy()
         collectionView.removeFromSuperview()
+        collectionView.visibleCells.forEach { ($0 as? IDestroyable)?.destroy() }
+        collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)
+            .forEach { ($0 as? IDestroyable)?.destroy() }
+        collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionFooter)
+            .forEach { ($0 as? IDestroyable)?.destroy() }
     }
     
     /// Every time the viewModel changed, this method will be called again, so make sure to call super for ListPage to work

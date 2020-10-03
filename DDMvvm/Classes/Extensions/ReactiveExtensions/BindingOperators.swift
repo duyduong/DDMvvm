@@ -15,14 +15,14 @@ infix operator <~> : DefaultPrecedence
 
 public func <~><T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disposable {
     let bindToUIDisposable = relay.bind(to: property)
-    let bindToRelay = property.bind(to: relay)
+    let bindToRelay = property.observeOn(MainScheduler.asyncInstance).bind(to: relay)
     
     return Disposables.create(bindToUIDisposable, bindToRelay)
 }
 
 public func <~><T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Disposable {
     let bindToUIDisposable = relay.bind(to: property)
-    let bindToRelay = property.bind(to: relay)
+    let bindToRelay = property.observeOn(MainScheduler.asyncInstance).bind(to: relay)
     
     return Disposables.create(bindToUIDisposable, bindToRelay)
 }

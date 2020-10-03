@@ -49,6 +49,11 @@ open class ListView<VM: IListViewModel>: View<VM> {
     open override func destroy() {
         super.destroy()
         tableView.removeFromSuperview()
+        tableView.visibleCells.forEach { ($0 as? IDestroyable)?.destroy() }
+        for section in 0..<tableView.numberOfSections {
+            let headerView = tableView.headerView(forSection: section)
+            (headerView as? IDestroyable)?.destroy()
+        }
     }
     
     /// Every time the viewModel changed, this method will be called again, so make sure to call super for ListPage to work

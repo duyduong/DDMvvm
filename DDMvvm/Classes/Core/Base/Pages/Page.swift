@@ -54,8 +54,9 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            disposeBag = DisposeBag()
+            guard _viewModel != newValue else { return }
             _viewModel = newValue
+            disposeBag = DisposeBag()
             viewModelChanged()
         }
     }
@@ -168,7 +169,7 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
     
     private func viewModelChanged() {
         bindViewAndViewModel()
-        (_viewModel as? IReactable)?.reactIfNeeded()
+        (_viewModel as? IReactable)?.reactIfNeeded
     }
 }
 
