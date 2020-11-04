@@ -67,7 +67,7 @@ public extension ScrollLayout {
     /// Append a child into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
     @discardableResult
-    func appendChild(_ child: Any) -> ScrollLayout {
+    func appendChild(_ child: UIView) -> ScrollLayout {
         layout.children([child])
         return self
     }
@@ -75,14 +75,21 @@ public extension ScrollLayout {
     /// Append children into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
     @discardableResult
-    func appendChildren(_ children: [Any]) -> ScrollLayout {
+    func appendChildren(_ children: [UIView]) -> ScrollLayout {
         layout.children(children)
+        return self
+    }
+    
+    /// Append children into stack layout using chilren builder
+    @discardableResult
+    func childrenBuilder(@StackLayout.ChildrenBuilder _ children: () -> [UIView]) -> ScrollLayout {
+        layout.childrenBuilder(children)
         return self
     }
     
     /// Insert a specific child at index
     @discardableResult
-    func insertChild(_ child: Any, at index: Int) -> ScrollLayout {
+    func insertChild(_ child: UIView, at index: Int) -> ScrollLayout {
         layout.child(child, at: index)
         return self
     }

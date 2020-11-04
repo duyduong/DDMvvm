@@ -109,29 +109,18 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
         submitBtn.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
         submitBtn.cornerRadius = 5
         
-        let buttonLayout = StackLayout().justifyContent(.fillEqually).spacing(10).children([
-            cancelBtn,
-            submitBtn
-        ])
-        
-        scrollView.paddings(.all(20)).appendChildren([
-            StackSpaceItem(height: 40),
-            nameTxt,
-            StackSpaceItem(height: 20),
-            phoneTxt,
-            StackSpaceItem(height: 40),
-            buttonLayout
-        ])
-        
-        /*
-         Adding custom space between items can be replaced with belows
-         
-        scrollView.appendChildren([
-            StackViewItem(view: nameTxt, attribute: .margin(insets: .only(top: 40))),
-            StackViewItem(view: phoneTxt, attribute: .margin(insets: .only(top: 20))),
-            StackViewItem(view: buttonLayout, attribute: .margin(insets: .only(top: 40))),
-        ])
-         */
+        // Using children builder
+        scrollView.paddings(.all(20)).childrenBuilder {
+            StackSpaceItem(height: 40)
+            nameTxt
+            StackSpaceItem(height: 20)
+            phoneTxt
+            StackSpaceItem(height: 40)
+            StackLayout().justifyContent(.fillEqually).spacing(10).childrenBuilder {
+                cancelBtn
+                submitBtn
+            }
+        }
     }
     
     override func bindViewAndViewModel() {

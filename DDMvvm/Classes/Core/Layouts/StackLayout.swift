@@ -65,6 +65,41 @@ open class StackLayout: UIStackView {
     open func setupView() {}
 }
 
+/// Children builder
+public extension StackLayout {
+    
+    @_functionBuilder
+    struct ChildrenBuilder {
+        public static func buildBlock(_ components: [UIView]...) -> [UIView] {
+            return components.flatMap { $0 }
+        }
+        
+        public static func buildExpression(_ component: UIView) -> [UIView] {
+            return [component]
+        }
+        
+        public static func buildExpression(_ components: [UIView]...) -> [UIView] {
+            return components.flatMap { $0 }
+        }
+        
+        public static func buildIf(_ components: [UIView]?...) -> [UIView] {
+            return components.compactMap { $0 }.flatMap { $0 }
+        }
+        
+        public static func buildEither(first: [UIView]) -> [UIView] {
+            return first
+        }
+        
+        public static func buildEither(second: [UIView]) -> [UIView] {
+            return second
+        }
+    }
+    
+    static func ForIn<S: Sequence>(_ sequence: S, @ChildrenBuilder builder: (S.Element) -> [UIView]) -> [UIView] {
+        return sequence.flatMap(builder)
+    }
+}
+
 public extension StackLayout {
     
     /// Define stack layout axis
@@ -98,25 +133,28 @@ public extension StackLayout {
     /// Add children into stack layout, accept only UIView or StackItem type,
     /// otherwise will be ignore
     @discardableResult
-    func children(_ children: [Any]) -> StackLayout {
-        children.forEach { child in
-            if let view = getView(for: child) {
-                addArrangedSubview(view)
-            }
+    func children(_ children: [UIView]) -> StackLayout {
+        children.forEach { addArrangedSubview($0) }
+        children.compactMap { $0 as? StackItem }.forEach {
+            $0.layout(with: self)
         }
         return self
+    }
+    
+    /// Add children into stack layout using builder
+    @discardableResult
+    func childrenBuilder(@ChildrenBuilder _ children: () -> [UIView]) -> StackLayout {
+        return self.children(children())
     }
     
     /// Insert a child at specific index, accept only UIView or StackItem type,
     /// otherwise will be ignore
     @discardableResult
-    func child(_ child: Any, at index: Int) -> StackLayout {
+    func child(_ child: UIView, at index: Int) -> StackLayout {
         guard index >= 0 && index < arrangedSubviews.count else { return self }
         
-        if let view = getView(for: child) {
-            insertArrangedSubview(view, at: index)
-        }
-        
+        insertArrangedSubview(child, at: index)
+        (child as? StackItem)?.layout(with: self)
         return self
     }
     
@@ -127,26 +165,16 @@ public extension StackLayout {
         
         let child = arrangedSubviews[index]
         removeArrangedSubview(child)
+        (child as? IDestroyable)?.destroy()
         child.removeFromSuperview()
         
         return self
-    }
-    
-    /// Get the view for a child, only accept UIView or StackItem type
-    private func getView(for child: Any) -> UIView? {
-        if let stackItem = child as? StackItem {
-            return stackItem.build(with: self)
-        } else if let view = child as? UIView {
-            return view
-        }
-        
-        return nil
     }
 }
 
 /// Basic protocol for item inside a stack layout
 public protocol StackItem where Self: UIView {
-    func build(with layout: StackLayout) -> UIView
+    func layout(with layout: StackLayout)
 }
 
 /*
@@ -187,23 +215,9 @@ public class StackViewItem: UIView, StackItem {
         
         /// Fill the content with insets
         case fill(insets: UIEdgeInsets)
-    }
-    
-    private let originalView: UIView
-    private let constraintsDefinition: ((UIView) -> ())
-
-    /// Constructor that takes a custom constraints definition
-    public init(view: UIView, constraintsDefinition: @escaping ((UIView) -> ())) {
-        self.originalView = view
-        self.constraintsDefinition = constraintsDefinition
-        super.init(frame: .zero)
-    }
-    
-    /// Constructor with custom attribute
-    public init(view: UIView, attribute: Attribute) {
-        self.originalView = view
-        self.constraintsDefinition = { (view) in
-            switch attribute {
+        
+        func layout(withView view: UIView) {
+            switch self {
             case .leading(let insets):
                 view.autoPinEdgesToSuperviewEdges(with: insets, excludingEdge: .trailing)
                 view.autoPinEdge(toSuperviewEdge: .trailing, withInset: insets.right, relation: .greaterThanOrEqual)
@@ -231,18 +245,28 @@ public class StackViewItem: UIView, StackItem {
                 view.autoPinEdgesToSuperviewEdges(with: insets)
             }
         }
+    }
+
+    /// Constructor that takes a custom constraints definition
+    public init(view: UIView, constraintsDefinition: @escaping ((UIView) -> ())) {
         super.init(frame: .zero)
+        addSubview(view)
+        constraintsDefinition(view)
+    }
+    
+    /// Constructor with custom attribute
+    public init(view: UIView, attribute: Attribute) {
+        super.init(frame: .zero)
+        
+        addSubview(view)
+        attribute.layout(withView: view)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func build(with layout: StackLayout) -> UIView {
-        addSubview(originalView)
-        constraintsDefinition(originalView)
-        return self
-    }
+    public func layout(with layout: StackLayout) {}
 }
 
 /// Custom spacing between stack items
@@ -267,8 +291,40 @@ public class StackSpaceItem: UIView, StackItem {
         super.init(coder: coder)
     }
     
-    public func build(with layout: StackLayout) -> UIView {
+    public func layout(with layout: StackLayout) {
         autoSetDimensions(to: CGSize(width: frame.width, height: frame.height))
-        return self
+    }
+}
+
+/// Custom ratio spacing between items
+public class StackFlexibleItem: UIView, StackItem {
+    
+    var widthRatio: CGFloat?
+    var heightRatio: CGFloat?
+    
+    /// Constructor with width only, mostly use in horizontal stack layout
+    public init(widthRatio: CGFloat) {
+        self.widthRatio = widthRatio
+        super.init(frame: .zero)
+    }
+    
+    /// Construtor with height only, mostly use in vertical stack layout
+    public init(heightRatio: CGFloat) {
+        self.heightRatio = heightRatio
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    public func layout(with layout: StackLayout) {
+        if let widthRatio = widthRatio {
+            autoMatch(.width, to: .width, of: layout, withMultiplier: widthRatio)
+        }
+        
+        if let heightRatio = heightRatio {
+            autoMatch(.height, to: .height, of: layout, withMultiplier: heightRatio)
+        }
     }
 }

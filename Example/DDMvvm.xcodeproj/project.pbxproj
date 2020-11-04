@@ -173,7 +173,6 @@
 				4EE544962161CEEC000E7B15 /* ExampleMenus */,
 				4EE544922161CE90000E7B15 /* MvvmExamples */,
 				4EE544932161CE90000E7B15 /* TransitionExamples */,
-				4EE544942161CE90000E7B15 /* ServiceInjectionExamples */,
 				4EE544952161CE90000E7B15 /* DataBindingExamples */,
 			);
 			path = Classes;
@@ -197,13 +196,6 @@
 				4ED40776216224DA00987322 /* Transitionings.swift */,
 			);
 			path = TransitionExamples;
-			sourceTree = "<group>";
-		};
-		4EE544942161CE90000E7B15 /* ServiceInjectionExamples */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ServiceInjectionExamples;
 			sourceTree = "<group>";
 		};
 		4EE544952161CE90000E7B15 /* DataBindingExamples */ = {
