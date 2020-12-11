@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DDMvvm'
-  s.version          = '1.8.4'
+  s.version          = '1.8.5'
   s.summary          = 'A MVVM library for iOS Swift.'
 
   s.description      = <<-DESC
