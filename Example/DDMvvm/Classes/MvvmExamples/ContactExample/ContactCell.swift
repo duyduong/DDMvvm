@@ -26,15 +26,13 @@ class ContactCell: TableCell<ContactCellViewModel> {
         phoneLbl.numberOfLines = 0
         phoneLbl.font = Font.system.normal(withSize: 15)
         
-        let infoLayout = StackLayout().direction(.vertical).children([
-            nameLbl,
-            phoneLbl
-        ])
-        
-        let layout = StackLayout().spacing(8).alignItems(.center).children([
-            avatarIv,
-            infoLayout
-        ])
+        let layout = StackLayout().spacing(8).alignItems(.center).childrenBuilder {
+            avatarIv
+            StackLayout().direction(.vertical).childrenBuilder {
+                nameLbl
+                phoneLbl
+            }
+        }
         contentView.addSubview(layout)
         layout.autoPinEdgesToSuperviewEdges(with: .all(5))
     }

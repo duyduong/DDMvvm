@@ -21,7 +21,7 @@ extension Reactive where Base: IView {
      This could be handy for binding a sub viewModel
      */
     public var viewModel: Binder<ViewModelElement?> {
-        return Binder(base) { $0.viewModel = $1 }
+        Binder(base) { $0.viewModel = $1 }
     }
 }
 
@@ -46,7 +46,6 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
     }
     
     public var disposeBag: DisposeBag? = DisposeBag()
-    private var hudBag: DisposeBag? = DisposeBag()
     
     public var animatorDelegate: AnimatorDelegate?
     
@@ -54,9 +53,7 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
     public var viewModel: VM? {
         get { return _viewModel }
         set {
-            guard _viewModel != newValue else { return }
             _viewModel = newValue
-            disposeBag = DisposeBag()
             viewModelChanged()
         }
     }
@@ -93,6 +90,8 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
         super.init(coder: aDecoder)
     }
     
+    deinit { destroy() }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -128,7 +127,7 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
      This method allows subclasses to create custom back button. To create the default back button, use global configurations `DDConfigurations.backButtonFactory`
      */
     open func backButtonFactory() -> Factory<UIBarButtonItem> {
-        return DDConfigurations.backButtonFactory
+        DDConfigurations.backButtonFactory
     }
     
     /**
@@ -153,8 +152,7 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
      Subclasses override this method to remove all things related to `DisposeBag`.
      */
     open func destroy() {
-        disposeBag = DisposeBag()
-        hudBag = DisposeBag()
+        cleanBags()
         viewModel?.destroy()
     }
     
@@ -165,11 +163,6 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
      */
     @objc open func onBack() {
         navigationService.pop()
-    }
-    
-    private func viewModelChanged() {
-        bindViewAndViewModel()
-        (_viewModel as? IReactable)?.reactIfNeeded
     }
 }
 

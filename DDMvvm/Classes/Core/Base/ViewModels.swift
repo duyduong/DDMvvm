@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 protocol IReactable {
-    var reactIfNeeded: Void { get }
+    func react()
 }
 
 extension Reactive where Base: IViewModel {
@@ -18,7 +18,7 @@ extension Reactive where Base: IViewModel {
     public typealias ModelElement = Base.ModelElement
     
     public var model: Binder<ModelElement?> {
-        return Binder(base) { $0.model = $1 }
+        Binder(base) { $0.model = $1 }
     }
 }
 
@@ -56,7 +56,6 @@ open class ViewModel<M>: NSObject, IPageViewModel, IReactable {
     
     /// This method will be called once. Good place to initialize our viewModel (listen, subscribe...) to any signals
     open func react() {}
-    lazy var reactIfNeeded: Void = react()
 }
 
 /**
@@ -76,9 +75,7 @@ open class ListViewModel<M, S: Hashable, CVM: IViewModel>: ViewModel<M>, IListVi
     
     required public init(model: M? = nil) {
         // Initially set empty first
-        itemsSource.update { snapshot in
-            snapshot.appendSections([])
-        }
+        itemsSource.update { $0.appendSections([]) }
         super.init(model: model)
     }
     
@@ -124,7 +121,6 @@ open class CellViewModel<M>: NSObject, IViewModel, IIndexable, IReactable {
     
     /// This method will be called once. Good place to initialize our viewModel (listen, subscribe...) to any signals
     open func react() {}
-    lazy var reactIfNeeded: Void = react()
 }
 
 /// A usefull CellViewModel based class to support ListPage and CollectionPage that have more than one cell identifier

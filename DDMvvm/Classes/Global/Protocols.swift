@@ -81,6 +81,20 @@ public protocol IView: IAnyView, IDestroyable {
     func bindViewAndViewModel()
 }
 
+extension IView {
+    
+    func viewModelChanged() {
+        cleanBags()
+        (viewModel as? IReactable)?.react()
+        bindViewAndViewModel()
+    }
+    
+    func cleanBags() {
+        disposeBag = DisposeBag()
+        (viewModel as? IDestroyable)?.disposeBag = DisposeBag()
+    }
+}
+
 // MARK: - Viewmodel protocols
 
 /// Base ViewModel type for Page (UIViewController), View (UIVIew)

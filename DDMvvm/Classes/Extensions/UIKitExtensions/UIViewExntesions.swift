@@ -214,7 +214,7 @@ public extension UIView {
         if #available(iOS 11.0, *) {
             return autoPinEdge(toSuperviewSafeArea: .bottom, withInset: inset)
         } else {
-            return autoPin(toBottomLayoutOf: viewController, withInset: inset)
+            return autoPin(toBottomLayoutGuideOf: viewController, withInset: inset)
         }
     }
 }
