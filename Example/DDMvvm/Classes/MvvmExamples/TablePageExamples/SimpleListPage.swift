@@ -40,14 +40,14 @@ class SimpleListPage: ListPage<SimpleListPageViewModel> {
     }
 }
 
-class SimpleListPageViewModel: ListViewModel<Model, SingleSection, SimpleListPageCellViewModel> {
+class SimpleListPageViewModel: ListViewModel<Any, SingleSection, SimpleListPageCellViewModel> {
     
     lazy var addAction: Action<Void, Void> = Action() { .just(self.add()) }
     
     private func add() {
         let number = Int.random(in: 1000...10000)
         let title = "This is your random number: \(number)"
-        let cvm = SimpleListPageCellViewModel(model: SimpleModel(withTitle: title))
+        let cvm = SimpleListPageCellViewModel(model: SimpleModel(title: title))
         itemsSource.update { snapshot in
             if snapshot.numberOfSections == 0 {
                 snapshot.appendSections([.main])

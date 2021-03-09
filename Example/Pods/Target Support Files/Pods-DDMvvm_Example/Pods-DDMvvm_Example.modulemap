@@ -1,6 +1,0 @@
-framework module Pods_DDMvvm_Example {
-  umbrella header "Pods-DDMvvm_Example-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -164,10 +164,7 @@ class ContactEditPageViewModel: ViewModel<ContactModel> {
     }
     
     private func save() -> Observable<ContactModel> {
-        let contact = ContactModel()
-        contact.name = rxName.value ?? ""
-        contact.phone = rxPhone.value ?? ""
-        
+        let contact = ContactModel(name: rxName.value ?? "", phone: rxPhone.value ?? "")
         navigationService.pop(with: .dismissPopup) {
             print("============ ContactEditPage did hide")
         }

@@ -8,21 +8,10 @@
 
 import Foundation
 import DDMvvm
-import ObjectMapper
 
-class ContactModel: Model {
-    
-    var name = ""
-    var phone = ""
-    
-    convenience init() {
-        self.init(JSON: [String: Any]())!
-    }
-    
-    override func mapping(map: Map) {
-        name <- map["name"]
-        phone <- map["phone"]
-    }
+struct ContactModel {
+    var name: String
+    var phone: String
 }
 
 

@@ -65,7 +65,7 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
     }
     
     private func pushFlip() {
-        let page = FlipPage(viewModel: ViewModel<Model>())
+        let page = FlipPage(viewModel: ViewModel<Any>())
         let animator = FlipAnimator()
         if usingModal {
             let navPage = NavigationPage(rootViewController: page)
@@ -76,7 +76,7 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
     }
     
     private func pushZoom() {
-        let page = ZoomPage(viewModel: ViewModel<Model>())
+        let page = ZoomPage(viewModel: ViewModel<Any>())
         let animator = ZoomAnimator()
         if usingModal {
             let navPage = NavigationPage(rootViewController: page)
@@ -87,7 +87,7 @@ class NavigationTransitionExamplePageViewModel: ViewModel<MenuModel> {
     }
 }
 
-class FlipPage: Page<ViewModel<Model>> {
+class FlipPage: Page<ViewModel<Any>> {
     
     override func initialize() {
         enableBackButton = true
@@ -107,7 +107,7 @@ class FlipPage: Page<ViewModel<Model>> {
     }
 }
 
-class ZoomPage: Page<ViewModel<Model>> {
+class ZoomPage: Page<ViewModel<Any>> {
     
     override func initialize() {
         enableBackButton = true

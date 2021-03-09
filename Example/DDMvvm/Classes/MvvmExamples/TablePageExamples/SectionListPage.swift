@@ -65,7 +65,7 @@ class SectionListPage: ListPage<SectionListPageViewModel>, UITableViewDelegate {
     }
 }
 
-class SectionListPageViewModel: ListViewModel<Model, SectionHeaderViewViewModel, SuperCellViewModel> {
+class SectionListPageViewModel: ListViewModel<Any, SectionHeaderViewViewModel, SuperCellViewModel> {
     
     let imageUrls = [
         "https://images.pexels.com/photos/371633/pexels-photo-371633.jpeg?auto=compress&cs=tinysrgb&h=350",
@@ -100,7 +100,7 @@ class SectionListPageViewModel: ListViewModel<Model, SectionHeaderViewViewModel,
             // ramdom image from imageUrls
             let index = Int.random(in: 0..<imageUrls.count)
             let url = imageUrls[index]
-            let model = SectionImageModel(withUrl: url)
+            let model = SectionImageModel(imageUrl: URL(string: url)!)
             
             itemsSource.update { snapshot in
                 snapshot.appendItems([SectionImageCellViewModel(model: model)], toSection: vm)
@@ -108,7 +108,7 @@ class SectionListPageViewModel: ListViewModel<Model, SectionHeaderViewViewModel,
         } else {
             itemsSource.update { snapshot in
                 snapshot.appendItems([
-                    SectionTextCellViewModel(model: SectionTextModel(withTitle: "Just a text cell title", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."))
+                    SectionTextCellViewModel(model: SectionTextModel(title: "Just a text cell title", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."))
                 ], toSection: vm)
             }
         }
@@ -117,7 +117,7 @@ class SectionListPageViewModel: ListViewModel<Model, SectionHeaderViewViewModel,
     // add section
     private func add() {
         let count = itemsSource.snapshot?.numberOfSections ?? 0
-        let vm = SectionHeaderViewViewModel(model: SimpleModel(withTitle: "Section title #\(count + 1)"))
+        let vm = SectionHeaderViewViewModel(model: SimpleModel(title: "Section title #\(count + 1)"))
         itemsSource.update { snapshot in
             snapshot.appendSections([vm])
         }

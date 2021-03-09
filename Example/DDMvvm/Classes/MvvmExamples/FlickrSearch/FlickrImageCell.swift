@@ -43,7 +43,7 @@ class FlickrImageCell: CollectionCell<FlickrImageCellViewModel> {
     }
 }
 
-class FlickrImageCellViewModel: CellViewModel<FlickrPhotoModel> {
+class FlickrImageCellViewModel: CellViewModel<FlickrSearchResponse.Photo> {
     
     let rxImage = BehaviorRelay(value: NetworkImage())
     let rxTitle = BehaviorRelay<String?>(value: nil)

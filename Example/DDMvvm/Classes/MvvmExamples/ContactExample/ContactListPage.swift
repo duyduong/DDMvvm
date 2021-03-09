@@ -48,7 +48,7 @@ class ContactListPage: ListPage<ContactListPageViewModel> {
     }
 }
 
-class ContactListPageViewModel: ListViewModel<Model, SingleSection, ContactCellViewModel> {
+class ContactListPageViewModel: ListViewModel<Any, SingleSection, ContactCellViewModel> {
     
     lazy var addAction: Action<Void, Void> = Action() { .just(self.add()) }
     
@@ -69,10 +69,10 @@ class ContactListPageViewModel: ListViewModel<Model, SingleSection, ContactCellV
         vm.saveAction.executionObservables.switchLatest().subscribe(onNext: { contactModel in
             if model == nil {
                 let cvm = ContactCellViewModel(model: contactModel)
-                self.itemsSource.update { snapshot in
+                self.itemsSource.update(animated: true) { snapshot in
                     if snapshot.numberOfSections == 0 {
                         snapshot.appendSections([.main])
-                    }                    
+                    }
                     snapshot.appendItems([cvm])
                 }
             } else if let cvm = self.rxSelectedItem.value {

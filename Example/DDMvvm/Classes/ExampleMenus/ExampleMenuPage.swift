@@ -51,13 +51,13 @@ class ExampleMenuPage: ListPage<ExampleMenuPageViewModel> {
 
 class ExampleMenuPageViewModel: ListViewModel<MenuModel, SingleSection, ExampleMenuCellViewModel> {
     
-    let rxPageTitle = BehaviorRelay(value: "")
+    let rxPageTitle = BehaviorRelay<String?>(value: nil)
     
     override func react() {
         let models = getMenuModels()
         itemsSource.update { snapshot in
             snapshot.appendSections([.main])
-            snapshot.appendItems(models.toCellViewModels())
+            snapshot.appendItems(models.map { ExampleMenuCellViewModel(model: $0) })
         }
         
         // set page title
@@ -90,10 +90,10 @@ class HomeMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
-            MenuModel(withTitle: "MVVM Examples", desc: "Examples about different ways to use base classes Page, ListPage and CollectionPage."),
-            MenuModel(withTitle: "Data Binding Examples", desc: "Examples about how to use data binding."),
-            MenuModel(withTitle: "Service Injection Examples", desc: "Examples about how to create a service and register it; how to inject to our ViewModel."),
-            MenuModel(withTitle: "Transition Examples", desc: "Examples about how to create a custom transitioning animation and apply it."),
+            MenuModel(title: "MVVM Examples", desc: "Examples about different ways to use base classes Page, ListPage and CollectionPage."),
+            MenuModel(title: "Data Binding Examples", desc: "Examples about how to use data binding."),
+            MenuModel(title: "Service Injection Examples", desc: "Examples about how to create a service and register it; how to inject to our ViewModel."),
+            MenuModel(title: "Transition Examples", desc: "Examples about how to create a custom transitioning animation and apply it."),
         ]
     }
     
@@ -125,8 +125,8 @@ class DataBindingMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
-            MenuModel(withTitle: "One-way, Two-way and Action Binding", desc: "How to setup data binding between ViewModel and View"),
-            MenuModel(withTitle: "Custom Control with Data Binding", desc: "How to create a control with two-way binding property."),
+            MenuModel(title: "One-way, Two-way and Action Binding", desc: "How to setup data binding between ViewModel and View"),
+            MenuModel(title: "Custom Control with Data Binding", desc: "How to create a control with two-way binding property."),
         ]
     }
     
@@ -155,8 +155,8 @@ class TransitionMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
-            MenuModel(withTitle: "Transition in NavigationPage", desc: ""),
-            MenuModel(withTitle: "Transition using modal presentation", desc: ""),
+            MenuModel(title: "Transition in NavigationPage", desc: ""),
+            MenuModel(title: "Transition using modal presentation", desc: ""),
         ]
     }
     
@@ -185,10 +185,10 @@ class MvvmMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
-            MenuModel(withTitle: "ListPage Examples", desc: "Demostration on how to use ListPage"),
-            MenuModel(withTitle: "CollectionPage Examples", desc: "Demostration on how to use CollectionPage"),
-            MenuModel(withTitle: "Advanced Example 1", desc: "When using MVVM, we should forget about Delegate as it is against to MVVM rule.\nThis example is to demostrate how to get result from other page without using Delegate"),
-            MenuModel(withTitle: "Advanced Example 2", desc: "An advanced example on using Search Bar to search images on Flickr."),
+            MenuModel(title: "ListPage Examples", desc: "Demostration on how to use ListPage"),
+            MenuModel(title: "CollectionPage Examples", desc: "Demostration on how to use CollectionPage"),
+            MenuModel(title: "Advanced Example 1", desc: "When using MVVM, we should forget about Delegate as it is against to MVVM rule.\nThis example is to demostrate how to get result from other page without using Delegate"),
+            MenuModel(title: "Advanced Example 2", desc: "An advanced example on using Search Bar to search images on Flickr."),
         ]
     }
     
@@ -235,8 +235,8 @@ class TPExampleMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
-            MenuModel(withTitle: "Simple ListPage", desc: "A simple ListPage which has one cell identifier."),
-            MenuModel(withTitle: "ListPage with section", desc: "A simple ListPage with section header and multiple cell identifiers."),
+            MenuModel(title: "Simple ListPage", desc: "A simple ListPage which has one cell identifier."),
+            MenuModel(title: "ListPage with section", desc: "A simple ListPage with section header and multiple cell identifiers."),
         ]
     }
     
@@ -265,8 +265,8 @@ class CPExampleMenuPageViewModel: ExampleMenuPageViewModel {
     
     override func getMenuModels() -> [MenuModel] {
         return [
-            MenuModel(withTitle: "Simple CollectionPage", desc: "A simple CollectionPage which has one cell identifier."),
-            MenuModel(withTitle: "CollectionPage with section", desc: "A simple CollectionPage with section header and multiple cell identifiers."),
+            MenuModel(title: "Simple CollectionPage", desc: "A simple CollectionPage which has one cell identifier."),
+            MenuModel(title: "CollectionPage with section", desc: "A simple CollectionPage with section header and multiple cell identifiers."),
         ]
     }
     

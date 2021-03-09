@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ObjectMapper
 import Alamofire
 import RxSwift
 import DDMvvm
@@ -16,98 +15,109 @@ import DDMvvm
 
 protocol IJsonService {
     
-    func request<T: Mappable>(_ path: String,
-                              method: HTTPMethod,
-                              params: [String: Any]?,
-                              parameterEncoding encoding: ParameterEncoding,
-                              additionalHeaders: HTTPHeaders?) -> Single<T>
-    
-    func request<T: Mappable>(_ path: String,
-                              method: HTTPMethod,
-                              params: [String: Any]?,
-                              parameterEncoding encoding: ParameterEncoding,
-                              additionalHeaders: HTTPHeaders?) -> Single<[T]>
+    func request<T: Decodable>(
+        path: String,
+        method: HTTPMethod,
+        params: [String: Any]?,
+        parameterEncoding encoding: ParameterEncoding,
+        additionalHeaders: HTTPHeaders?
+    ) -> Single<T>
 }
 
 extension IJsonService {
     
-    func request<T: Mappable>(_ path: String,
-                                     method: HTTPMethod,
-                                     params: [String: Any]? = nil,
-                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                     additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return request(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
-    }
-    
-    func request<T: Mappable>(_ path: String,
-                                     method: HTTPMethod,
-                                     params: [String: Any]? = nil,
-                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                     additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
-        return request(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
+    func request<T: Decodable>(
+        path: String,
+        method: HTTPMethod,
+        params: [String: Any]? = nil,
+        parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+        additionalHeaders: HTTPHeaders? = nil
+    ) -> Single<T> {
+        return request(path: path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
     }
 }
 
 extension IJsonService {
     
-    func get<T: Mappable>(_ path: String,
-                                 params: [String: Any]? = nil,
-                                 parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                 additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return request(path, method: .get, params: params, additionalHeaders: additionalHeaders)
+    func get<T: Decodable>(
+        path: String,
+        params: [String: Any]? = nil,
+        parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+        additionalHeaders: HTTPHeaders? = nil
+    ) -> Single<T> {
+        return request(path: path, method: .get, params: params, additionalHeaders: additionalHeaders)
     }
     
-    func get<T: Mappable>(_ path: String,
-                                 params: [String: Any]? = nil,
-                                 parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                 additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
-        return request(path, method: .get, params: params, additionalHeaders: additionalHeaders)
-    }
-    
-    func post<T: Mappable>(_ path: String,
-                                  params: [String: Any]? = nil,
-                                  parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                  additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return request(path, method: .post, params: params, additionalHeaders: additionalHeaders)
-    }
-    
-    func post<T: Mappable>(_ path: String,
-                                  params: [String: Any]? = nil,
-                                  parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                  additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
-        return request(path, method: .post, params: params, additionalHeaders: additionalHeaders)
+    func post<T: Decodable>(
+        path: String,
+        params: [String: Any]? = nil,
+        parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+        additionalHeaders: HTTPHeaders? = nil
+    ) -> Single<T> {
+        return request(path: path, method: .post, params: params, additionalHeaders: additionalHeaders)
     }
 }
 
 /// Json API service
-open class JsonService: NetworkService, IJsonService {
+class JsonService: IJsonService {
     
-    func request<T: Mappable>(_ path: String,
-                                     method: HTTPMethod,
-                                     params: [String: Any]? = nil,
-                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                     additionalHeaders: HTTPHeaders? = nil) -> Single<T> {
-        return callRequest(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
-            .map { responseString in
-                if let model = Mapper<T>().map(JSONString: responseString) {
-                    return model
+    let sessionManager: Session
+    private let sessionConfiguration: URLSessionConfiguration = .default
+    
+    var timeout: TimeInterval = 30 {
+        didSet { sessionConfiguration.timeoutIntervalForRequest = timeout }
+    }
+    
+    private let baseUrl: String
+    var defaultHeaders = HTTPHeaders()
+    
+    init(baseUrl: String) {
+        self.baseUrl = baseUrl
+        
+        sessionConfiguration.timeoutIntervalForRequest = timeout
+        sessionManager = Session(configuration: sessionConfiguration)
+    }
+    
+    func request<T: Decodable>(
+        path: String,
+        method: HTTPMethod,
+        params: [String: Any]? = nil,
+        parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
+        additionalHeaders: HTTPHeaders? = nil
+    ) -> Single<T> {
+        let obs: Single<Data> = Single.create { single in
+            let headers = self.makeHeaders(additionalHeaders)
+            let request = self.sessionManager.request(
+                "\(self.baseUrl)/\(path)",
+                method: method,
+                parameters: params,
+                encoding: encoding,
+                headers: headers)
+            
+            request.responseData { response in
+                switch response.result {
+                case .success(let data):
+                    single(.success(data))
+                case .failure(let error):
+                    single(.failure(error))
                 }
-                
-                throw NSError(domain: "com.example.error", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Cannot mapp JSON to Model"])
+            }
+            
+            return Disposables.create { request.cancel() }
+        }
+        
+        return obs.map { (data: Data) -> T in
+            try JSONDecoder().decode(T.self, from: data)
         }
     }
     
-    func request<T: Mappable>(_ path: String,
-                                     method: HTTPMethod, params: [String: Any]? = nil,
-                                     parameterEncoding encoding: ParameterEncoding = URLEncoding.default,
-                                     additionalHeaders: HTTPHeaders? = nil) -> Single<[T]> {
-        return callRequest(path, method: method, params: params, parameterEncoding: encoding, additionalHeaders: additionalHeaders)
-            .map { responseString in
-                if let models = Mapper<T>().mapArray(JSONString: responseString) {
-                    return models
-                }
-                
-                throw NSError(domain: "com.example.error", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Cannot mapp JSON to Model"])
+    private func makeHeaders(_ additionalHeaders: HTTPHeaders?) -> HTTPHeaders {
+        var headers = defaultHeaders
+        
+        if let additionalHeaders = additionalHeaders {
+            additionalHeaders.forEach { headers.add($0) }
         }
+        
+        return headers
     }
 }

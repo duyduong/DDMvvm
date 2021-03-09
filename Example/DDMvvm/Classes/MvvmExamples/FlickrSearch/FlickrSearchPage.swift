@@ -181,10 +181,8 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, SingleSection, FlickrI
             .debounce(.milliseconds(500), scheduler: Scheduler.shared.mainScheduler)
             .flatMap { text -> Observable<[FlickrImageCellViewModel]> in
                 if !text.isNilOrEmpty {
-                    let obs: Single<FlickrSearchResponse> = self.jsonService.get("", params: self.params, parameterEncoding: URLEncoding.queryString)
-                    return obs.asObservable()
-                        .catchErrorJustReturn(FlickrSearchResponse())
-                        .map(self.prepareSources)
+                    let obs: Single<FlickrSearchResponse> = self.jsonService.get(path: "", params: self.params, parameterEncoding: URLEncoding.queryString)
+                    return obs.asObservable().map(self.prepareSources)
                 }
                 
                 return .just([])
@@ -210,7 +208,7 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, SingleSection, FlickrI
         rxIsLoadingMore.accept(true)
         page += 1
         
-        let obs: Single<FlickrSearchResponse> = jsonService.get("", params: params, parameterEncoding: URLEncoding.queryString)
+        let obs: Single<FlickrSearchResponse> = jsonService.get(path: "", params: params, parameterEncoding: URLEncoding.queryString)
         obs.map(prepareSources).subscribe(onSuccess: { cvms in
             self.itemsSource.update { snapshot in
                 if snapshot.numberOfSections == 0 {
@@ -221,21 +219,22 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, SingleSection, FlickrI
             }
             
             self.rxIsLoadingMore.accept(false)
-        }, onError: { error in
+        }, onFailure: { error in
             self.rxIsLoadingMore.accept(false)
         }) => tmpBag
     }
     
     private func prepareSources(_ response: FlickrSearchResponse) -> [FlickrImageCellViewModel] {
         if response.stat == .fail {
-            alertService.presentOkayAlert(title: "Error", message: "\(response.message)\nPlease be sure to provide your own API key from Flickr.")
+            let message = response.message ?? "Failed to search on Flickr"
+            alertService.presentOkayAlert(title: "Error", message: "\(message)\nPlease be sure to provide your own API key from Flickr.")
         }
         
-        if response.page >= response.pages {
+        if response.photos.page >= response.photos.pages {
             done = true
         }
         
-        return response.photos.toCellViewModels() as [FlickrImageCellViewModel]
+        return response.photos.photo.map { FlickrImageCellViewModel(model: $0) }
     }
 }
 
