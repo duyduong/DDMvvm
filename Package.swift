@@ -11,11 +11,11 @@ let package = Package(
         .library(name: "DDMvvm", targets: ["DDMvvm"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMajor(from: "6.0.0")),
+        .package(url: "https://github.com/ReactiveX/RxSwift", .exact("5.1.1")),
         .package(url: "https://github.com/RxSwiftCommunity/Action", .upToNextMajor(from: "4.0.0")),
-        .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMajor(from: "5.0.0")),
+        .package(url: "https://github.com/Alamofire/Alamofire", .exact("5.2.0")),
         .package(url: "https://github.com/Alamofire/AlamofireImage", .upToNextMajor(from: "4.0.0")),
-        .package(url: "https://github.com/PureLayout/PureLayout", .upToNextMajor(from: "3.0.0")),
+        .package(url: "https://github.com/PureLayout/PureLayout", .exact("3.1.7")),
         .package(url: "https://github.com/ra1028/DifferenceKit", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [

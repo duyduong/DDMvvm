@@ -51,7 +51,7 @@ class ExampleMenuPage: ListPage<ExampleMenuPageViewModel> {
 
 class ExampleMenuPageViewModel: ListViewModel<MenuModel, SingleSection, ExampleMenuCellViewModel> {
     
-    let rxPageTitle = BehaviorRelay<String?>(value: nil)
+    let rxPageTitle = BehaviorRelay<String>(value: "")
     
     override func react() {
         let models = getMenuModels()

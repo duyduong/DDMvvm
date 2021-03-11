@@ -16,11 +16,11 @@ A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model
   s.source_files          = 'Sources/DDMvvm/Classes/**/*'
   s.frameworks            = 'UIKit'
 
-  s.dependency 'RxSwift'
+  s.dependency 'RxSwift', '5.1.1'
   s.dependency 'RxCocoa'
   s.dependency 'Action'
-  s.dependency 'Alamofire'
+  s.dependency 'Alamofire', '5.2.0'
   s.dependency 'AlamofireImage'
-  s.dependency 'PureLayout'
+  s.dependency 'PureLayout', '3.1.7'
   s.dependency 'DifferenceKit'
 end

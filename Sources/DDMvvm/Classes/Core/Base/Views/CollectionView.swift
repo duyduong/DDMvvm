@@ -65,7 +65,7 @@ open class CollectionView<VM: IListViewModel>: View<VM> {
     open override func bindViewAndViewModel() {
         collectionView.rx.itemSelected.subscribe(onNext: itemSelected) => disposeBag
         viewModel?.itemsSource.snapshotChanged
-            .observe(on: Scheduler.shared.mainScheduler)
+            .observeOn(Scheduler.shared.mainScheduler)
             .subscribe(onNext: snapshotChanged) => disposeBag
     }
 

@@ -67,7 +67,7 @@ open class ListPage<VM: IListViewModel>: Page<VM> {
     open override func bindViewAndViewModel() {
         tableView.rx.itemSelected.subscribe(onNext: itemSelected) => disposeBag
         viewModel?.itemsSource.snapshotChanged
-            .observe(on: Scheduler.shared.mainScheduler)
+            .observeOn(Scheduler.shared.mainScheduler)
             .subscribe(onNext: snapshotChanged) => disposeBag
     }
     

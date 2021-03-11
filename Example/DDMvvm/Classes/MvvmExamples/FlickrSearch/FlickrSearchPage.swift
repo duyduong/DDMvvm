@@ -219,7 +219,7 @@ class FlickrSearchPageViewModel: ListViewModel<MenuModel, SingleSection, FlickrI
             }
             
             self.rxIsLoadingMore.accept(false)
-        }, onFailure: { error in
+        }, onError: { error in
             self.rxIsLoadingMore.accept(false)
         }) => tmpBag
     }
