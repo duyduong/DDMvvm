@@ -7,7 +7,6 @@
 
 import UIKit
 import RxSwift
-import Action
 
 class OverlayView: AbstractControlView {
     
@@ -60,9 +59,6 @@ public class DrawerPage: UIViewController, IDestroyable {
     private let detailContentView = UIView()
     
     private let overlayView = OverlayView()
-    private lazy var tapAction: Action<Void, Void> = {
-        return Action() { .just(self.closeDrawer(true)) }
-    }()
     
     public override var prefersStatusBarHidden: Bool {
         if isOpen {
@@ -131,8 +127,6 @@ public class DrawerPage: UIViewController, IDestroyable {
     }
     
     public func destroy() {
-        overlayView.tapGesture.unbindAction()
-        
         detailPage?.removeFromParent()
         masterPage?.removeFromParent()
         
@@ -151,7 +145,9 @@ public class DrawerPage: UIViewController, IDestroyable {
         detailContentView.addSubview(overlayView)
         overlayView.autoPinEdgesToSuperviewEdges()
         
-        overlayView.tapGesture.bind(to: tapAction, input: ())
+        overlayView.rx.tapGesture.subscribe(onNext: { [weak self] _ in
+            self?.closeDrawer(true)
+        }) => disposeBag
         
         masterContentView.isHidden = true
         view.addSubview(masterContentView)

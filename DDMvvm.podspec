@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DDMvvm'
-  s.version          = '1.8.7'
+  s.version          = '1.8.8'
   s.summary          = 'A MVVM library for iOS Swift.'
 
   s.description      = <<-DESC
@@ -18,7 +18,6 @@ A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model
 
   s.dependency 'RxSwift', '5.1.1'
   s.dependency 'RxCocoa'
-  s.dependency 'Action'
   s.dependency 'Alamofire', '5.2.0'
   s.dependency 'AlamofireImage'
   s.dependency 'PureLayout', '3.1.7'

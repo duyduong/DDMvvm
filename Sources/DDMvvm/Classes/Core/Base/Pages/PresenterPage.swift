@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import Action
 
 /*
  PresenterPage used for present a popup
@@ -40,16 +39,6 @@ public class PresenterPage: UIViewController, IDestroyable {
     public var showCompletion: (() -> Void)?
     
     private var isShown = false
-    
-    private lazy var tapAction: Action<Void, Void> = {
-        return Action() {
-            if self.shouldDismissOnTapOutside {
-                self.dismiss(animated: false)
-            }
-            
-            return .just(())
-        }
-    }()
     
     public init(contentPage: UIViewController) {
         self.contentPage = contentPage
@@ -85,7 +74,13 @@ public class PresenterPage: UIViewController, IDestroyable {
         
         contentPage.didMove(toParent: self)
         
-        overlayView.tapGesture.bind(to: tapAction, input: ())
+        overlayView.rx.tapGesture.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            
+            if self.shouldDismissOnTapOutside {
+                self.dismiss(animated: false)
+            }
+        }) => disposeBag
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -118,8 +113,6 @@ public class PresenterPage: UIViewController, IDestroyable {
     }
     
     public func destroy() {
-        overlayView.tapGesture.unbindAction()
-        
         (contentPage as? IDestroyable)?.destroy()
         disposeBag = DisposeBag()
         

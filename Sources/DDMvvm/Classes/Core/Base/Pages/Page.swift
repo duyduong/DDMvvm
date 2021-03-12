@@ -8,7 +8,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import Action
 import PureLayout
 
 extension Reactive where Base: IView {
@@ -64,17 +63,24 @@ open class Page<VM: IPageViewModel>: UIViewController, IView, ITransitionView {
     }
     
     public private(set) var backButton: UIBarButtonItem?
-    private lazy var backAction: Action<Void, Void> = Action() { .just(self.onBack()) }
+    private var backActionSubscription: Disposable?
     
     public var enableBackButton: Bool = false {
         didSet {
             if enableBackButton {
                 backButton = backButtonFactory().create()
                 navigationItem.leftBarButtonItem = backButton
-                backButton?.rx.bind(to: backAction, input: ())
+                
+                backActionSubscription?.dispose()
+                
+                // Handle tap action
+                backActionSubscription = backButton?.rx.tap.subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.onBack()
+                })
             } else {
                 navigationItem.leftBarButtonItem = nil
-                backButton?.rx.unbindAction()
+                backActionSubscription?.dispose()
             }
         }
     }
