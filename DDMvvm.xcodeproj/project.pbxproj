@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA13BF8C25FDDC1700B63234 /* ContentEquatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8025FDDC1700B63234 /* ContentEquatable.swift */; };
+		CA13BF8D25FDDC1700B63234 /* ArraySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8125FDDC1700B63234 /* ArraySection.swift */; };
+		CA13BF8E25FDDC1700B63234 /* Algorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8225FDDC1700B63234 /* Algorithm.swift */; };
+		CA13BF8F25FDDC1700B63234 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8425FDDC1700B63234 /* UIKitExtension.swift */; };
+		CA13BF9025FDDC1700B63234 /* ContentIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8525FDDC1700B63234 /* ContentIdentifiable.swift */; };
+		CA13BF9125FDDC1700B63234 /* AnyDifferentiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8625FDDC1700B63234 /* AnyDifferentiable.swift */; };
+		CA13BF9225FDDC1700B63234 /* StagedChangeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8725FDDC1700B63234 /* StagedChangeset.swift */; };
+		CA13BF9325FDDC1700B63234 /* ElementPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8825FDDC1700B63234 /* ElementPath.swift */; };
+		CA13BF9425FDDC1700B63234 /* DifferentiableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8925FDDC1700B63234 /* DifferentiableSection.swift */; };
+		CA13BF9525FDDC1700B63234 /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8A25FDDC1700B63234 /* Changeset.swift */; };
+		CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8B25FDDC1700B63234 /* Differentiable.swift */; };
 		CA384DA925FB413F0093E4FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA384DA825FB413F0093E4FC /* Assets.xcassets */; };
 		CA51910E25FB17E3002063AD /* LocalHud.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C125FB17E3002063AD /* LocalHud.swift */; };
 		CA51910F25FB17E3002063AD /* DecoratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C225FB17E3002063AD /* DecoratorView.swift */; };
@@ -71,7 +82,6 @@
 		CA5191A925FB34AB002063AD /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51919E25FB34AB002063AD /* Alamofire.xcframework */; };
 		CA5191AB25FB34AB002063AD /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51919F25FB34AB002063AD /* RxSwift.xcframework */; };
 		CA5191AD25FB34AC002063AD /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA5191A025FB34AB002063AD /* RxCocoa.xcframework */; };
-		CA5191B325FB34AC002063AD /* DifferenceKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA5191A325FB34AB002063AD /* DifferenceKit.xcframework */; };
 		CA5191B525FB34AC002063AD /* AlamofireImage.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA5191A425FB34AB002063AD /* AlamofireImage.xcframework */; };
 		CA5191D125FB3BA2002063AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5191D025FB3BA2002063AD /* AppDelegate.swift */; };
 		CA5191DD25FB3BA4002063AD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA5191DB25FB3BA4002063AD /* LaunchScreen.storyboard */; };
@@ -115,6 +125,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA13BF8025FDDC1700B63234 /* ContentEquatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentEquatable.swift; sourceTree = "<group>"; };
+		CA13BF8125FDDC1700B63234 /* ArraySection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArraySection.swift; sourceTree = "<group>"; };
+		CA13BF8225FDDC1700B63234 /* Algorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algorithm.swift; sourceTree = "<group>"; };
+		CA13BF8425FDDC1700B63234 /* UIKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
+		CA13BF8525FDDC1700B63234 /* ContentIdentifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentIdentifiable.swift; sourceTree = "<group>"; };
+		CA13BF8625FDDC1700B63234 /* AnyDifferentiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyDifferentiable.swift; sourceTree = "<group>"; };
+		CA13BF8725FDDC1700B63234 /* StagedChangeset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StagedChangeset.swift; sourceTree = "<group>"; };
+		CA13BF8825FDDC1700B63234 /* ElementPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementPath.swift; sourceTree = "<group>"; };
+		CA13BF8925FDDC1700B63234 /* DifferentiableSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DifferentiableSection.swift; sourceTree = "<group>"; };
+		CA13BF8A25FDDC1700B63234 /* Changeset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Changeset.swift; sourceTree = "<group>"; };
+		CA13BF8B25FDDC1700B63234 /* Differentiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Differentiable.swift; sourceTree = "<group>"; };
 		CA384DA825FB413F0093E4FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../.Trash/Assets.xcassets; sourceTree = "<group>"; };
 		CA384DF225FB452B0093E4FC /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		CA384DF325FB452B0093E4FC /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -184,9 +205,6 @@
 		CA51919E25FB34AB002063AD /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
 		CA51919F25FB34AB002063AD /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		CA5191A025FB34AB002063AD /* RxCocoa.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoa.xcframework; path = Carthage/Build/RxCocoa.xcframework; sourceTree = "<group>"; };
-		CA5191A125FB34AB002063AD /* RxTest.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxTest.xcframework; path = Carthage/Build/RxTest.xcframework; sourceTree = "<group>"; };
-		CA5191A225FB34AB002063AD /* RxBlocking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxBlocking.xcframework; path = Carthage/Build/RxBlocking.xcframework; sourceTree = "<group>"; };
-		CA5191A325FB34AB002063AD /* DifferenceKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = DifferenceKit.xcframework; path = Carthage/Build/DifferenceKit.xcframework; sourceTree = "<group>"; };
 		CA5191A425FB34AB002063AD /* AlamofireImage.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AlamofireImage.xcframework; path = Carthage/Build/AlamofireImage.xcframework; sourceTree = "<group>"; };
 		CA5191CE25FB3BA2002063AD /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA5191D025FB3BA2002063AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -229,7 +247,6 @@
 				CA5191A925FB34AB002063AD /* Alamofire.xcframework in Frameworks */,
 				CA5191AB25FB34AB002063AD /* RxSwift.xcframework in Frameworks */,
 				CA5191B525FB34AC002063AD /* AlamofireImage.xcframework in Frameworks */,
-				CA5191B325FB34AC002063AD /* DifferenceKit.xcframework in Frameworks */,
 				CA5191AD25FB34AC002063AD /* RxCocoa.xcframework in Frameworks */,
 				CA5191A725FB34AB002063AD /* PureLayout.xcframework in Frameworks */,
 			);
@@ -245,6 +262,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CA13BF7F25FDDC1700B63234 /* DifferenceKit */ = {
+			isa = PBXGroup;
+			children = (
+				CA13BF8025FDDC1700B63234 /* ContentEquatable.swift */,
+				CA13BF8125FDDC1700B63234 /* ArraySection.swift */,
+				CA13BF8225FDDC1700B63234 /* Algorithm.swift */,
+				CA13BF8325FDDC1700B63234 /* Extensions */,
+				CA13BF8525FDDC1700B63234 /* ContentIdentifiable.swift */,
+				CA13BF8625FDDC1700B63234 /* AnyDifferentiable.swift */,
+				CA13BF8725FDDC1700B63234 /* StagedChangeset.swift */,
+				CA13BF8825FDDC1700B63234 /* ElementPath.swift */,
+				CA13BF8925FDDC1700B63234 /* DifferentiableSection.swift */,
+				CA13BF8A25FDDC1700B63234 /* Changeset.swift */,
+				CA13BF8B25FDDC1700B63234 /* Differentiable.swift */,
+			);
+			path = DifferenceKit;
+			sourceTree = "<group>";
+		};
+		CA13BF8325FDDC1700B63234 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CA13BF8425FDDC1700B63234 /* UIKitExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		CA384DF125FB45090093E4FC /* Package */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +337,7 @@
 		CA5190BE25FB17E3002063AD /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CA13BF7F25FDDC1700B63234 /* DifferenceKit */,
 				CA5190BF25FB17E3002063AD /* Core */,
 				CA5190D525FB17E3002063AD /* DiffableDataSource */,
 				CA5190E225FB17E3002063AD /* Managers */,
@@ -498,13 +542,10 @@
 			children = (
 				CA51919E25FB34AB002063AD /* Alamofire.xcframework */,
 				CA5191A425FB34AB002063AD /* AlamofireImage.xcframework */,
-				CA5191A325FB34AB002063AD /* DifferenceKit.xcframework */,
 				CA51919D25FB34AB002063AD /* PureLayout.xcframework */,
-				CA5191A225FB34AB002063AD /* RxBlocking.xcframework */,
 				CA5191A025FB34AB002063AD /* RxCocoa.xcframework */,
 				CA51919C25FB34AB002063AD /* RxRelay.xcframework */,
 				CA51919F25FB34AB002063AD /* RxSwift.xcframework */,
-				CA5191A125FB34AB002063AD /* RxTest.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -765,14 +806,18 @@
 				CA51911725FB17E3002063AD /* NavigationPage.swift in Sources */,
 				CA51913E25FB17E3002063AD /* UIViewControllerExtensions.swift in Sources */,
 				CA51914025FB17E3002063AD /* OptionalExtensions.swift in Sources */,
+				CA13BF8D25FDDC1700B63234 /* ArraySection.swift in Sources */,
 				CA51914725FB17E3002063AD /* Font.swift in Sources */,
 				CA51913825FB17E3002063AD /* ArrayExtensions.swift in Sources */,
 				CA51912B25FB17E3002063AD /* UIBarButtonItemExtensions.swift in Sources */,
 				CA51911125FB17E3002063AD /* StackLayout.swift in Sources */,
 				CA51911825FB17E3002063AD /* ListPage.swift in Sources */,
 				CA51913B25FB17E3002063AD /* UINavigationItemExtensions.swift in Sources */,
+				CA13BF9025FDDC1700B63234 /* ContentIdentifiable.swift in Sources */,
 				CA51911E25FB17E3002063AD /* TableViewDiffableDataSource.swift in Sources */,
 				CA51911F25FB17E3002063AD /* CollectionViewDiffableDataSource.swift in Sources */,
+				CA13BF8C25FDDC1700B63234 /* ContentEquatable.swift in Sources */,
+				CA13BF8F25FDDC1700B63234 /* UIKitExtension.swift in Sources */,
 				CA51914425FB17E3002063AD /* DataSources.swift in Sources */,
 				CA51911925FB17E3002063AD /* DrawerPage.swift in Sources */,
 				CA51912625FB17E3002063AD /* DiffableDataSourceSnapshot.swift in Sources */,
@@ -780,19 +825,23 @@
 				CA51913F25FB17E3002063AD /* UIImageExtensions.swift in Sources */,
 				CA51912C25FB17E3002063AD /* UITableViewCellExtensions.swift in Sources */,
 				CA51912E25FB17E3002063AD /* BindingOperators.swift in Sources */,
+				CA13BF8E25FDDC1700B63234 /* Algorithm.swift in Sources */,
 				CA51913225FB17E3002063AD /* UILabelExtensions.swift in Sources */,
 				CA51914525FB17E3002063AD /* Protocols.swift in Sources */,
 				CA51914225FB17E3002063AD /* UIColorExtensions.swift in Sources */,
 				CA51913525FB17E3002063AD /* UITabBarItemExtensions.swift in Sources */,
+				CA13BF9225FDDC1700B63234 /* StagedChangeset.swift in Sources */,
 				CA51912F25FB17E3002063AD /* UIViewExtensions.swift in Sources */,
 				CA51913625FB17E3002063AD /* NSErrorExtensions.swift in Sources */,
 				CA51914325FB17E3002063AD /* Global.swift in Sources */,
 				CA51913325FB17E3002063AD /* UISwitchExtensions.swift in Sources */,
 				CA51912525FB17E3002063AD /* CocoaCollectionViewDiffableDataSource.swift in Sources */,
 				CA51913425FB17E3002063AD /* UIImageViewExtensions.swift in Sources */,
+				CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */,
 				CA51911B25FB17E3002063AD /* PresenterPage.swift in Sources */,
 				CA51913D25FB17E3002063AD /* UIViewExntesions.swift in Sources */,
 				CA51913A25FB17E3002063AD /* CGSizeExtensions.swift in Sources */,
+				CA13BF9125FDDC1700B63234 /* AnyDifferentiable.swift in Sources */,
 				CA51912025FB17E3002063AD /* MainThreadSerialDispatcher.swift in Sources */,
 				CA51910F25FB17E3002063AD /* DecoratorView.swift in Sources */,
 				CA51912825FB17E3002063AD /* Animator.swift in Sources */,
@@ -806,9 +855,11 @@
 				CA51911025FB17E3002063AD /* AbstractView.swift in Sources */,
 				CA51912A25FB17E3002063AD /* UIScrollViewExtensions.swift in Sources */,
 				CA51914825FB17E3002063AD /* AlertService.swift in Sources */,
+				CA13BF9525FDDC1700B63234 /* Changeset.swift in Sources */,
 				CA51914625FB17E3002063AD /* Scheduler.swift in Sources */,
 				CA51911225FB17E3002063AD /* AbsoluteLayout.swift in Sources */,
 				CA51911625FB17E3002063AD /* Views.swift in Sources */,
+				CA13BF9425FDDC1700B63234 /* DifferentiableSection.swift in Sources */,
 				CA51912225FB17E3002063AD /* SnapshotStructure.swift in Sources */,
 				CA51912725FB17E3002063AD /* DependencyManager.swift in Sources */,
 				CA51914925FB17E3002063AD /* NavigationService.swift in Sources */,
@@ -816,6 +867,7 @@
 				CA51911C25FB17E3002063AD /* Page.swift in Sources */,
 				CA51912925FB17E3002063AD /* AnimatorDelegate.swift in Sources */,
 				CA51912D25FB17E3002063AD /* WKWebViewExtensions.swift in Sources */,
+				CA13BF9325FDDC1700B63234 /* ElementPath.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
