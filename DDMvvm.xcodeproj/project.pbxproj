@@ -18,7 +18,6 @@
 		CA13BF9425FDDC1700B63234 /* DifferentiableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8925FDDC1700B63234 /* DifferentiableSection.swift */; };
 		CA13BF9525FDDC1700B63234 /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8A25FDDC1700B63234 /* Changeset.swift */; };
 		CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8B25FDDC1700B63234 /* Differentiable.swift */; };
-		CA384DA925FB413F0093E4FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA384DA825FB413F0093E4FC /* Assets.xcassets */; };
 		CA51910E25FB17E3002063AD /* LocalHud.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C125FB17E3002063AD /* LocalHud.swift */; };
 		CA51910F25FB17E3002063AD /* DecoratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C225FB17E3002063AD /* DecoratorView.swift */; };
 		CA51911025FB17E3002063AD /* AbstractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C325FB17E3002063AD /* AbstractView.swift */; };
@@ -42,7 +41,6 @@
 		CA51912225FB17E3002063AD /* SnapshotStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190DC25FB17E3002063AD /* SnapshotStructure.swift */; };
 		CA51912325FB17E3002063AD /* UniversalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190DD25FB17E3002063AD /* UniversalError.swift */; };
 		CA51912425FB17E3002063AD /* HashableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190DE25FB17E3002063AD /* HashableExtension.swift */; };
-		CA51912525FB17E3002063AD /* CocoaCollectionViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190E025FB17E3002063AD /* CocoaCollectionViewDiffableDataSource.swift */; };
 		CA51912625FB17E3002063AD /* DiffableDataSourceSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190E125FB17E3002063AD /* DiffableDataSourceSnapshot.swift */; };
 		CA51912725FB17E3002063AD /* DependencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190E325FB17E3002063AD /* DependencyManager.swift */; };
 		CA51912825FB17E3002063AD /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190E525FB17E3002063AD /* Animator.swift */; };
@@ -113,6 +111,7 @@
 		CA51922525FB3BFA002063AD /* DataBindingExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920925FB3BFA002063AD /* DataBindingExamplePage.swift */; };
 		CA51922625FB3BFA002063AD /* CustomControlExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920A25FB3BFA002063AD /* CustomControlExamplePage.swift */; };
 		CAD5AA5A25FDF48B00D307E4 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51919C25FB34AB002063AD /* RxRelay.xcframework */; };
+		CAD5AA6025FDF5D200D307E4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAD5AA5F25FDF5D200D307E4 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,7 +136,6 @@
 		CA13BF8925FDDC1700B63234 /* DifferentiableSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DifferentiableSection.swift; sourceTree = "<group>"; };
 		CA13BF8A25FDDC1700B63234 /* Changeset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Changeset.swift; sourceTree = "<group>"; };
 		CA13BF8B25FDDC1700B63234 /* Differentiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Differentiable.swift; sourceTree = "<group>"; };
-		CA384DA825FB413F0093E4FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../.Trash/Assets.xcassets; sourceTree = "<group>"; };
 		CA384DF225FB452B0093E4FC /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		CA384DF325FB452B0093E4FC /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		CA384DF425FB452B0093E4FC /* DDMvvm.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = DDMvvm.podspec; sourceTree = "<group>"; };
@@ -165,7 +163,6 @@
 		CA5190DC25FB17E3002063AD /* SnapshotStructure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotStructure.swift; sourceTree = "<group>"; };
 		CA5190DD25FB17E3002063AD /* UniversalError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalError.swift; sourceTree = "<group>"; };
 		CA5190DE25FB17E3002063AD /* HashableExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashableExtension.swift; sourceTree = "<group>"; };
-		CA5190E025FB17E3002063AD /* CocoaCollectionViewDiffableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaCollectionViewDiffableDataSource.swift; sourceTree = "<group>"; };
 		CA5190E125FB17E3002063AD /* DiffableDataSourceSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffableDataSourceSnapshot.swift; sourceTree = "<group>"; };
 		CA5190E325FB17E3002063AD /* DependencyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DependencyManager.swift; sourceTree = "<group>"; };
 		CA5190E525FB17E3002063AD /* Animator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
@@ -238,6 +235,7 @@
 		CA51920825FB3BFA002063AD /* SegmentedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedView.swift; sourceTree = "<group>"; };
 		CA51920925FB3BFA002063AD /* DataBindingExamplePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBindingExamplePage.swift; sourceTree = "<group>"; };
 		CA51920A25FB3BFA002063AD /* CustomControlExamplePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomControlExamplePage.swift; sourceTree = "<group>"; };
+		CAD5AA5F25FDF5D200D307E4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -419,7 +417,6 @@
 			children = (
 				CA5190D625FB17E3002063AD /* UIKit */,
 				CA5190D925FB17E3002063AD /* Internal */,
-				CA5190DF25FB17E3002063AD /* AppKit */,
 				CA5190E125FB17E3002063AD /* DiffableDataSourceSnapshot.swift */,
 			);
 			path = DiffableDataSource;
@@ -444,14 +441,6 @@
 				CA5190DE25FB17E3002063AD /* HashableExtension.swift */,
 			);
 			path = Internal;
-			sourceTree = "<group>";
-		};
-		CA5190DF25FB17E3002063AD /* AppKit */ = {
-			isa = PBXGroup;
-			children = (
-				CA5190E025FB17E3002063AD /* CocoaCollectionViewDiffableDataSource.swift */,
-			);
-			path = AppKit;
 			sourceTree = "<group>";
 		};
 		CA5190E225FB17E3002063AD /* Managers */ = {
@@ -556,10 +545,10 @@
 			isa = PBXGroup;
 			children = (
 				CA5191E625FB3BFA002063AD /* Classes */,
-				CA384DA825FB413F0093E4FC /* Assets.xcassets */,
 				CA5191D025FB3BA2002063AD /* AppDelegate.swift */,
 				CA5191DB25FB3BA4002063AD /* LaunchScreen.storyboard */,
 				CA5191DE25FB3BA4002063AD /* Info.plist */,
+				CAD5AA5F25FDF5D200D307E4 /* Assets.xcassets */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -768,7 +757,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA384DA925FB413F0093E4FC /* Assets.xcassets in Resources */,
+				CAD5AA6025FDF5D200D307E4 /* Assets.xcassets in Resources */,
 				CA5191DD25FB3BA4002063AD /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -837,7 +826,6 @@
 				CA51913625FB17E3002063AD /* NSErrorExtensions.swift in Sources */,
 				CA51914325FB17E3002063AD /* Global.swift in Sources */,
 				CA51913325FB17E3002063AD /* UISwitchExtensions.swift in Sources */,
-				CA51912525FB17E3002063AD /* CocoaCollectionViewDiffableDataSource.swift in Sources */,
 				CA51913425FB17E3002063AD /* UIImageViewExtensions.swift in Sources */,
 				CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */,
 				CA51911B25FB17E3002063AD /* PresenterPage.swift in Sources */,

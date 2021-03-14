@@ -1,6 +1,5 @@
 import UIKit
 import QuartzCore
-import DifferenceKit
 
 extension Array {
     subscript(safe index: Int) -> Element? {

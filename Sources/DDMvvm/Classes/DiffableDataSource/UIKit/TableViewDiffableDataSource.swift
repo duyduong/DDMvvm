@@ -1,7 +1,4 @@
-#if os(iOS) || os(tvOS)
-
 import UIKit
-import DifferenceKit
 
 /// A class for backporting `UITableViewDiffableDataSource` introduced in iOS 13.0+, tvOS 13.0+.
 /// Represents the data model object for `UITableView` that can be applies the
@@ -185,4 +182,3 @@ open class TableViewDiffableDataSource<SectionIdentifierType: Hashable, ItemIden
     }
 }
 
-#endif

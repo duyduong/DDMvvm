@@ -1,7 +1,4 @@
-#if os(iOS) || os(tvOS)
-
 import UIKit
-import DifferenceKit
 
 /// A class for backporting `UICollectionViewDiffableDataSource` introduced in iOS 13.0+, tvOS 13.0+.
 /// Represents the data model object for `UICollectionView` that can be applies the
@@ -157,4 +154,3 @@ open class CollectionViewDiffableDataSource<SectionIdentifierType: Hashable, Ite
     }
 }
 
-#endif

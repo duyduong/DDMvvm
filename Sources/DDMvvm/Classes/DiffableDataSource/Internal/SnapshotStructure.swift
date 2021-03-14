@@ -1,5 +1,4 @@
 import Foundation
-import DifferenceKit
 
 struct SnapshotStructure<SectionID: Hashable, ItemID: Hashable> {
     struct Item: Differentiable, Equatable {
