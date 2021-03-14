@@ -21,5 +21,4 @@ A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model
   s.dependency 'Alamofire', '5.2.0'
   s.dependency 'AlamofireImage'
   s.dependency 'PureLayout', '3.1.7'
-  s.dependency 'DifferenceKit'
 end

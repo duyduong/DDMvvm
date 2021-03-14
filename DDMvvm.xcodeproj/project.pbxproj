@@ -112,6 +112,7 @@
 		CA51922425FB3BFA002063AD /* SegmentedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920825FB3BFA002063AD /* SegmentedView.swift */; };
 		CA51922525FB3BFA002063AD /* DataBindingExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920925FB3BFA002063AD /* DataBindingExamplePage.swift */; };
 		CA51922625FB3BFA002063AD /* CustomControlExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920A25FB3BFA002063AD /* CustomControlExamplePage.swift */; };
+		CAD5AA5A25FDF48B00D307E4 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51919C25FB34AB002063AD /* RxRelay.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -249,6 +250,7 @@
 				CA5191B525FB34AC002063AD /* AlamofireImage.xcframework in Frameworks */,
 				CA5191AD25FB34AC002063AD /* RxCocoa.xcframework in Frameworks */,
 				CA5191A725FB34AB002063AD /* PureLayout.xcframework in Frameworks */,
+				CAD5AA5A25FDF48B00D307E4 /* RxRelay.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

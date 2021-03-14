@@ -14,8 +14,7 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift", .exact("5.1.1")),
         .package(url: "https://github.com/Alamofire/Alamofire", .exact("5.2.0")),
         .package(url: "https://github.com/Alamofire/AlamofireImage", .upToNextMajor(from: "4.0.0")),
-        .package(url: "https://github.com/PureLayout/PureLayout", .exact("3.1.7")),
-        .package(url: "https://github.com/ra1028/DifferenceKit", .upToNextMajor(from: "1.0.0"))
+        .package(url: "https://github.com/PureLayout/PureLayout", .exact("3.1.7"))
     ],
     targets: [
         .target(name: "DDMvvm", dependencies: [
@@ -23,8 +22,7 @@ let package = Package(
             .product(name: "RxCocoa", package: "RxSwift"),
             "Alamofire",
             "AlamofireImage",
-            "PureLayout",
-            "DifferenceKit"
+            "PureLayout"
         ])
     ],
     swiftLanguageVersions: [.v5]
