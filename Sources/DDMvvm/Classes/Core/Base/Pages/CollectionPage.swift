@@ -78,10 +78,15 @@ open class CollectionPage<VM: IListViewModel>: Page<VM> {
 
     /// Every time the viewModel changed, this method will be called again, so make sure to call super for CollectionPage to work
     open override func bindViewAndViewModel() {
-        collectionView.rx.itemSelected.subscribe(onNext: itemSelected) => disposeBag
+        collectionView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+            self?.itemSelected(indexPath)
+        }) => disposeBag
+        
         viewModel?.itemsSource.snapshotChanged
             .observeOn(Scheduler.shared.mainScheduler)
-            .subscribe(onNext: snapshotChanged) => disposeBag
+            .subscribe(onNext: { [weak self] data in
+                self?.snapshotChanged(data)
+            }) => disposeBag
     }
 
     private func itemSelected(_ indexPath: IndexPath) {

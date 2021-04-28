@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "Action",
-        "repositoryURL": "https://github.com/RxSwiftCommunity/Action",
-        "state": {
-          "branch": null,
-          "revision": "77a1aba64490424b485b54ffbd0bdecc3abaa046",
-          "version": "4.2.0"
-        }
-      },
-      {
         "package": "Alamofire",
         "repositoryURL": "https://github.com/Alamofire/Alamofire",
         "state": {
@@ -26,15 +17,6 @@
           "branch": null,
           "revision": "3e8edbeb75227f8542aa87f90240cf0424d6362f",
           "version": "4.1.0"
-        }
-      },
-      {
-        "package": "DifferenceKit",
-        "repositoryURL": "https://github.com/ra1028/DifferenceKit",
-        "state": {
-          "branch": null,
-          "revision": "14c66681e12a38b81045f44c6c29724a0d4b0e72",
-          "version": "1.1.5"
         }
       },
       {
