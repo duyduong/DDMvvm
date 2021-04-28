@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "DDMvvm", targets: ["DDMvvm"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift", .exact("5.1.1")),
+        .package(url: "https://github.com/ReactiveX/RxSwift", .exact("6.1.0")),
         .package(url: "https://github.com/Alamofire/Alamofire", .exact("5.2.0")),
         .package(url: "https://github.com/Alamofire/AlamofireImage", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/PureLayout/PureLayout", .exact("3.1.7"))

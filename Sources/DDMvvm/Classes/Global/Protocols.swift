@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 /// Destroyable type for handling dispose bag and destroy it
-public protocol IDestroyable: class {
+public protocol IDestroyable: AnyObject {
     var disposeBag: DisposeBag? { get set }
     func destroy()
 }
@@ -62,7 +62,7 @@ public protocol ITransitionView where Self: UIViewController {
 }
 
 /// AnyView type for helping assign any viewModel to any view
-public protocol IAnyView: class {
+public protocol IAnyView: AnyObject {
     
     /**
      Any value assign to this property will be delegate to its correct viewModel type

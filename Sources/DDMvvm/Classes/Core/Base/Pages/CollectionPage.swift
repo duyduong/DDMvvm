@@ -83,7 +83,7 @@ open class CollectionPage<VM: IListViewModel>: Page<VM> {
         }) => disposeBag
         
         viewModel?.itemsSource.snapshotChanged
-            .observeOn(Scheduler.shared.mainScheduler)
+            .observe(on: Scheduler.shared.mainScheduler)
             .subscribe(onNext: { [weak self] data in
                 self?.snapshotChanged(data)
             }) => disposeBag

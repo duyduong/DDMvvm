@@ -82,7 +82,7 @@ open class ListViewModel<M, S: Hashable, CVM: IViewModel>: ViewModel<M>, IListVi
     open func selectedItemDidChange(_ cellViewModel: CVM) { }
 }
 
-protocol IIndexable: class {
+protocol IIndexable: AnyObject {
     var indexPath: IndexPath? { get set }
 }
 

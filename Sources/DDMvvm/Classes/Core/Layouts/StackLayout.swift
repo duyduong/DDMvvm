@@ -68,7 +68,7 @@ open class StackLayout: UIStackView {
 /// Children builder
 public extension StackLayout {
     
-    @_functionBuilder
+    @resultBuilder
     struct ChildrenBuilder {
         public static func buildBlock(_ components: [UIView]...) -> [UIView] {
             return components.flatMap { $0 }
