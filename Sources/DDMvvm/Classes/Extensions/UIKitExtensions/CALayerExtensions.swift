@@ -8,19 +8,14 @@
 import UIKit
 
 public extension CALayer {
-    
-    var image: UIImage? {
-        return toImage()
-    }
-    
-    func toImage(_ isOpaque: Bool = false) -> UIImage? {
-        defer { UIGraphicsEndImageContext() }
-        
-        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0.0)
-        
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        
-        render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
+  var image: UIImage? { toImage() }
+
+  func toImage(_ isOpaque: Bool = false) -> UIImage? {
+    defer { UIGraphicsEndImageContext() }
+
+    UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0.0)
+    guard let context = UIGraphicsGetCurrentContext() else { return nil }
+    render(in: context)
+    return UIGraphicsGetImageFromCurrentImageContext()
+  }
 }

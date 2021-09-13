@@ -6,65 +6,47 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import DDMvvm
 import RxCocoa
+import UIKit
 
-class ContactCell: TableCell<ContactCellViewModel> {
+class ContactCell: TableCell<Contact> {
+  let avatarIv = UIImageView()
+  let nameLbl = UILabel()
+  let phoneLbl = UILabel()
 
-    let avatarIv = UIImageView()
-    let nameLbl = UILabel()
-    let phoneLbl = UILabel()
-    
-    override func initialize() {
-        avatarIv.image = UIImage(named: "default-contact")
-        avatarIv.autoSetDimensions(to: CGSize(width: 64, height: 64))
-        
-        nameLbl.numberOfLines = 0
-        nameLbl.font = Font.system.bold(withSize: 17)
-        
-        phoneLbl.numberOfLines = 0
-        phoneLbl.font = Font.system.normal(withSize: 15)
-        
-        let layout = StackLayout().spacing(8).alignItems(.center).childrenBuilder {
-            avatarIv
-            StackLayout().direction(.vertical).childrenBuilder {
-                nameLbl
-                phoneLbl
-            }
-        }
-        contentView.addSubview(layout)
-        layout.autoPinEdgesToSuperviewEdges(with: .all(5))
+  override func initialize() {
+    avatarIv.image = UIImage(named: "default-contact")
+    avatarIv.snp.makeConstraints {
+      $0.width.height.equalTo(64)
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxName ~> nameLbl.rx.text => disposeBag
-        viewModel.rxPhone ~> phoneLbl.rx.text => disposeBag
+
+    nameLbl.numberOfLines = 0
+    nameLbl.font = UIFont.preferredFont(forTextStyle: .headline)
+
+    phoneLbl.numberOfLines = 0
+    phoneLbl.font = UIFont.preferredFont(forTextStyle: .body)
+
+    let layout = UIStackView(arrangedSubviews: [
+      avatarIv,
+      UIStackView(arrangedSubviews: [
+        nameLbl,
+        phoneLbl
+      ])
+      .setAxis(.vertical)
+    ])
+    .setSpacing(8)
+    .setAlignment(.center)
+    contentView.addSubview(layout)
+    layout.snp.makeConstraints {
+      $0.edges.equalToSuperview().inset(UIEdgeInsets.all(5))
     }
+  }
+  
+  override func cellDataChanged() {
+    guard let data = data else { return }
+    nameLbl.text = data.name
+    phoneLbl.text = data.phone
+  }
 }
-
-class ContactCellViewModel: CellViewModel<ContactModel> {
-    
-    let rxName = BehaviorRelay<String?>(value: nil)
-    let rxPhone = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        modelChanged()
-    }
-    
-    override func modelChanged() {
-        rxName.accept(model?.name)
-        rxPhone.accept(model?.phone)
-    }
-}
-
-
-
-
-
-
-
-
 

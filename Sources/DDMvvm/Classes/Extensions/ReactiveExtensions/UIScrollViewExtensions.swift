@@ -5,25 +5,24 @@
 //  Created by Dao Duy Duong on 9/26/18.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 public extension Reactive where Base: UIScrollView {
-    
-    func endReach(_ distance: CGFloat) -> Observable<Void> {
-        return Observable.create { observer in
-            return self.base.rx.contentOffset.subscribe(onNext: { offset in
-                let scrollViewHeight = self.base.frame.size.height
-                let scrollContentSizeHeight = self.base.contentSize.height
-                let scrollOffset = offset.y
-                
-                let scrollSize = scrollOffset + scrollViewHeight
-                
-                // at the bottom
-                if scrollSize >= scrollContentSizeHeight - distance {
-                    observer.onNext(())
-                }
-            })
+  func endReach(_ distance: CGFloat) -> Observable<Void> {
+    Observable.create { [base] observer in
+      base.rx.contentOffset.subscribe(onNext: { offset in
+        let scrollViewHeight = base.frame.size.height
+        let scrollContentSizeHeight = base.contentSize.height
+        let scrollOffset = offset.y
+
+        let scrollSize = scrollOffset + scrollViewHeight
+
+        // at the bottom
+        if scrollSize >= scrollContentSizeHeight - distance {
+          observer.onNext(())
         }
+      })
     }
+  }
 }

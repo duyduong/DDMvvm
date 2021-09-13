@@ -6,11 +6,10 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import Foundation
 import DDMvvm
+import Foundation
 
-struct MenuModel: Decodable {
-    var title: String
-    var desc: String
+protocol Menu: Hashable, RouteType {
+  var title: String { get }
+  var description: String { get }
 }
-

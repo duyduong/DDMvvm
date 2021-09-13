@@ -6,55 +6,56 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
-import RxSwift
-import RxCocoa
 import DDMvvm
+import RxCocoa
+import RxSwift
+import UIKit
 
-class SectionHeaderView: View<SectionHeaderViewViewModel> {
-    
-    let titleLbl = UILabel()
-    let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
 
-    override func initialize() {
-        let toolbar = UIToolbar()
-        addSubview(toolbar)
-        toolbar.autoPinEdgesToSuperviewEdges(with: .zero)
-        
-        let titleItem = UIBarButtonItem(customView: titleLbl)
-        let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let items = [titleItem, spaceItem, addBtn]
-        toolbar.items = items
+
+extension Reactive where Base: SectionHeaderView {
+  var addSectionObservable: Observable<SectionList> {
+    base.addBtn.rx.tap.map { [weak base] in
+      guard let base = base else {
+        return .init(title: "")
+      }
+      return base.section
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxTitle ~> titleLbl.rx.text => disposeBag
-        addBtn.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.viewModel?.addPressed()
-        }) => disposeBag
-    }
+  }
 }
 
-class SectionHeaderViewViewModel: CellViewModel<SimpleModel> {
-    
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    
-    fileprivate let publisher = PublishSubject<SectionHeaderViewViewModel>()
-    lazy var itemAddedObservable = publisher.asObservable()
-    
-    override func react() {
-        rxTitle.accept(model?.title)
+class SectionHeaderView: UIView, IDestroyable {
+  private let titleLbl = UILabel()
+  let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+  
+  var section: SectionList {
+    didSet { update() }
+  }
+  
+  init(section: SectionList) {
+    self.section = section
+    super.init(frame: .zero)
+    setupView()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("Use init(section:)")
+  }
+  
+  private func setupView() {
+    let toolbar = UIToolbar()
+    addSubview(toolbar)
+    toolbar.snp.makeConstraints {
+      $0.edges.equalToSuperview()
     }
-    
-    func addPressed() {
-        publisher.onNext(self)
-    }
+
+    let titleItem = UIBarButtonItem(customView: titleLbl)
+    let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    let items = [titleItem, spaceItem, addBtn]
+    toolbar.items = items
+  }
+  
+  private func update() {
+    titleLbl.text = section.title
+  }
 }
-
-
-
-
-
-

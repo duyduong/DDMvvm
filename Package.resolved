@@ -20,21 +20,12 @@
         }
       },
       {
-        "package": "PureLayout",
-        "repositoryURL": "https://github.com/PureLayout/PureLayout",
-        "state": {
-          "branch": null,
-          "revision": "6fd4f2f875157d29d5ef00fbaaac149d91df5dcc",
-          "version": "3.1.7"
-        }
-      },
-      {
         "package": "RxSwift",
         "repositoryURL": "https://github.com/ReactiveX/RxSwift",
         "state": {
           "branch": null,
-          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
-          "version": "5.1.1"
+          "revision": "7e01c05f25c025143073eaa3be3532f9375c614b",
+          "version": "6.1.0"
         }
       }
     ]

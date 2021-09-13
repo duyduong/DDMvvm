@@ -6,84 +6,67 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
-import RxCocoa
 import DDMvvm
+import RxCocoa
+import UIKit
 
-class SectionTextCell: TableCell<SectionTextCellViewModel> {
-    
-    let titleLbl = UILabel()
-    let descLbl = UILabel()
-    
-    override func initialize() {
-        titleLbl.numberOfLines = 0
-        titleLbl.font = Font.system.bold(withSize: 17)
-        
-        descLbl.numberOfLines = 0
-        descLbl.font = Font.system.normal(withSize: 15)
-        
-        let layout = StackLayout().direction(.vertical).children([
-            titleLbl,
-            descLbl
-        ])
-        contentView.addSubview(layout)
-        layout.autoPinEdgesToSuperviewEdges(with: .all(5))
-    }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxTitle ~> titleLbl.rx.text => disposeBag
-        viewModel.rxDesc ~> descLbl.rx.text => disposeBag
-    }
+struct SectionListItem: Hashable {
+  enum ItemType: Hashable {
+    case image(url: String)
+    case text(title: String, description: String)
+  }
+  
+  let type: ItemType
+  let number = Int.random(in: 0 ..< 200_000)
 }
 
-class SectionTextCellViewModel: SuperCellViewModel {
-    
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    let rxDesc = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        guard let model = model as? SectionTextModel else { return }
-        
-        rxTitle.accept(model.title)
-        rxDesc.accept(model.desc)
+class SectionTextCell: TableCell<SectionListItem> {
+
+  let titleLbl = UILabel()
+  let descLbl = UILabel()
+
+  override func initialize() {
+    titleLbl.numberOfLines = 0
+    titleLbl.font = UIFont.preferredFont(forTextStyle: .headline)
+
+    descLbl.numberOfLines = 0
+    descLbl.font = UIFont.preferredFont(forTextStyle: .body)
+
+    let layout = UIStackView(arrangedSubviews: [
+      titleLbl,
+      descLbl
+    ])
+    .setAxis(.vertical)
+    contentView.addSubview(layout)
+    layout.snp.makeConstraints {
+      $0.edges.equalToSuperview().inset(UIEdgeInsets.all(5))
     }
+  }
+  
+  override func cellDataChanged() {
+    guard case let .text(title, description) = data?.type else { return }
+    titleLbl.text = title
+    descLbl.text = description
+  }
 }
 
-class SectionImageCell: TableCell<SectionImageCellViewModel> {
-    
-    let netImageView = UIImageView()
-    
-    override func initialize() {
-        netImageView.contentMode = .scaleAspectFill
-        netImageView.clipsToBounds = true
-        contentView.addSubview(netImageView)
-        netImageView.autoMatch(.height, to: .width, of: netImageView, withMultiplier: 9/16.0)
-        netImageView.autoPinEdgesToSuperviewEdges(with: .symmetric(horizontal: 15, vertical: 10))
+class SectionImageCell: TableCell<SectionListItem> {
+  let netImageView = UIImageView()
+
+  override func initialize() {
+    netImageView.contentMode = .scaleAspectFill
+    netImageView.clipsToBounds = true
+    contentView.addSubview(netImageView)
+    netImageView.snp.makeConstraints {
+      $0.height.equalTo(netImageView.snp.height).multipliedBy(9/16.0)
+      $0.edges.equalToSuperview().inset(UIEdgeInsets.symmetric(horizontal: 15, vertical: 10))
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxImage ~> netImageView.rx.networkImage => disposeBag
-    }
+  }
+  
+  override func cellDataChanged() {
+    guard case let .image(urlString) = data?.type,
+          let url = URL(string: urlString)
+    else { return }
+    netImageView.af.setImage(withURL: url, imageTransition: .crossDissolve(0.25))
+  }
 }
-
-class SectionImageCellViewModel: SuperCellViewModel {
-    
-    let rxImage = BehaviorRelay(value: NetworkImage())
-    
-    override func react() {
-        guard let model = model as? SectionImageModel else { return }
-        
-        rxImage.accept(NetworkImage(withURL: model.imageUrl, placeholder: .from(color: .lightGray)))
-    }
-}
-
-
-
-
-
-
-

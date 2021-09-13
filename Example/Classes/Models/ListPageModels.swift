@@ -9,27 +9,21 @@
 import Foundation
 
 struct SimpleModel {
-    var title: String
+  var title: String
 }
 
 struct NumberModel {
-    var number = Int.random(in: 0..<200000)
+  var number = Int.random(in: 0 ..< 200_000)
 }
 
 struct SectionTextModel {
-    
-    var number = Int.random(in: 0..<200000)
-    var title: String
-    var desc: String
+
+  var number = Int.random(in: 0 ..< 200_000)
+  var title: String
+  var desc: String
 }
 
 struct SectionImageModel {
-    var number = Int.random(in: 0..<200000)
-    var imageUrl: URL
+  var number = Int.random(in: 0 ..< 200_000)
+  var imageUrl: URL
 }
-
-
-
-
-
-

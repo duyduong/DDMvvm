@@ -5,26 +5,26 @@
 //  Created by Dao Duy Duong on 9/26/18.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 // MARK: - Two way binding shorthand
 
-infix operator <~> : DefaultPrecedence
+infix operator <~>: DefaultPrecedence
 
-public func <~><T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disposable {
-    let bindToUIDisposable = relay.bind(to: property)
-    let bindToRelay = property.observe(on: MainScheduler.asyncInstance).bind(to: relay)
-    
-    return Disposables.create(bindToUIDisposable, bindToRelay)
+public func <~> <T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disposable {
+  let bindToUIDisposable = relay.bind(to: property)
+  let bindToRelay = property.observe(on: MainScheduler.asyncInstance).bind(to: relay)
+
+  return Disposables.create(bindToUIDisposable, bindToRelay)
 }
 
-public func <~><T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Disposable {
-    let bindToUIDisposable = relay.bind(to: property)
-    let bindToRelay = property.observe(on: MainScheduler.asyncInstance).bind(to: relay)
-    
-    return Disposables.create(bindToUIDisposable, bindToRelay)
+public func <~> <T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Disposable {
+  let bindToUIDisposable = relay.bind(to: property)
+  let bindToRelay = property.observe(on: MainScheduler.asyncInstance).bind(to: relay)
+
+  return Disposables.create(bindToUIDisposable, bindToRelay)
 }
 
 // MARK: - One way binding shorthand
@@ -32,90 +32,73 @@ public func <~><T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Dis
 infix operator ~>: DefaultPrecedence
 
 /// Observale
-public func ~><T, R>(source: Observable<T>, binder: (Observable<T>) -> R) -> R {
-    return source.bind(to: binder)
+public func ~> <T, R>(source: Observable<T>, binder: (Observable<T>) -> R) -> R {
+  source.bind(to: binder)
 }
 
-public func ~><T>(source: Observable<T>, binder: Binder<T>) -> Disposable {
-    return source.bind(to: binder)
+public func ~> <T>(source: Observable<T>, binder: Binder<T>) -> Disposable {
+  source.bind(to: binder)
 }
 
-public func ~><T>(source: Observable<T>, relay: BehaviorRelay<T>) -> Disposable {
-    return source.bind(to: relay)
+public func ~> <T>(source: Observable<T>, relay: BehaviorRelay<T>) -> Disposable {
+  source.bind(to: relay)
 }
 
-public func ~><T>(source: Observable<T>, relay: BehaviorRelay<T?>) -> Disposable {
-    return source.bind(to: relay)
+public func ~> <T>(source: Observable<T>, relay: BehaviorRelay<T?>) -> Disposable {
+  source.bind(to: relay)
 }
 
 /// Single
-public func ~><T>(source: Single<T>, relay: BehaviorRelay<T?>) -> Disposable {
-    return source.subscribe(onSuccess: relay.accept)
+public func ~> <T>(source: Single<T>, relay: BehaviorRelay<T?>) -> Disposable {
+  source.subscribe(onSuccess: relay.accept)
 }
 
 /// Driver
-public func ~><T>(source: Driver<T>, relay: BehaviorRelay<T?>) -> Disposable {
-    return source.drive(onNext: relay.accept)
+public func ~> <T>(source: Driver<T>, relay: BehaviorRelay<T?>) -> Disposable {
+  source.drive(onNext: relay.accept)
 }
 
-public func ~><T>(source: Driver<T>, binder: Binder<T>) -> Disposable {
-    return source.drive(onNext: binder.onNext)
+public func ~> <T>(source: Driver<T>, binder: Binder<T>) -> Disposable {
+  source.drive(onNext: binder.onNext)
 }
 
-public func ~><T>(source: Observable<T>, property: ControlProperty<T>) -> Disposable {
-    return source.bind(to: property)
+public func ~> <T>(source: Observable<T>, property: ControlProperty<T>) -> Disposable {
+  source.bind(to: property)
 }
 
 /// BehaviorRelay
-public func ~><T>(relay: BehaviorRelay<T>, observer: Binder<T>) -> Disposable {
-    return relay.bind(to: observer)
+public func ~> <T>(relay: BehaviorRelay<T>, observer: Binder<T>) -> Disposable {
+  relay.bind(to: observer)
 }
 
-public func ~><T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Disposable {
-    return relay.bind(to: property)
+public func ~> <T>(relay: BehaviorRelay<T>, property: ControlProperty<T>) -> Disposable {
+  relay.bind(to: property)
 }
 
-public func ~><T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disposable {
-    return relay.bind(to: property)
+public func ~> <T>(property: ControlProperty<T>, relay: BehaviorRelay<T>) -> Disposable {
+  relay.bind(to: property)
 }
 
-public func ~><T>(lhs: BehaviorRelay<T>, rhs: BehaviorRelay<T>) -> Disposable {
-    return lhs.asObservable().bind(to: rhs)
+public func ~> <T>(lhs: BehaviorRelay<T>, rhs: BehaviorRelay<T>) -> Disposable {
+  lhs.asObservable().bind(to: rhs)
 }
 
 /// ControlEvent
-public func ~><T>(event: ControlEvent<T>, relay: BehaviorRelay<T>) -> Disposable {
-    return event.bind(to: relay)
+public func ~> <T>(event: ControlEvent<T>, relay: BehaviorRelay<T>) -> Disposable {
+  event.bind(to: relay)
 }
 
 // MARK: - Add to dispose bag shorthand
 
 precedencegroup DisposablePrecedence {
-    lowerThan: DefaultPrecedence
+  lowerThan: DefaultPrecedence
 }
 
 infix operator =>: DisposablePrecedence
 
-public func =>(disposable: Disposable?, bag: DisposeBag?) {
-    if let d = disposable, let b = bag {
-        d.disposed(by: b)
-    }
+public func => (disposable: Disposable?, bag: DisposeBag?) {
+  guard let disposable = disposable, let bag = bag else {
+    return
+  }
+  disposable.disposed(by: bag)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

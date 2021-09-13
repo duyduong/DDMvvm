@@ -6,42 +6,22 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
-import RxCocoa
 import DDMvvm
+import RxCocoa
+import UIKit
 
-class SimpleListPageCell: TableCell<SimpleListPageCellViewModel> {
+class SimpleListPageCell: TableCell<String> {
+  let titleLbl = UILabel()
 
-    let titleLbl = UILabel()
-    
-    override func initialize() {
-        contentView.addSubview(titleLbl)
-        titleLbl.autoPinEdgesToSuperviewEdges(with: .symmetric(horizontal: 15, vertical: 10))
+  override func initialize() {
+    contentView.addSubview(titleLbl)
+    titleLbl.snp.makeConstraints {
+      $0.edges.equalToSuperview().inset(UIEdgeInsets.symmetric(horizontal: 15, vertical: 10))
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxTitle ~> titleLbl.rx.text => disposeBag
-    }
+  }
+  
+  override func cellDataChanged() {
+    guard let title = data else { return }
+    titleLbl.text = title
+  }
 }
-
-class SimpleListPageCellViewModel: CellViewModel<SimpleModel> {
-    
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        rxTitle.accept(model?.title)
-    }
-}
-
-
-
-
-
-
-
-
-
-
-

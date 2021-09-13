@@ -6,57 +6,43 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
-import RxCocoa
 import DDMvvm
+import RxCocoa
+import UIKit
 
-class FlickrImageCell: CollectionCell<FlickrImageCellViewModel> {
-    
-    let imageView = UIImageView()
-    let titleLbl = UILabel()
-    
-    override func initialize() {
-        contentView.cornerRadius = 7
-        
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        contentView.addSubview(imageView)
-        imageView.autoPinEdgesToSuperviewEdges()
-        
-        let titleView = UIView()
-        titleView.backgroundColor = UIColor(r: 0, g: 0, b: 0, a: 0.5)
-        contentView.addSubview(titleView)
-        titleView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
-        
-        titleLbl.font = Font.system.normal(withSize: 15)
-        titleLbl.textColor = .white
-        titleLbl.numberOfLines = 2
-        titleView.addSubview(titleLbl)
-        titleLbl.autoPinEdgesToSuperviewEdges(with: .all(5))
+class FlickrImageCell: CollectionCell<FlickrSearchResponse.Photo> {
+  let imageView = UIImageView()
+  let titleLbl = UILabel()
+
+  override func initialize() {
+    contentView.cornerRadius = 7
+
+    imageView.contentMode = .scaleAspectFill
+    imageView.clipsToBounds = true
+    contentView.addSubview(imageView)
+    imageView.snp.makeConstraints {
+      $0.edges.equalToSuperview()
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxImage ~> imageView.rx.networkImage => disposeBag
-        viewModel.rxTitle ~> titleLbl.rx.text => disposeBag
+
+    let titleView = UIView()
+    titleView.backgroundColor = UIColor(r: 0, g: 0, b: 0, a: 0.5)
+    contentView.addSubview(titleView)
+    titleView.snp.makeConstraints {
+      $0.bottom.leading.trailing.equalToSuperview()
     }
+
+    titleLbl.font = UIFont.preferredFont(forTextStyle: .body)
+    titleLbl.textColor = .white
+    titleLbl.numberOfLines = 2
+    titleView.addSubview(titleLbl)
+    imageView.snp.makeConstraints {
+      $0.edges.equalToSuperview().inset(UIEdgeInsets.all(5))
+    }
+  }
+  
+  override func cellDataChanged() {
+    guard let photo = data else { return }
+    imageView.af.setImage(withURL: photo.imageUrl)
+    titleLbl.text = photo.title
+  }
 }
-
-class FlickrImageCellViewModel: CellViewModel<FlickrSearchResponse.Photo> {
-    
-    let rxImage = BehaviorRelay(value: NetworkImage())
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        rxImage.accept(NetworkImage(withURL: model?.imageUrl, placeholder: UIImage.from(color: .black)))
-        rxTitle.accept(model?.title)
-    }
-}
-
-
-
-
-
-
-

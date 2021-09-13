@@ -5,152 +5,128 @@
 //  Created by Dao Duy Duong on 9/26/18.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 open class CollectionPage<VM: IListViewModel>: Page<VM> {
+  public typealias Section = VM.Section
+  public typealias Item = VM.Item
+  public typealias DataSource = CollectionDataSource<Section, Item>
 
-    public typealias S = VM.SectionElement
-    public typealias CVM = VM.CellElement
-
-    public lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
-        collectionView.backgroundColor = .clear
-        return collectionView
-    }()
-    
-    private lazy var dataSource = CollectionDataSource<S, CVM>(
-        collectionView: collectionView,
-        cellProvider: prepareCell,
-        supplementaryViewProvider: viewForSupplementaryElement,
-        canMoveRowAtIndexPath: canMoveItem
+  public private(set) lazy var collectionView: UICollectionView = {
+    let collectionView = UICollectionView(
+      frame: .zero,
+      collectionViewLayout: collectionViewLayout()
     )
-    
-    public override init(viewModel: VM? = nil) {
-        super.init(viewModel: viewModel)
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+    collectionView.backgroundColor = .clear
+    return collectionView
+  }()
 
-    override open func viewDidLoad() {
-        view.addSubview(collectionView)
-        super.viewDidLoad()
-    }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        collectionView.backgroundView = nil
-    }
+  private lazy var dataSource = DataSource(
+    collectionView: collectionView,
+    cellProvider: prepareCell,
+    supplementaryViewProvider: viewForSupplementaryElement,
+    canMoveRowAtIndexPath: canMoveItem
+  )
 
-    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+  override open func viewDidLoad() {
+    view.addSubview(collectionView)
+    super.viewDidLoad()
+  }
 
-        coordinator.animate(alongsideTransition: { _ in
-            self.collectionView.collectionViewLayout.invalidateLayout()
-        }, completion: nil)
-    }
-    
-    /**
-     Subclasses override this method to create its own collection view layout.
-     
-     By default, flow layout will be used.
-     */
-    open func collectionViewLayout() -> UICollectionViewLayout {
-        return UICollectionViewFlowLayout()
-    }
+  override open func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    collectionView.backgroundView = nil
+  }
 
-    open override func initialize() {
-        collectionView.autoPinEdgesToSuperviewEdges()
-    }
-    
-    open override func destroy() {
-        super.destroy()
-        collectionView.removeFromSuperview()
-        collectionView.visibleCells.forEach { ($0 as? IDestroyable)?.destroy() }
-        collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)
-            .forEach { ($0 as? IDestroyable)?.destroy() }
-        collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionFooter)
-            .forEach { ($0 as? IDestroyable)?.destroy() }
-    }
+  override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
 
-    /// Every time the viewModel changed, this method will be called again, so make sure to call super for CollectionPage to work
-    open override func bindViewAndViewModel() {
-        collectionView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
-            self?.itemSelected(indexPath)
-        }) => disposeBag
-        
-        viewModel?.itemsSource.snapshotChanged
-            .observe(on: Scheduler.shared.mainScheduler)
-            .subscribe(onNext: { [weak self] data in
-                self?.snapshotChanged(data)
-            }) => disposeBag
-    }
+    coordinator.animate(alongsideTransition: { _ in
+      self.collectionView.collectionViewLayout.invalidateLayout()
+    }, completion: nil)
+  }
 
-    private func itemSelected(_ indexPath: IndexPath) {
-        guard let viewModel = viewModel, let cellViewModel = dataSource[indexPath] else { return }
-        
-        viewModel.rxSelectedItem.accept(cellViewModel)
-        viewModel.rxSelectedIndex.accept(indexPath)
-        
-        viewModel.selectedItemDidChange(cellViewModel)
-        selectedItemDidChange(cellViewModel)
+  /**
+   Subclasses override this method to create its own collection view layout.
+
+   By default, flow layout will be used.
+   */
+  open func collectionViewLayout() -> UICollectionViewLayout {
+    return UICollectionViewFlowLayout()
+  }
+
+  override open func initialize() {
+    collectionView.snp.makeConstraints {
+      $0.edges.equalToSuperview()
     }
-    
-    private func snapshotChanged(_ itemSource: ItemSource<S, CVM>.Snapshot?) {
-        guard let itemSource = itemSource else { return }
-        let snapshot = itemSource.snapshot
-        let animated = itemSource.animated
-        dataSource.apply(snapshot, animatingDifferences: animated)
+  }
+
+  override open func destroy() {
+    super.destroy()
+  }
+
+  /// Every time the viewModel changed, this method will be called again, so make sure to call super for CollectionPage to work
+  override open func bindViewAndViewModel() {
+    collectionView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+      self?.itemSelected(indexPath)
+    }) => disposeBag
+
+    viewModel.itemsSource.snapshotChanged
+      .observe(on: Scheduler.shared.mainScheduler)
+      .subscribe(onNext: { [weak self] data in
+        self?.snapshotChanged(data)
+      }) => disposeBag
+  }
+
+  private func itemSelected(_ indexPath: IndexPath) {
+    (viewModel as? IntenalListViewModel)?.selectedIndexRelay.accept(indexPath)
+    if let item = dataSource[indexPath] {
+      viewModel.selectedItemDidChange(item)
+      selectedItemDidChange(item)
     }
-    
-    // MARK: - Abstract for subclasses
-    
-    /**
-     Subclasses have to override this method to return correct cell identifier based `CVM` type.
-     */
-    open func cellIdentifier(_ cellViewModel: CVM) -> String {
-        fatalError("Subclasses have to implemented this method.")
-    }
-    
-    /**
-     Subclasses override this method to handle cell pressed action.
-     */
-    open func selectedItemDidChange(_ cellViewModel: CVM) { }
-    
-    // MARK: - Collection view datasources
-    
-    func prepareCell(for collectionView: UICollectionView, at indexPath: IndexPath, cellViewModel: CVM) -> UICollectionViewCell {
-        (cellViewModel as? IIndexable)?.indexPath = indexPath
-        
-        let identifier = cellIdentifier(cellViewModel)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
-        if let cell = cell as? IAnyView {
-            cell.anyViewModel = cellViewModel
-        }
-        return cell
-    }
-    
-    open func viewForSupplementaryElement(for collectionView: UICollectionView, kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        return (nil as UICollectionReusableView?)!
-    }
-    
-    open func canMoveItem(_ dataSource: CollectionDataSource<S, CVM>, at indexPath: IndexPath) -> Bool {
-        return false
-    }
+  }
+
+  private func snapshotChanged(_ itemSource: ItemSource<Section, Item>.DataSource?) {
+    guard let itemSource = itemSource else { return }
+    let snapshot = itemSource.snapshot
+    let animated = itemSource.animated
+    dataSource.apply(snapshot, animatingDifferences: animated)
+  }
+
+  // MARK: - Abstract for subclasses
+
+  /**
+   Subclasses have to override this method to return correct cell identifier based `CVM` type.
+   */
+  open func cellIdentifier(_ item: Item) -> String {
+    fatalError("Subclasses have to implemented this method.")
+  }
+
+  /**
+   Subclasses override this method to handle cell pressed action.
+   */
+  open func selectedItemDidChange(_ item: Item) {}
+
+  // MARK: - Collection view datasources
+
+  func prepareCell(for collectionView: UICollectionView, at indexPath: IndexPath, item: Item) -> UICollectionViewCell {
+    let identifier = cellIdentifier(item)
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+    (cell as? CellConfigurable)?.setData(data: item)
+    return cell
+  }
+
+  open func viewForSupplementaryElement(
+    for collectionView: UICollectionView,
+    kind: String,
+    at indexPath: IndexPath
+  ) -> UICollectionReusableView {
+    return (nil as UICollectionReusableView?)!
+  }
+
+  open func canMoveItem(_ dataSource: DataSource, at indexPath: IndexPath) -> Bool {
+    return false
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

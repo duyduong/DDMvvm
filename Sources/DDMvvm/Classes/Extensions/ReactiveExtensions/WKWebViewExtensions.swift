@@ -5,19 +5,17 @@
 //  Created by Dao Duy Duong on 9/26/18.
 //
 
+import RxCocoa
+import RxSwift
 import UIKit
 import WebKit
-import RxSwift
-import RxCocoa
 
 public extension Reactive where Base: WKWebView {
-    
-    var url: Binder<URL?> {
-        return Binder(base) { view, url in
-            if let url = url {
-                view.stopLoading()
-                view.load(URLRequest(url: url))
-            }
-        }
+  var url: Binder<URL?> {
+    Binder(base) { view, url in
+      guard let url = url else { return }
+      view.stopLoading()
+      view.load(URLRequest(url: url))
     }
+  }
 }

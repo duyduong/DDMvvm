@@ -6,31 +6,37 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import DDMvvm
+import UIKit
+import RxSwift
+import RxCocoa
 
-class SectionHeaderCell: CollectionCell<SectionHeaderViewViewModel> {
-    
-    let titleLbl = UILabel()
-    let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
-    
-    override func initialize() {
-        let toolbar = UIToolbar()
-        addSubview(toolbar)
-        toolbar.autoPinEdgesToSuperviewEdges(with: .zero)
-        
-        let titleItem = UIBarButtonItem(customView: titleLbl)
-        let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let items = [titleItem, spaceItem, addBtn]
-        toolbar.items = items
+extension Reactive where Base: SectionHeaderCell {
+  var addSectionObservable: Observable<SectionList> {
+    base.addBtn.rx.tap
+      .map { [base] in base.data! }
+  }
+}
+
+class SectionHeaderCell: CollectionCell<SectionList> {
+  private let titleLbl = UILabel()
+  fileprivate let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+
+  override func initialize() {
+    let toolbar = UIToolbar()
+    addSubview(toolbar)
+    toolbar.snp.makeConstraints {
+      $0.edges.equalToSuperview()
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.rxTitle ~> titleLbl.rx.text => disposeBag
-        addBtn.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.viewModel?.addPressed()
-        }) => disposeBag
-    }
+
+    let titleItem = UIBarButtonItem(customView: titleLbl)
+    let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    let items = [titleItem, spaceItem, addBtn]
+    toolbar.items = items
+  }
+  
+  override func cellDataChanged() {
+    guard let section = data else { return }
+    titleLbl.text = section.title
+  }
 }

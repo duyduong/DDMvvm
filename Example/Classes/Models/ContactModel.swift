@@ -6,21 +6,10 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import Foundation
 import DDMvvm
+import Foundation
 
-struct ContactModel {
-    var name: String
-    var phone: String
+struct Contact: Hashable {
+  var name: String
+  var phone: String
 }
-
-
-
-
-
-
-
-
-
-
-

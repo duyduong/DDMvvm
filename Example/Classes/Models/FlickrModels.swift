@@ -10,7 +10,7 @@ import Foundation
 
 /*
  Here is an example response from Flickr api
- 
+
  {
      "photos": {
          "page": 1,
@@ -33,51 +33,47 @@ import Foundation
      },
      "stat": "ok"
  }
- 
+
  */
 
 struct FlickrSearchResponse: Decodable {
-    
-    enum FlickrStatus: String, Decodable {
-        case ok, fail
+  enum FlickrStatus: String, Decodable {
+    case ok, fail
+  }
+
+  struct Photo: Hashable, Decodable {
+    var id: String
+    var owner: String
+    var secret: String
+    var server: String
+    var farm: Int
+    var title: String
+    var isPublic: Int
+    var isFriend: Int
+    var isFamily: Int
+
+    var imageUrl: URL {
+      let url = "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_q.jpg"
+      return URL(string: url)!
     }
-    
-    struct Photo: Decodable {
-        var id: String
-        var owner: String
-        var secret: String
-        var server: String
-        var farm: Int
-        var title: String
-        var isPublic: Int
-        var isFriend: Int
-        var isFamily: Int
-        
-        var imageUrl: URL {
-            let url = "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_q.jpg"
-            return URL(string: url)!
-        }
-        
-        private enum CodingKeys: String, CodingKey {
-            case id, owner, secret, server, farm, title
-            case isPublic = "ispublic"
-            case isFriend = "isfriend"
-            case isFamily = "isfamily"
-        }
+
+    private enum CodingKeys: String, CodingKey {
+      case id, owner, secret, server, farm, title
+      case isPublic = "ispublic"
+      case isFriend = "isfriend"
+      case isFamily = "isfamily"
     }
-    
-    struct Photos: Decodable {
-        var page: Int
-        var pages: Int
-        var perpage: Int
-        var total: Int
-        var photo: [Photo]
-    }
-    
-    var stat: FlickrStatus = .ok
-    var photos: Photos
-    var message: String?
+  }
+
+  struct Photos: Decodable {
+    var page: Int
+    var pages: Int
+    var perpage: Int
+    var total: Int
+    var photo: [Photo]
+  }
+
+  var stat: FlickrStatus = .ok
+  var photos: Photos
+  var message: String?
 }
-
-
-

@@ -6,58 +6,36 @@
 //  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
-import UIKit
-import RxCocoa
 import DDMvvm
+import RxCocoa
+import UIKit
 
-class ExampleMenuCell: TableCell<ExampleMenuCellViewModel> {
-    
-    let titleLbl = UILabel()
-    let descLbl = UILabel()
-    
-    override func initialize() {
-        titleLbl.numberOfLines = 0
-        titleLbl.font = Font.system.bold(withSize: 17)
-        
-        descLbl.numberOfLines = 0
-        descLbl.font = Font.system.normal(withSize: 15)
-        
-        let layout = StackLayout().direction(.vertical).children([
-            titleLbl,
-            descLbl
-        ])
-        contentView.addSubview(layout)
-        layout.autoPinEdgesToSuperviewEdges(with: .all(5))
-        
-        accessoryType = .disclosureIndicator
+class ExampleMenuCell: TableCell<Menu> {
+  let titleLbl = UILabel()
+  let descLbl = UILabel()
+
+  override func initialize() {
+    titleLbl.numberOfLines = 0
+    titleLbl.font = UIFont.preferredFont(forTextStyle: .headline)
+
+    descLbl.numberOfLines = 0
+    descLbl.font = UIFont.preferredFont(forTextStyle: .body)
+
+    let layout = UIStackView(arrangedSubviews: [
+      titleLbl, descLbl
+    ])
+    .setAxis(.vertical)
+    contentView.addSubview(layout)
+    layout.snp.makeConstraints {
+      $0.edges.equalToSuperview().inset(UIEdgeInsets.all(5))
     }
-    
-    override func bindViewAndViewModel() {
-        guard let viewModel = viewModel else {
-            return
-        }
-        
-        viewModel.rxTitle ~> titleLbl.rx.text => disposeBag
-        viewModel.rxDesc ~> descLbl.rx.text => disposeBag
-    }
+
+    accessoryType = .disclosureIndicator
+  }
+
+  override func cellDataChanged() {
+    guard let data = data else { return }
+    titleLbl.text = data.title
+    descLbl.text = data.description
+  }
 }
-
-class ExampleMenuCellViewModel: CellViewModel<MenuModel> {
-    
-    let rxTitle = BehaviorRelay<String?>(value: nil)
-    let rxDesc = BehaviorRelay<String?>(value: nil)
-    
-    override func react() {
-        rxTitle.accept(model?.title)
-        rxDesc.accept(model?.desc)
-    }
-}
-
-
-
-
-
-
-
-
-

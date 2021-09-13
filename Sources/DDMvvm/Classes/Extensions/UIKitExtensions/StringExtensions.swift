@@ -8,27 +8,22 @@
 import UIKit
 
 public extension String {
-    
-    func toURL() -> URL? {
-        return URL(string: self)
+  func asURL() -> URL? {
+    URL(string: self)
+  }
+
+  func asURLRequest() -> URLRequest? {
+    if let url = asURL() {
+      return URLRequest(url: url)
     }
-    
-    func toURLRequest() -> URLRequest? {
-        if let url = toURL() {
-            return URLRequest(url: url)
-        }
-        return nil
-    }
-    
-    func toHex() -> Int? {
-        return Int(self, radix: 16)
-    }
-    
-    func trim() -> String {
-        return trimmingCharacters(in: .whitespacesAndNewlines)
-    }
+    return nil
+  }
+
+  func toHex() -> Int? {
+    Int(self, radix: 16)
+  }
+
+  func trim() -> String {
+    return trimmingCharacters(in: .whitespacesAndNewlines)
+  }
 }
-
-
-
-
