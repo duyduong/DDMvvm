@@ -18,14 +18,18 @@ public protocol IListViewModel: IPageViewModel {
   typealias SelectedItem = (indexPath: IndexPath, item: Item?)
 
   var itemsSource: ItemSource<Section, Item> { get }
+  var snapshotChanged: Observable<DiffableDataSourceSnapshot<Section, Item>> { get }
   var selectedItemChanged: Observable<SelectedItem> { get }
 
   func selectedItemDidChange(_ cellViewModel: Item)
 }
 
-open class ListViewModel<Section: Hashable, Item: Hashable>: PageViewModel, IListViewModel {
+open class ListViewModel<Section: Hashable, Item: Hashable>: PageViewModel, IListViewModel, IntenalListViewModel {
   public typealias DataSourceSnapshot = DiffableDataSourceSnapshot<Section, Item>
   public let itemsSource = ItemSource<Section, Item>()
+  public var snapshotChanged: Observable<DataSourceSnapshot> {
+    itemsSource.snapshotDataUpdated.map { $0.snapshot }
+  }
 
   let selectedIndexRelay = PublishRelay<IndexPath>()
   public var selectedItemChanged: Observable<SelectedItem> {

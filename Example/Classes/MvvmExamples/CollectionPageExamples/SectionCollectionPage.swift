@@ -54,7 +54,7 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
 
   // Based on cellViewModel type, we can return correct identifier for cells
   override func cellIdentifier(_ item: SectionListItem) -> String {
-    switch item.type {
+    switch item {
     case .image: return CollectionImageCell.identifier
     case .text: return CollectionTextCell.identifier
     }
@@ -77,7 +77,7 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
         self?.viewModel.addItem(to: section)
       }) => cell.disposeBag
       
-      if let section = viewModel.itemsSource.snapshot?.sectionIdentifiers[safe: indexPath.section] {
+      if let section = viewModel.itemsSource.snapshot.sectionIdentifiers[safe: indexPath.section] {
         cell.data = section
       }
       return cell
@@ -102,8 +102,7 @@ extension SectionCollectionPage: UICollectionViewDelegateFlowLayout {
     sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     let viewWidth = collectionView.frame.width
-    let numOfCols: CGFloat = 2 // collectionView.frame.width > collectionView.frame.height ? 2 : 1
-
+    let numOfCols: CGFloat = 2
     let contentWidth = viewWidth - ((numOfCols + 1) * padding)
     let width = contentWidth / numOfCols
     return CGSize(width: width, height: 9 * width / 16)

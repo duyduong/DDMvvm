@@ -19,6 +19,10 @@
 		CA13BF9525FDDC1700B63234 /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8A25FDDC1700B63234 /* Changeset.swift */; };
 		CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8B25FDDC1700B63234 /* Differentiable.swift */; };
 		CA15E63726F6FCC2007F3815 /* IRoutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA15E63626F6FCC2007F3815 /* IRoutable.swift */; };
+		CA15E63C26F75EF8007F3815 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA15E63B26F75EF8007F3815 /* AlertService.swift */; };
+		CA15E63E26F75F24007F3815 /* AlertAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA15E63D26F75F24007F3815 /* AlertAction.swift */; };
+		CA15E64026F75F3A007F3815 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA15E63F26F75F3A007F3815 /* AlertType.swift */; };
+		CA15E64226F75FBA007F3815 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA15E64126F75FBA007F3815 /* AlertController.swift */; };
 		CA51910F25FB17E3002063AD /* DecoratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C225FB17E3002063AD /* DecoratorView.swift */; };
 		CA51911025FB17E3002063AD /* AbstractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C325FB17E3002063AD /* AbstractView.swift */; };
 		CA51911425FB17E3002063AD /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190CA25FB17E3002063AD /* CollectionView.swift */; };
@@ -164,6 +168,10 @@
 		CA13BF8A25FDDC1700B63234 /* Changeset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Changeset.swift; sourceTree = "<group>"; };
 		CA13BF8B25FDDC1700B63234 /* Differentiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Differentiable.swift; sourceTree = "<group>"; };
 		CA15E63626F6FCC2007F3815 /* IRoutable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRoutable.swift; sourceTree = "<group>"; };
+		CA15E63B26F75EF8007F3815 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
+		CA15E63D26F75F24007F3815 /* AlertAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertAction.swift; sourceTree = "<group>"; };
+		CA15E63F26F75F3A007F3815 /* AlertType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
+		CA15E64126F75FBA007F3815 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		CA384DF225FB452B0093E4FC /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		CA384DF325FB452B0093E4FC /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		CA384DF425FB452B0093E4FC /* DDMvvm.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = DDMvvm.podspec; sourceTree = "<group>"; };
@@ -327,6 +335,17 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		CA15E63A26F75EE5007F3815 /* AlertService */ = {
+			isa = PBXGroup;
+			children = (
+				CA15E63B26F75EF8007F3815 /* AlertService.swift */,
+				CA15E63D26F75F24007F3815 /* AlertAction.swift */,
+				CA15E63F26F75F3A007F3815 /* AlertType.swift */,
+				CA15E64126F75FBA007F3815 /* AlertController.swift */,
+			);
+			path = AlertService;
+			sourceTree = "<group>";
+		};
 		CA384DF125FB45090093E4FC /* Package */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,6 +410,7 @@
 		CA5190BF25FB17E3002063AD /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				CA15E63A26F75EE5007F3815 /* AlertService */,
 				CAD9570526EDD6D8007D116D /* Navigator */,
 				CA5190C025FB17E3002063AD /* Controls */,
 				CA5190C825FB17E3002063AD /* Base */,
@@ -905,6 +925,7 @@
 				CA15E63726F6FCC2007F3815 /* IRoutable.swift in Sources */,
 				CA13BF9225FDDC1700B63234 /* StagedChangeset.swift in Sources */,
 				CA51912F25FB17E3002063AD /* UIViewExtensions.swift in Sources */,
+				CA15E63C26F75EF8007F3815 /* AlertService.swift in Sources */,
 				CA51914325FB17E3002063AD /* DDConfigurations.swift in Sources */,
 				CA51913325FB17E3002063AD /* UISwitchExtensions.swift in Sources */,
 				CA51913425FB17E3002063AD /* UIImageViewExtensions.swift in Sources */,
@@ -912,6 +933,7 @@
 				CA51911B25FB17E3002063AD /* PopupPage.swift in Sources */,
 				CA51913D25FB17E3002063AD /* UIViewExntesions.swift in Sources */,
 				CA51913A25FB17E3002063AD /* CGSizeExtensions.swift in Sources */,
+				CA15E64026F75F3A007F3815 /* AlertType.swift in Sources */,
 				CA13BF9125FDDC1700B63234 /* AnyDifferentiable.swift in Sources */,
 				CA51912025FB17E3002063AD /* MainThreadSerialDispatcher.swift in Sources */,
 				CAD9570F26EEEFF3007D116D /* IPopoverView.swift in Sources */,
@@ -930,6 +952,7 @@
 				CA51912A25FB17E3002063AD /* UIScrollViewExtensions.swift in Sources */,
 				CA13BF9525FDDC1700B63234 /* Changeset.swift in Sources */,
 				CA51914625FB17E3002063AD /* Scheduler.swift in Sources */,
+				CA15E63E26F75F24007F3815 /* AlertAction.swift in Sources */,
 				CAD956D726ECB0DC007D116D /* UIStackViewExtensions.swift in Sources */,
 				CA51911625FB17E3002063AD /* View.swift in Sources */,
 				CA13BF9425FDDC1700B63234 /* DifferentiableSection.swift in Sources */,
@@ -938,6 +961,7 @@
 				CA51913925FB17E3002063AD /* UIEdgeInsetsExtensions.swift in Sources */,
 				CA51911C25FB17E3002063AD /* Page.swift in Sources */,
 				CA51912925FB17E3002063AD /* AnimatorDelegate.swift in Sources */,
+				CA15E64226F75FBA007F3815 /* AlertController.swift in Sources */,
 				CA51912D25FB17E3002063AD /* WKWebViewExtensions.swift in Sources */,
 				CAD9570726EDD86C007D116D /* Router.swift in Sources */,
 				CA13BF9325FDDC1700B63234 /* ElementPath.swift in Sources */,

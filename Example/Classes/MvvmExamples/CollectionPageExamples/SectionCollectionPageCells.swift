@@ -37,9 +37,9 @@ class CollectionTextCell: CollectionCell<SectionListItem> {
   }
 
   override func cellDataChanged() {
-    guard case let .text(title, description) = data?.type else { return }
-    titleLbl.text = title
-    descLbl.text = description
+    guard case let .text(data) = data else { return }
+    titleLbl.text = data.title
+    descLbl.text = data.description
   }
 }
 
@@ -58,8 +58,8 @@ class CollectionImageCell: CollectionCell<SectionListItem> {
   }
   
   override func cellDataChanged() {
-    guard case let .image(urlString) = data?.type,
-          let url = URL(string: urlString)
+    guard case let .image(data) = data,
+          let url = URL(string: data.url)
     else { return }
     netImageView.af.setImage(withURL: url, imageTransition: .crossDissolve(0.25))
   }

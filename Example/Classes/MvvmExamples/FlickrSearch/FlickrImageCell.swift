@@ -15,7 +15,7 @@ class FlickrImageCell: CollectionCell<FlickrSearchResponse.Photo> {
   let titleLbl = UILabel()
 
   override func initialize() {
-    contentView.cornerRadius = 7
+    cornerRadius = 7
 
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
@@ -35,14 +35,18 @@ class FlickrImageCell: CollectionCell<FlickrSearchResponse.Photo> {
     titleLbl.textColor = .white
     titleLbl.numberOfLines = 2
     titleView.addSubview(titleLbl)
-    imageView.snp.makeConstraints {
+    titleLbl.snp.makeConstraints {
       $0.edges.equalToSuperview().inset(UIEdgeInsets.all(5))
     }
   }
   
   override func cellDataChanged() {
     guard let photo = data else { return }
-    imageView.af.setImage(withURL: photo.imageUrl)
+    imageView.af.setImage(
+      withURL: photo.imageUrl,
+      placeholderImage: .from(color: .black),
+      imageTransition: .crossDissolve(0.25)
+    )
     titleLbl.text = photo.title
   }
 }

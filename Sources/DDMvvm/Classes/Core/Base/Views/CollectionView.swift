@@ -67,26 +67,25 @@ open class CollectionView<VM: IListViewModel>: View<VM> {
       self?.itemSelected(indexPath)
     }) => disposeBag
 
-    viewModel.itemsSource.snapshotChanged
+    viewModel.itemsSource.snapshotDataUpdated
       .observe(on: Scheduler.shared.mainScheduler)
       .subscribe(onNext: { [weak self] data in
-        self?.snapshotChanged(data)
+        self?.snapshotDataChanged(data)
       }) => disposeBag
   }
 
   private func itemSelected(_ indexPath: IndexPath) {
     (viewModel as? IntenalListViewModel)?.selectedIndexRelay.accept(indexPath)
-    if let item = dataSource[indexPath] {
-      viewModel.selectedItemDidChange(item)
-      selectedItemDidChange(item)
-    }
+    guard let item = dataSource[indexPath] else { return }
+    viewModel.selectedItemDidChange(item)
+    selectedItemDidChange(item)
   }
 
-  private func snapshotChanged(_ itemSource: ItemSource<Section, Item>.DataSource?) {
-    guard let itemSource = itemSource else { return }
-    let snapshot = itemSource.snapshot
-    let animated = itemSource.animated
-    dataSource.apply(snapshot, animatingDifferences: animated)
+  private func snapshotDataChanged(_ data: ItemSource<Section, Item>.SnapshotData) {
+    dataSource.apply(
+      data.snapshot,
+      animatingDifferences: data.animated
+    )
   }
 
   // MARK: - Abstract for subclasses

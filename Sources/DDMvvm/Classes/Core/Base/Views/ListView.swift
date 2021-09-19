@@ -57,10 +57,10 @@ open class ListView<VM: IListViewModel>: View<VM> {
       self?.itemSelected(indexPath)
     }) => disposeBag
 
-    viewModel.itemsSource.snapshotChanged
+    viewModel.itemsSource.snapshotDataUpdated
       .observe(on: Scheduler.shared.mainScheduler)
       .subscribe(onNext: { [weak self] data in
-        self?.snapshotChanged(data)
+        self?.snapshotDataChanged(data)
       }) => disposeBag
   }
 
@@ -72,9 +72,11 @@ open class ListView<VM: IListViewModel>: View<VM> {
     }
   }
 
-  private func snapshotChanged(_ data: ItemSource<Section, Item>.DataSource?) {
-    guard let data = data else { return }
-    dataSource.apply(data.snapshot, animatingDifferences: data.animated)
+  private func snapshotDataChanged(_ data: ItemSource<Section, Item>.SnapshotData) {
+    dataSource.apply(
+      data.snapshot,
+      animatingDifferences: data.animated
+    )
   }
 
   // MARK: - Abstract for subclasses

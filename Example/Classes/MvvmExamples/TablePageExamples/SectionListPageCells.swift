@@ -10,18 +10,23 @@ import DDMvvm
 import RxCocoa
 import UIKit
 
-struct SectionListItem: Hashable {
-  enum ItemType: Hashable {
-    case image(url: String)
-    case text(title: String, description: String)
+enum SectionListItem: Hashable {
+  struct ImageData: Hashable {
+    let id = UUID().uuidString
+    let url: String
   }
   
-  let type: ItemType
-  let number = Int.random(in: 0 ..< 200_000)
+  struct TextData: Hashable {
+    let id = UUID().uuidString
+    let title: String
+    let description: String
+  }
+  
+  case image(data: ImageData)
+  case text(data: TextData)
 }
 
 class SectionTextCell: TableCell<SectionListItem> {
-
   let titleLbl = UILabel()
   let descLbl = UILabel()
 
@@ -44,9 +49,9 @@ class SectionTextCell: TableCell<SectionListItem> {
   }
   
   override func cellDataChanged() {
-    guard case let .text(title, description) = data?.type else { return }
-    titleLbl.text = title
-    descLbl.text = description
+    guard case let .text(data) = data else { return }
+    titleLbl.text = data.title
+    descLbl.text = data.description
   }
 }
 
@@ -64,8 +69,8 @@ class SectionImageCell: TableCell<SectionListItem> {
   }
   
   override func cellDataChanged() {
-    guard case let .image(urlString) = data?.type,
-          let url = URL(string: urlString)
+    guard case let .image(data) = data,
+          let url = URL(string: data.url)
     else { return }
     netImageView.af.setImage(withURL: url, imageTransition: .crossDissolve(0.25))
   }

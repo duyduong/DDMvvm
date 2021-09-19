@@ -13,7 +13,6 @@ import RxSwift
 import UIKit
 
 class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
-
   let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 400, height: 30))
   let indicatorView = UIActivityIndicatorView(style: .gray)
 
@@ -42,7 +41,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
     loadMoreIndicator.startAnimating()
     loadMoreView.addSubview(loadMoreIndicator)
     loadMoreIndicator.snp.makeConstraints {
-      $0.centerY.equalToSuperview()
+      $0.centerX.equalToSuperview()
       $0.top.bottom.equalToSuperview().inset(10)
     }
 
@@ -69,13 +68,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
     viewModel.rxSearchText <~> searchBar.rx.text => disposeBag
 
     // toggle show/hide indicator next to search bar
-    viewModel.rxIsSearching.subscribe(onNext: { value in
-      if value {
-        self.indicatorView.startAnimating()
-      } else {
-        self.indicatorView.stopAnimating()
-      }
-    }) => disposeBag
+    viewModel.rxIsSearching ~> indicatorView.rx.isAnimating => disposeBag
 
     // toggle load more indicator when scroll to bottom
     viewModel.rxIsLoadingMore
@@ -102,7 +95,7 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
 
   // this method is required
   override func cellIdentifier(_ item: FlickrSearchResponse.Photo) -> String {
-    return FlickrImageCell.identifier
+    FlickrImageCell.identifier
   }
 }
 
@@ -133,11 +126,8 @@ extension FlickrSearchPage: UICollectionViewDelegateFlowLayout {
 }
 
 class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchResponse.Photo> {
-  // Json service injection
   @Injected var jsonService: IJsonService
-
-  // Alert service injection
-  // let alertService: IAlertService = DependencyManager.shared.getService()
+  @Injected var alertService: IAlertService
 
   let rxSearchText = BehaviorRelay<String?>(value: nil)
   let rxIsSearching = BehaviorRelay(value: false)
@@ -150,9 +140,9 @@ class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchRespon
   var tmpBag: DisposeBag?
 
   var params: [String: Any] {
-    return [
+    [
       "method": "flickr.photos.search",
-      "api_key": "b31f0f4d78f96a1315d1d25f07ec09c1", // please provide your API key
+      "api_key": "891774493ea5183f9ddba6ccec09a3bb", // please provide your API key
       "format": "json",
       "nojsoncallback": 1,
       "page": page,
@@ -174,28 +164,33 @@ class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchRespon
         }
       })
       .debounce(.milliseconds(500), scheduler: Scheduler.shared.mainScheduler)
-      .flatMap { text -> Observable<[FlickrSearchResponse.Photo]> in
+      .flatMap { [weak self] text -> Observable<[FlickrSearchResponse.Photo]> in
+        guard let self = self else { return .empty() }
         if !text.isNilOrEmpty {
-          let obs: Single<FlickrSearchResponse> = self.jsonService.get(path: "", params: self.params, parameterEncoding: URLEncoding.queryString)
+          let obs: Single<FlickrSearchResponse> = self.jsonService.get(
+            path: "",
+            params: self.params,
+            parameterEncoding: URLEncoding.queryString
+          )
           return obs.asObservable().map(self.prepareSources)
         }
 
         return .just([])
       }
-      .subscribe(onNext: { cvms in
-        self.itemsSource.update { snapshot in
-          if snapshot.numberOfSections == 0 {
-            snapshot.appendSections([.main])
-          }
-
-          snapshot.appendItems(cvms)
+      .subscribe(onNext: { [weak self] items in
+        guard let self = self else { return }
+        self.itemsSource.update(animated: true) { snapshot in
+          var newSnapshot = DataSourceSnapshot()
+          newSnapshot.appendSections([.main])
+          newSnapshot.appendItems(items)
+          snapshot = newSnapshot
         }
         self.rxIsSearching.accept(false)
       }) => disposeBag
   }
 
   fileprivate func loadMore() {
-    let numberOfItems = itemsSource.snapshot?.numberOfItems ?? 0
+    let numberOfItems = itemsSource.snapshot.numberOfItems
     if numberOfItems <= 0 || done || rxIsLoadingMore.value { return }
 
     tmpBag = DisposeBag()
@@ -203,16 +198,16 @@ class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchRespon
     rxIsLoadingMore.accept(true)
     page += 1
 
-    let obs: Single<FlickrSearchResponse> = jsonService.get(path: "", params: params, parameterEncoding: URLEncoding.queryString)
+    let obs: Single<FlickrSearchResponse> = jsonService.get(
+      path: "",
+      params: params,
+      parameterEncoding: URLEncoding.queryString
+    )
     obs.map(prepareSources)
       .subscribe { event in
         switch event {
         case let .success(photos):
-          self.itemsSource.update { snapshot in
-            if snapshot.numberOfSections == 0 {
-              snapshot.appendSections([.main])
-            }
-            
+          self.itemsSource.update(animated: true) { snapshot in
             snapshot.appendItems(photos)
           }
           
@@ -226,8 +221,12 @@ class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchRespon
 
   private func prepareSources(_ response: FlickrSearchResponse) -> [FlickrSearchResponse.Photo] {
     if response.stat == .fail {
-      // let message = response.message ?? "Failed to search on Flickr"
-      // alertService.presentOkayAlert(title: "Error", message: "\(message)\nPlease be sure to provide your own API key from Flickr.")
+       let message = response.message ?? "Failed to search on Flickr"
+      alertService.schedule(
+        alert: DefaultAlert.ok(title: "Error", messge: message),
+        preferredStyle: .alert,
+        completion: nil
+      )
     }
 
     if response.photos.page >= response.photos.pages {

@@ -14,7 +14,6 @@ import UIKit
 // MARK: - Json service, service for calling API
 
 protocol IJsonService {
-
   func request<T: Decodable>(
     path: String,
     method: HTTPMethod,
@@ -25,7 +24,6 @@ protocol IJsonService {
 }
 
 extension IJsonService {
-
   func request<T: Decodable>(
     path: String,
     method: HTTPMethod,

@@ -43,7 +43,7 @@ class SectionListPage: ListPage<SectionListPageViewModel> {
 
   // Based on type to return correct identifier for cells
   override func cellIdentifier(_ item: SectionListItem) -> String {
-    switch item.type {
+    switch item {
     case .image: return SectionImageCell.identifier
     case .text: return SectionTextCell.identifier
     }
@@ -58,7 +58,7 @@ class SectionListPage: ListPage<SectionListPageViewModel> {
 
 extension SectionListPage: UITableViewDelegate {
   func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    guard let section = viewModel.itemsSource.snapshot?.sectionIdentifiers[section] else {
+    guard let section = viewModel.itemsSource.snapshot.sectionIdentifiers[safe: section] else {
       return nil
     }
     
@@ -104,12 +104,17 @@ class SectionListPageViewModel: ListViewModel<SectionList, SectionListItem> {
       let url = imageUrls[index]
 
       itemsSource.update(animated: true) { snapshot in
-        snapshot.appendItems([.init(type: .image(url: url))], toSection: section)
+        snapshot.appendItems([.image(data: .init(url: url))], toSection: section)
       }
     } else {
       itemsSource.update(animated: true) { snapshot in
         snapshot.appendItems([
-          .init(type: .text(title: "Just a text cell title", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."))
+          .text(
+            data: .init(
+              title: "Just a text cell title",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+            )
+          )
         ], toSection: section)
       }
     }
@@ -117,7 +122,7 @@ class SectionListPageViewModel: ListViewModel<SectionList, SectionListItem> {
 
   /// Add new section
   func addSection() {
-    let count = itemsSource.snapshot?.numberOfSections ?? 0
+    let count = itemsSource.snapshot.numberOfSections
     let section: SectionList = .single(title: "Section title #\(count + 1)")
     itemsSource.update(animated: true) { snapshot in
       snapshot.appendSections([section])
@@ -126,11 +131,12 @@ class SectionListPageViewModel: ListViewModel<SectionList, SectionListItem> {
 
   /// Shuffle a random section
   func shuffle() {
-    guard let section = itemsSource.snapshot?.sectionIdentifiers.randomElement() else { return }
+    guard let section = itemsSource.snapshot.sectionIdentifiers.randomElement() else { return }
     itemsSource.update(animated: true) { snapshot in
       var items = snapshot.itemIdentifiers(inSection: section)
+      snapshot.deleteItems(items)
       items.shuffle()
-      snapshot.reloadItems(items)
+      snapshot.appendItems(items, toSection: section)
     }
   }
 }

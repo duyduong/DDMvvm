@@ -16,6 +16,7 @@ import UIKit
  */
 class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
   let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+  let shuffleBtn = UIBarButtonItem(title: "Shuffle", style: .done, target: nil, action: nil)
   let padding: CGFloat = 5
 
   override func initialize() {
@@ -23,7 +24,7 @@ class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
     // If you want to layout tableView differently, then remove this line
     super.initialize()
 
-    navigationItem.rightBarButtonItem = addBtn
+    navigationItem.rightBarButtonItems = [addBtn, shuffleBtn]
 
     collectionView.delegate = self
     if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
@@ -42,6 +43,10 @@ class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
 
     addBtn.rx.tap.subscribe(onNext: { [weak self] in
       self?.viewModel.add()
+    }) => disposeBag
+
+    shuffleBtn.rx.tap.subscribe(onNext: { [weak self] in
+      self?.viewModel.shuffle()
     }) => disposeBag
   }
 
