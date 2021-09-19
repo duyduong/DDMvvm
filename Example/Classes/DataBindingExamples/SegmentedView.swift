@@ -10,6 +10,7 @@ import DDMvvm
 import RxCocoa
 import RxSwift
 import UIKit
+import SnapKit
 
 extension Reactive where Base: SegmentedView {
 
@@ -54,7 +55,7 @@ class SegmentedView: AbstractControlView {
 
   private let indicatorWidth: CGFloat = 30
 
-  var leadingConst: NSLayoutConstraint!
+  var leadingConstraint: Constraint?
 
   init(withTitles titles: [String], apportionsSegmentWidthsByContent: Bool = true) {
     self.titles = titles
@@ -108,13 +109,13 @@ class SegmentedView: AbstractControlView {
     indicatorView.snp.makeConstraints {
       $0.width.equalTo(indicatorWidth)
       $0.height.equalTo(3)
+      $0.centerY.equalToSuperview().offset(15)
     }
+    
     if let first = buttons.first {
       indicatorView.snp.makeConstraints {
-        $0.centerX.equalToSuperview().offset(15)
-        $0.centerY.equalTo(first.snp.centerY)
+        leadingConstraint = $0.centerX.equalTo(first.snp.centerX).constraint
       }
-
       first.isSelected = true
     } else {
       indicatorView.isHidden = true
@@ -129,9 +130,8 @@ class SegmentedView: AbstractControlView {
   }
 
   @objc func buttonPressed(_ sender: UIButton) {
-    if let index = buttons.firstIndex(of: sender) {
-      selectedIndex = index
-    }
+    guard let index = buttons.firstIndex(of: sender) else { return }
+    selectedIndex = index
   }
 
   private func moveIndicator(relativeTo selectedBtn: UIButton, animated: Bool = true) {
@@ -150,8 +150,9 @@ class SegmentedView: AbstractControlView {
   }
 
   private func updateVerticalConstraint(to selectedBtn: UIButton) {
-    indicatorView.snp.updateConstraints {
-      $0.centerY.equalTo(selectedBtn.snp.centerY)
+    leadingConstraint?.deactivate()
+    indicatorView.snp.makeConstraints {
+      leadingConstraint = $0.centerX.equalTo(selectedBtn.snp.centerX).constraint
     }
   }
 

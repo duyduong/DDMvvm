@@ -34,6 +34,17 @@ public protocol RouterType {
   func dismiss(completion: (() -> Void)?)
 }
 
+/// Default router for common usage
+public struct DefaultRouter: RouterType {
+  public let rootViewController: UIViewController?
+
+  public init(rootViewController: UIViewController?) {
+    self.rootViewController = rootViewController
+  }
+}
+
+// MARK: - Default router implementation
+
 public extension RouterType {
   /// Navigate to a specific route
   /// - Parameters:
@@ -57,13 +68,23 @@ public extension RouterType {
 
     // Inject transition and animator delegate
     destinationPage.transition = transition
+    
+    // Keep this for backward animation
+    // As `transitioningDelegate` will be deinit
     destinationPage.animatorDelegate = animatorDelegate
+    
+    // Let the animation works
+    destinationPage.transitioningDelegate = animatorDelegate
 
     let animated = transition.animated
     switch transition.type {
     case .auto:
       if let navigationController = context.navigationController {
-        navigationController.pushViewController(destinationPage, animated: transition.animated, completions: completion)
+        navigationController.pushViewController(
+          destinationPage,
+          animated: transition.animated,
+          completions: completion
+        )
       } else {
         context.present(destinationPage, animated: transition.animated, completion: completion)
       }
@@ -76,6 +97,9 @@ public extension RouterType {
       )
 
     case .modal:
+      if animatorDelegate != nil {
+        destinationPage.modalPresentationStyle = .custom
+      }
       context.present(destinationPage, animated: animated, completion: completion)
 
     case .popup:
@@ -96,24 +120,11 @@ public extension RouterType {
   ///   - transition: Specific `DismissType`
   ///   - completion: Block called after completed dismiss
   func dismiss(transition: FinishTransition, completion: (() -> Void)? = nil) {
-    guard let context = DDConfigurations.topPage() else { return }
+    guard let context = rootViewController ?? DDConfigurations.topPage() else { return }
 
     switch transition.type {
     case .auto:
-      let navigationController = context.navigationController
-      if navigationController == nil || navigationController?.viewControllers.first == context {
-        context.dismiss(animated: transition.animated) {
-          (context as? IDestroyable)?.destroy()
-          context.navigationController?.destroy()
-          context.tabBarController?.destroy()
-          completion?()
-        }
-      } else {
-        navigationController?.popViewController(animated: transition.animated) { page in
-          (page as? IDestroyable)?.destroy()
-          completion?()
-        }
-      }
+      dismissAuto(from: context, animated: transition.animated, completion: completion)
       
     case .pop:
       context.navigationController?.popViewController(animated: transition.animated) { page in
@@ -152,63 +163,68 @@ public extension RouterType {
   /// Dimiss top context page (transition is based on context page transtion)
   /// - Parameter completion: Block called after completed dismiss
   func dismiss(completion: (() -> Void)? = nil) {
-    guard let context = DDConfigurations.topPage() else { return }
+    guard let context = rootViewController ?? DDConfigurations.topPage() else { return }
 
     // Use transition source object to know the current presentation
-    if let transition = context.transition {
-      switch transition.type {
-      case .auto:
-        let navigationController = context.navigationController
-        if navigationController == nil || navigationController?.viewControllers.first == context {
-          context.dismiss(animated: transition.animated) {
-            (context as? IDestroyable)?.destroy()
-            context.navigationController?.destroy()
-            context.tabBarController?.destroy()
-            completion?()
-          }
-        } else {
-          navigationController?.popViewController(animated: transition.animated, completions: { page in
-            (page as? IDestroyable)?.destroy()
-            completion?()
-          })
-        }
-        
-      case .push:
-        context.navigationController?.popViewController(animated: transition.animated, completions: { page in
-          (page as? IDestroyable)?.destroy()
-          completion?()
-        })
-        
-      case .modal:
-        context.dismiss(animated: transition.animated) {
-          (context as? IDestroyable)?.destroy()
-          context.navigationController?.destroy()
-          context.tabBarController?.destroy()
-          completion?()
-        }
+    guard let transition = context.transition ??
+            context.navigationController?.transition ??
+            context.tabBarController?.transition
+    else {
+      return dismissAuto(from: context, animated: true, completion: completion)
+    }
+    switch transition.type {
+    case .auto:
+      dismissAuto(from: context, animated: transition.animated, completion: completion)
+      
+    case .push:
+      context.navigationController?.popViewController(animated: transition.animated) { page in
+        (page as? IDestroyable)?.destroy()
+        completion?()
+      }
+      
+    case .modal:
+      context.dismiss(animated: transition.animated) {
+        (context as? IDestroyable)?.destroy()
+        context.navigationController?.destroy()
+        context.tabBarController?.destroy()
+        completion?()
+      }
 
-      case .popup:
-        let popupPage = context.parent?.parent as? PopupPage ?? context.parent as? PopupPage ?? context as? PopupPage
-        popupPage?.dismiss(animated: false, completion: {
-          popupPage?.destroy()
-          completion?()
-        })
+    case .popup:
+      let popupPage = context.parent?.parent as? PopupPage ??
+        context.parent as? PopupPage ??
+        context as? PopupPage
+      popupPage?.dismiss(animated: false) {
+        popupPage?.destroy()
+        completion?()
+      }
 
-      case .popover:
-        context.dismiss(animated: true) {
-          (context as? IDestroyable)?.destroy()
-          completion?()
-        }
+    case .popover:
+      context.dismiss(animated: true) {
+        (context as? IDestroyable)?.destroy()
+        completion?()
       }
     }
   }
 }
 
-/// Default router for common usage
-public struct DefaultRouter: RouterType {
-  public var rootViewController: UIViewController?
+// MARK: -
 
-  public init(rootViewController: UIViewController?) {
-    self.rootViewController = rootViewController
+private extension RouterType {
+  func dismissAuto(from context: UIViewController, animated: Bool, completion: (() -> Void)?) {
+    let navigationController = context.navigationController
+    if navigationController == nil || navigationController?.viewControllers.first == context {
+      context.dismiss(animated: animated) {
+        (context as? IDestroyable)?.destroy()
+        context.navigationController?.destroy()
+        context.tabBarController?.destroy()
+        completion?()
+      }
+    } else {
+      navigationController?.popViewController(animated: animated) { page in
+        (page as? IDestroyable)?.destroy()
+        completion?()
+      }
+    }
   }
 }

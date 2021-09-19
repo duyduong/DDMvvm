@@ -32,10 +32,10 @@ class ExampleMenuPage<Item: Menu>: ListPage<ExampleMenuPageViewModel<Item>> {
   }
 
   override func selectedItemDidChange(_ item: Item) {
-    guard let index = viewModel.itemsSource.snapshot?.itemIdentifiers.firstIndex(of: item) else {
+    guard let indexPath = viewModel.itemsSource[item: item] else {
       return
     }
-    tableView.deselectRow(at: IndexPath(row: index, section: 0), animated: true)
+    tableView.deselectRow(at: indexPath, animated: true)
   }
 }
 

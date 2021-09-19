@@ -21,8 +21,6 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
   let submitBtn = UIButton(type: .custom)
 
   override func initialize() {
-    enableBackButton = true
-
     helloLbl.font = UIFont.preferredFont(forTextStyle: .title3)
 
     emailTxt.borderStyle = .roundedRect
@@ -47,7 +45,7 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
     }
 
     scrollView
-      .setPaddings(UIEdgeInsets(top: 50, left: 20, bottom: 20, right: 20))
+      .setPaddings(NSDirectionalEdgeInsets(top: 50, leading: 20, bottom: 20, trailing: 20))
       .addArrangedSubviews([
         helloLbl,
         emailTxt,

@@ -25,8 +25,6 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
   override func initialize() {
     super.initialize()
 
-    enableBackButton = true
-
     // setup search bar
     indicatorView.hidesWhenStopped = true
     searchBar.placeholder = "Search for Flickr images"

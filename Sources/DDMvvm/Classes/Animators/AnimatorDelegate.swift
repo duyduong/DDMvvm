@@ -38,7 +38,7 @@ extension AnimatorDelegate: UIViewControllerTransitioningDelegate {
     presenting: UIViewController?,
     source: UIViewController
   ) -> UIPresentationController? {
-    return PresentationController(
+    PresentationController(
       presentedViewController: presented,
       presenting: presenting
     )
@@ -46,5 +46,5 @@ extension AnimatorDelegate: UIViewControllerTransitioningDelegate {
 }
 
 class PresentationController: UIPresentationController {
-  override var shouldRemovePresentersView: Bool { return true }
+  override var shouldRemovePresentersView: Bool { true }
 }

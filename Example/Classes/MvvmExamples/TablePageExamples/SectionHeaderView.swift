@@ -11,16 +11,9 @@ import RxCocoa
 import RxSwift
 import UIKit
 
-
-
 extension Reactive where Base: SectionHeaderView {
   var addSectionObservable: Observable<SectionList> {
-    base.addBtn.rx.tap.map { [weak base] in
-      guard let base = base else {
-        return .init(title: "")
-      }
-      return base.section
-    }
+    base.addBtn.rx.tap.map { [base] in base.section }
   }
 }
 
@@ -29,7 +22,7 @@ class SectionHeaderView: UIView, IDestroyable {
   let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
   
   var section: SectionList {
-    didSet { update() }
+    didSet { updateTitle() }
   }
   
   init(section: SectionList) {
@@ -44,18 +37,23 @@ class SectionHeaderView: UIView, IDestroyable {
   
   private func setupView() {
     let toolbar = UIToolbar()
+    toolbar.tintColor = .black
     addSubview(toolbar)
     toolbar.snp.makeConstraints {
       $0.edges.equalToSuperview()
     }
 
+    titleLbl.textColor = .black
     let titleItem = UIBarButtonItem(customView: titleLbl)
     let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     let items = [titleItem, spaceItem, addBtn]
     toolbar.items = items
+    
+    updateTitle()
   }
   
-  private func update() {
-    titleLbl.text = section.title
+  private func updateTitle() {
+    guard case let .single(title) = section else { return }
+    titleLbl.text = title
   }
 }

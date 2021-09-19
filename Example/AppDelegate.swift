@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let page = ExampleMenuPage(viewModel: HomeMenuPageViewModel(title: ""))
     let rootPage = NavigationPage(rootViewController: page)
-    rootPage.navigationBar.tintColor = .black
+    rootPage.navigationBar.tintColor = .systemBlue
     window?.rootViewController = rootPage
     window?.makeKeyAndVisible()
 

@@ -25,24 +25,34 @@ public struct ItemSource<Section: Hashable, Item: Hashable> {
   /// Current snapshot
   public var snapshot: DataSourceSnapshot? { rxSnapshot.value?.snapshot }
 
+  /// Whether to animate the changes
+  public var animated = false
+
   init() {
     update { $0.appendSections([]) }
   }
 
   /// Update itemsSource with new snapshot
-  public func update(animated: Bool = false, block: (inout DataSourceSnapshot) -> Void) {
+  /// - Parameters:
+  ///   - animated: Individually animate this change
+  ///   - block: Snapshot preparation block
+  public func update(animated: Bool? = nil, block: (inout DataSourceSnapshot) -> Void) {
     var snapshot = self.snapshot ?? DataSourceSnapshot()
     block(&snapshot)
-    rxSnapshot.accept(DataSource(snapshot: snapshot, animated: animated))
+    rxSnapshot.accept(DataSource(snapshot: snapshot, animated: animated ?? self.animated))
   }
 
   // MARK: - Subscripts
 
-  public subscript(indexPath indexPath: IndexPath) -> Item? {
-    guard let section = snapshot?.sectionIdentifiers[safe: indexPath.section] else {
-      return nil
+  public subscript(item item: Item) -> IndexPath? {
+    guard let snapshot = snapshot else { return nil }
+    for (i, section) in snapshot.sectionIdentifiers.enumerated() {
+      let sectionItems = snapshot.itemIdentifiers(inSection: section)
+      if let index = sectionItems.firstIndex(of: item) {
+        return IndexPath(item: index, section: i)
+      }
     }
-    return snapshot?.itemIdentifiers(inSection: section)[safe: indexPath.item]
+    return nil
   }
 
   public subscript(index index: Int, section section: Int) -> Item? {
@@ -50,5 +60,12 @@ public struct ItemSource<Section: Hashable, Item: Hashable> {
       return nil
     }
     return snapshot?.itemIdentifiers(inSection: section)[safe: index]
+  }
+  
+  public subscript(index index: Int, section section: Section) -> Item? {
+    guard let sectionItems = snapshot?.itemIdentifiers(inSection: section) else {
+      return nil
+    }
+    return sectionItems[safe: index]
   }
 }

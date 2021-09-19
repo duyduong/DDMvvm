@@ -58,7 +58,7 @@ class SectionImageCell: TableCell<SectionListItem> {
     netImageView.clipsToBounds = true
     contentView.addSubview(netImageView)
     netImageView.snp.makeConstraints {
-      $0.height.equalTo(netImageView.snp.height).multipliedBy(9/16.0)
+      $0.height.equalTo(netImageView.snp.width).multipliedBy(9/16.0)
       $0.edges.equalToSuperview().inset(UIEdgeInsets.symmetric(horizontal: 15, vertical: 10))
     }
   }

@@ -32,6 +32,8 @@ public enum DDConfigurations {
         return topViewController(baseViewController: selectedViewController)
       } else if let presentedViewController = baseViewController?.presentedViewController {
         return topViewController(baseViewController: presentedViewController)
+      } else if let popupPage = baseViewController as? PopupPage {
+        return topViewController(baseViewController: popupPage.children.first)
       }
       return baseViewController
     }

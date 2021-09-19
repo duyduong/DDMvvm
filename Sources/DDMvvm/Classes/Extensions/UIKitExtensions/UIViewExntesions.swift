@@ -9,9 +9,13 @@ import UIKit
 
 public extension UIView {
   /// Load Xib from name
+  /// - Parameters:
+  ///   - nibNamed: Nib name
+  ///   - bundle: Resource bundle
+  /// - Returns: UIView instance type
   static func loadFrom<T: UIView>(nibNamed: String, bundle: Bundle? = nil) -> T? {
     let nib = UINib(nibName: nibNamed, bundle: bundle)
-    return nib.instantiate(withOwner: nil, options: nil)[0] as? T
+    return nib.instantiate(withOwner: nil, options: nil).first as? T
   }
 
   /// Clear all subviews, destroy if needed
@@ -51,6 +55,8 @@ public extension UIView {
   }
 }
 
+// MARK: - 
+
 extension UIView {
   @objc
   open var cornerRadius: CGFloat {
@@ -75,6 +81,11 @@ extension UIView {
   }
 
   /// Set box shadow
+  /// - Parameters:
+  ///   - offset: Shadow offset
+  ///   - color: Shadow color
+  ///   - opacity: Shadow opacity
+  ///   - blur: Blur radius
   @objc
   open func setShadow(offset: CGSize, color: UIColor, opacity: Float, blur: CGFloat) {
     let shadowPath = UIBezierPath(roundedRect: layer.bounds, cornerRadius: layer.cornerRadius)
@@ -86,6 +97,8 @@ extension UIView {
     layer.shadowPath = shadowPath.cgPath
   }
 }
+
+// MARK: - Capture image
 
 public extension UIView {
   var image: UIImage? { toImage() }
@@ -99,6 +112,8 @@ public extension UIView {
     return UIGraphicsGetImageFromCurrentImageContext()
   }
 }
+
+// MARK: - Gradient colors
 
 public extension UIView {
   static func gradientImage(gradient: Gradient) -> UIImage? {
@@ -119,5 +134,27 @@ public extension UIView {
       layer.insertSublayer(gradientLayer, at: 0)
       return gradientLayer
     }
+  }
+}
+
+// MARK: -
+
+public extension UIView {
+  /// Get paren view controller
+  var parentViewController: UIViewController? {
+    if let nextResponder = next as? UIViewController {
+      return nextResponder
+    } else if let nextResponder = next as? UIView {
+      return nextResponder.parentViewController
+    }
+    return nil
+  }
+
+  /// Get the parent view controller router
+  var parentRouter: RouterType? {
+    guard let parentViewController = parentViewController as? IRoutable else {
+      return nil
+    }
+    return parentViewController.router
   }
 }

@@ -55,18 +55,9 @@ public final class ScrollableStackView: UIScrollView {
     }
   }
 
-  private func updatePaddings(_ paddings: UIEdgeInsets) {
+  private func updatePaddings(_ paddings: NSDirectionalEdgeInsets) {
     stackView.snp.updateConstraints {
-      $0.edges
-        .equalToSuperview()
-        .inset(
-          NSDirectionalEdgeInsets(
-            top: paddings.top,
-            leading: paddings.left,
-            bottom: paddings.bottom,
-            trailing: paddings.right
-          )
-        )
+      $0.edges.equalToSuperview().inset(paddings)
     }
   }
 }
@@ -110,7 +101,7 @@ public extension ScrollableStackView {
 
   /// Update paddings around the layout
   @discardableResult
-  func setPaddings(_ insets: UIEdgeInsets = .zero) -> Self {
+  func setPaddings(_ insets: NSDirectionalEdgeInsets = .zero) -> Self {
     updatePaddings(insets)
     return self
   }

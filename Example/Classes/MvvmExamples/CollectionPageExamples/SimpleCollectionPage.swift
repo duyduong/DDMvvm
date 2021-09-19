@@ -15,9 +15,7 @@ import UIKit
  This should be the characteristic of ViewModel, decoupling with View
  */
 class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
-
   let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
-
   let padding: CGFloat = 5
 
   override func initialize() {
@@ -33,7 +31,10 @@ class SimpleCollectionPage: CollectionPage<SimpleListPageViewModel> {
       layout.minimumInteritemSpacing = padding
       layout.sectionInset = .all(padding)
     }
-    collectionView.register(SimpleCollectionPageCell.self, forCellWithReuseIdentifier: SimpleCollectionPageCell.identifier)
+    collectionView.register(
+      SimpleCollectionPageCell.self,
+      forCellWithReuseIdentifier: SimpleCollectionPageCell.identifier
+    )
   }
 
   override func bindViewAndViewModel() {

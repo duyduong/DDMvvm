@@ -13,7 +13,7 @@ import UIKit
 
 class WrapperPage: NavigationPage, IPopupView {
   var layout: PopupLayout {
-    .center(width: .pinEdge(insets: 24), height: .pinEdge(insets: 24))
+    .center(width: .pinEdge(insets: 24), height: .pinEdge(insets: 60))
   }
 }
 
@@ -29,13 +29,12 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
   override func initialize() {
     title = "Add/Edit Contact"
 
-    enableBackButton = true
-
     nameTxt.borderStyle = .roundedRect
     nameTxt.placeholder = "Enter your name"
 
     phoneTxt.borderStyle = .roundedRect
     phoneTxt.placeholder = "Enter your phone number"
+    phoneTxt.keyboardType = .numberPad
 
     cancelBtn.setTitle("Cancel", for: .normal)
     cancelBtn.setTitleColor(.white, for: .normal)
@@ -61,14 +60,14 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
           cancelBtn,
           submitBtn
         ])
+        .setDistribution(.fillEqually)
         .setSpacing(10)
       ])
       .setCustomSpacing(20, after: nameTxt)
       .setCustomSpacing(40, after: phoneTxt)
     view.addSubview(scrollView)
     scrollView.snp.makeConstraints {
-      $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
-      $0.bottom.leading.trailing.equalToSuperview()
+      $0.edges.equalToSuperview()
     }
   }
 
@@ -94,8 +93,10 @@ class ContactEditPageViewModel: PageViewModel {
   let rxPhone = BehaviorRelay<String?>(value: nil)
   let rxSaveEnabled = BehaviorRelay(value: false)
 
-  private let publisher = PublishRelay<Contact>()
-  lazy var contactObservable = publisher.asObservable()
+  private let contactUpdateRelay = PublishRelay<Contact>()
+  var contactUpdateObservable: Observable<Contact> {
+    contactUpdateRelay.asObservable()
+  }
   
   init(contact: Contact?) {
     self.contact = contact
@@ -112,8 +113,12 @@ class ContactEditPageViewModel: PageViewModel {
   }
 
   fileprivate func save() {
-    let contact = Contact(name: rxName.value ?? "", phone: rxPhone.value ?? "")
-    publisher.accept(contact)
+    let contact = Contact(
+      id: contact?.id ?? UUID().uuidString,
+      name: rxName.value ?? "",
+      phone: rxPhone.value ?? ""
+    )
+    contactUpdateRelay.accept(contact)
     router?.dismiss()
   }
 }

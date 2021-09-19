@@ -15,8 +15,6 @@ class CustomControlExamplePage: Page<CustomControlExamplePageViewModel> {
   let label = UILabel()
 
   override func initialize() {
-    enableBackButton = true
-
     view.addSubview(segmentedView)
     segmentedView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide)
@@ -26,7 +24,7 @@ class CustomControlExamplePage: Page<CustomControlExamplePageViewModel> {
     view.addSubview(label)
     label.snp.makeConstraints {
       $0.top.equalTo(segmentedView.snp.bottom).offset(50)
-      $0.centerY.equalToSuperview()
+      $0.centerX.equalToSuperview()
     }
   }
 

@@ -1,5 +1,5 @@
 //
-//  FlickrItemModel.swift
+//  FlickrSearchResponse.swift
 //  DDMvvm_Example
 //
 //  Created by Dao Duy Duong on 10/2/18.

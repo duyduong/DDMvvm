@@ -9,14 +9,6 @@ import RxSwift
 import UIKit
 
 open class NavigationPage: UINavigationController, UIGestureRecognizerDelegate {
-  override open var preferredStatusBarStyle: UIStatusBarStyle {
-    return visibleViewController?.preferredStatusBarStyle ?? .default
-  }
-
-  override open var prefersStatusBarHidden: Bool {
-    return visibleViewController?.prefersStatusBarHidden ?? false
-  }
-
   override open func viewDidLoad() {
     super.viewDidLoad()
     delegate = self
@@ -31,7 +23,7 @@ extension NavigationPage: UINavigationControllerDelegate {
     from fromVC: UIViewController,
     to toVC: UIViewController
   ) -> UIViewControllerAnimatedTransitioning? {
-    var animatorDelegate: AnimatorDelegate?
+    let animatorDelegate: AnimatorDelegate?
     switch operation {
     case .push: animatorDelegate = toVC.animatorDelegate
     case .pop: animatorDelegate = fromVC.animatorDelegate

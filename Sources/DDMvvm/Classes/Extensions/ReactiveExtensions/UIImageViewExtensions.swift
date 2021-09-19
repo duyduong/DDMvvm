@@ -28,7 +28,6 @@ public struct NetworkImage {
 }
 
 public extension Reactive where Base: UIImageView {
-
   /// Simple binder for `NetworkImage`
   var networkImage: Binder<NetworkImage> { networkImage() }
 

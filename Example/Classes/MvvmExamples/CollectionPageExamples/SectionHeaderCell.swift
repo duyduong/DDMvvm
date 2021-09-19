@@ -13,8 +13,7 @@ import RxCocoa
 
 extension Reactive where Base: SectionHeaderCell {
   var addSectionObservable: Observable<SectionList> {
-    base.addBtn.rx.tap
-      .map { [base] in base.data! }
+    base.addBtn.rx.tap.map { [base] in base.data! }
   }
 }
 
@@ -24,11 +23,13 @@ class SectionHeaderCell: CollectionCell<SectionList> {
 
   override func initialize() {
     let toolbar = UIToolbar()
+    toolbar.tintColor = .black
     addSubview(toolbar)
     toolbar.snp.makeConstraints {
       $0.edges.equalToSuperview()
     }
 
+    titleLbl.textColor = .black
     let titleItem = UIBarButtonItem(customView: titleLbl)
     let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     let items = [titleItem, spaceItem, addBtn]
@@ -36,7 +37,7 @@ class SectionHeaderCell: CollectionCell<SectionList> {
   }
   
   override func cellDataChanged() {
-    guard let section = data else { return }
-    titleLbl.text = section.title
+    guard case let .single(title) = data else { return }
+    titleLbl.text = title
   }
 }

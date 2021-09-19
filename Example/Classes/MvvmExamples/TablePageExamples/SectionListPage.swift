@@ -13,15 +13,15 @@ import UIKit
 
 class SectionListPage: ListPage<SectionListPageViewModel> {
   let addSectionBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
-  let sortBtn = UIBarButtonItem(title: "Sort", style: .plain, target: nil, action: nil)
+  let shuffleBtn = UIBarButtonItem(title: "Shuffle", style: .done, target: nil, action: nil)
   
-  // Cache header
-  var sectionHeader: SectionHeaderView?
+  // Cache headers
+  var cacheHeaders: [SectionList: SectionHeaderView] = [:]
 
   override func initialize() {
     super.initialize()
 
-    navigationItem.rightBarButtonItems = [addSectionBtn, sortBtn]
+    navigationItem.rightBarButtonItems = [addSectionBtn, shuffleBtn]
 
     tableView.delegate = self
     tableView.estimatedRowHeight = 300
@@ -36,8 +36,8 @@ class SectionListPage: ListPage<SectionListPageViewModel> {
       self?.viewModel.addSection()
     }) => disposeBag
 
-    sortBtn.rx.tap.subscribe(onNext: { [weak self] in
-      self?.viewModel.sort()
+    shuffleBtn.rx.tap.subscribe(onNext: { [weak self] in
+      self?.viewModel.shuffle()
     }) => disposeBag
   }
 
@@ -48,24 +48,33 @@ class SectionListPage: ListPage<SectionListPageViewModel> {
     case .text: return SectionTextCell.identifier
     }
   }
+  
+  override func destroy() {
+    super.destroy()
+    cacheHeaders.forEach { $1.destroy() }
+    cacheHeaders = [:]
+  }
 }
 
 extension SectionListPage: UITableViewDelegate {
   func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if let section = viewModel.itemsSource.snapshot?.sectionIdentifiers[section] {
-      if sectionHeader == nil {
-        let headerView = SectionHeaderView(section: section)
-        headerView.rx.addSectionObservable.subscribe(onNext: { [weak self] section in
-          self?.viewModel.addItem(to: section)
-        }) => disposeBag
-        sectionHeader = headerView
-      } else {
-        sectionHeader?.section = section
-      }
-      return sectionHeader
+    guard let section = viewModel.itemsSource.snapshot?.sectionIdentifiers[section] else {
+      return nil
+    }
+    
+    // If there is cache header, use it
+    if let headerView = cacheHeaders[section] {
+      return headerView
     }
 
-    return nil
+    // Otherwise create new one, and save cache
+    let headerView = SectionHeaderView(section: section)
+    cacheHeaders[section] = headerView
+    headerView.rx.addSectionObservable
+      .subscribe(onNext: { [weak self] section in
+        self?.viewModel.addItem(to: section)
+      }) => disposeBag
+    return headerView
   }
 
   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -73,33 +82,17 @@ extension SectionListPage: UITableViewDelegate {
   }
 }
 
-struct SectionList: Hashable {
-  let title: String
+enum SectionList: Hashable {
+  case single(title: String)
 }
 
 class SectionListPageViewModel: ListViewModel<SectionList, SectionListItem> {
-
   let imageUrls = [
     "https://images.pexels.com/photos/371633/pexels-photo-371633.jpeg?auto=compress&cs=tinysrgb&h=350",
     "https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg?auto=compress&cs=tinysrgb&h=350",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI3cP_SZVm5g43t4U8slThjjp6v1dGoUyfPd6ncEvVQQG1LzDl",
     "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
   ]
-
-  var tmpBag: DisposeBag?
-
-  override func initialize() {
-//    itemsSource.snapshotChanged
-//      .compactMap {
-//        $0?.snapshot.sectionIdentifiers.map {
-//          $0.itemAddedObservable
-//        }
-//      }
-//      .subscribe(onNext: { obs in
-//        self.tmpBag = DisposeBag()
-//        Observable.merge(obs).subscribe(onNext: self.addCell) => self.tmpBag
-//      }) => disposeBag
-  }
 
   func addItem(to section: SectionList) {
     let randomIndex = Int.random(in: 0 ... 1)
@@ -110,11 +103,11 @@ class SectionListPageViewModel: ListViewModel<SectionList, SectionListItem> {
       let index = Int.random(in: 0 ..< imageUrls.count)
       let url = imageUrls[index]
 
-      itemsSource.update { snapshot in
+      itemsSource.update(animated: true) { snapshot in
         snapshot.appendItems([.init(type: .image(url: url))], toSection: section)
       }
     } else {
-      itemsSource.update { snapshot in
+      itemsSource.update(animated: true) { snapshot in
         snapshot.appendItems([
           .init(type: .text(title: "Just a text cell title", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."))
         ], toSection: section)
@@ -122,25 +115,22 @@ class SectionListPageViewModel: ListViewModel<SectionList, SectionListItem> {
     }
   }
 
-  // add section
+  /// Add new section
   func addSection() {
     let count = itemsSource.snapshot?.numberOfSections ?? 0
-    let section = SectionList(title: "Section title #\(count + 1)")
+    let section: SectionList = .single(title: "Section title #\(count + 1)")
     itemsSource.update(animated: true) { snapshot in
       snapshot.appendSections([section])
     }
   }
 
-  func sort() {
-    let count = itemsSource.snapshot?.numberOfSections ?? 0
-    guard count > 0 else { return }
-
-    let randomIndex = Int.random(in: 0 ..< count)
-    guard let section = itemsSource.snapshot?.sectionIdentifiers[safe: randomIndex] else { return }
-    itemsSource.update { snapshot in
-      let currentItems = snapshot.itemIdentifiers(inSection: section)
-        .sorted { $1.number < $0.number }
-      snapshot.reloadItems(currentItems)
+  /// Shuffle a random section
+  func shuffle() {
+    guard let section = itemsSource.snapshot?.sectionIdentifiers.randomElement() else { return }
+    itemsSource.update(animated: true) { snapshot in
+      var items = snapshot.itemIdentifiers(inSection: section)
+      items.shuffle()
+      snapshot.reloadItems(items)
     }
   }
 }

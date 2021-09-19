@@ -24,16 +24,14 @@ public protocol IListViewModel: IPageViewModel {
 }
 
 open class ListViewModel<Section: Hashable, Item: Hashable>: PageViewModel, IListViewModel {
+  public typealias DataSourceSnapshot = DiffableDataSourceSnapshot<Section, Item>
   public let itemsSource = ItemSource<Section, Item>()
 
   let selectedIndexRelay = PublishRelay<IndexPath>()
   public var selectedItemChanged: Observable<SelectedItem> {
     selectedIndexRelay.map { [weak self] indexPath in
-      guard let self = self else {
-        return (indexPath, nil)
-      }
-
-      return (indexPath, self.itemsSource[indexPath: indexPath])
+      guard let self = self else { return (indexPath, nil) }
+      return (indexPath, self.itemsSource[index: indexPath.item, section: indexPath.section])
     }
   }
 

@@ -16,7 +16,11 @@ class ContactCell: TableCell<Contact> {
   let phoneLbl = UILabel()
 
   override func initialize() {
-    avatarIv.image = UIImage(named: "default-contact")
+    contentView.backgroundColor = .white
+    if #available(iOS 13.0, *) {
+      avatarIv.image = UIImage(systemName: "person.circle")
+    }
+    avatarIv.tintColor = .black
     avatarIv.snp.makeConstraints {
       $0.width.height.equalTo(64)
     }
@@ -39,7 +43,7 @@ class ContactCell: TableCell<Contact> {
     .setAlignment(.center)
     contentView.addSubview(layout)
     layout.snp.makeConstraints {
-      $0.edges.equalToSuperview().inset(UIEdgeInsets.all(5))
+      $0.edges.equalToSuperview().inset(NSDirectionalEdgeInsets.all(5))
     }
   }
   

@@ -16,12 +16,13 @@ import UIKit
  */
 class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
   let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+  let shuffleBtn = UIBarButtonItem(title: "Shuffle", style: .done, target: nil, action: nil)
   let padding: CGFloat = 5
 
   override func initialize() {
     super.initialize()
 
-    navigationItem.rightBarButtonItem = addBtn
+    navigationItem.rightBarButtonItems = [addBtn, shuffleBtn]
 
     collectionView.delegate = self
     if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
@@ -44,6 +45,10 @@ class SectionCollectionPage: CollectionPage<SectionListPageViewModel> {
 
     addBtn.rx.tap.subscribe(onNext: { [weak self] in
       self?.viewModel.addSection()
+    }) => disposeBag
+
+    shuffleBtn.rx.tap.subscribe(onNext: { [weak self] in
+      self?.viewModel.shuffle()
     }) => disposeBag
   }
 

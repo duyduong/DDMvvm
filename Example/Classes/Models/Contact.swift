@@ -1,5 +1,5 @@
 //
-//  ContactModel.swift
+//  Contact.swift
 //  DDMvvm_Example
 //
 //  Created by Dao Duy Duong on 10/5/18.
@@ -10,6 +10,7 @@ import DDMvvm
 import Foundation
 
 struct Contact: Hashable {
-  var name: String
-  var phone: String
+  var id = UUID().uuidString
+  let name: String
+  let phone: String
 }

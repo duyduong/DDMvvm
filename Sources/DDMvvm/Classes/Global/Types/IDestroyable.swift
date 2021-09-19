@@ -8,10 +8,8 @@
 import RxSwift
 import UIKit
 
-struct AssociatedKeys {
+private struct AssociatedKeys {
   static var DisposeBag = "rx_disposeBag"
-  static var AnimatorDelegate = "animator_delegate"
-  static var Transition = "transition"
 }
 
 public protocol IDestroyable: AnyObject {

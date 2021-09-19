@@ -86,7 +86,7 @@ public extension IPopupView {
 
       case let .pinEdge(insets):
         view.snp.makeConstraints {
-          $0.leading.trailing.equalToSuperview().offset(insets)
+          $0.leading.trailing.equalToSuperview().inset(insets)
         }
 
       case .dynamic:
@@ -106,7 +106,7 @@ public extension IPopupView {
 
       case let .pinEdge(insets):
         view.snp.makeConstraints {
-          $0.top.bottom.equalToSuperview().offset(insets)
+          $0.top.bottom.equalToSuperview().inset(insets)
         }
 
       case .dynamic:

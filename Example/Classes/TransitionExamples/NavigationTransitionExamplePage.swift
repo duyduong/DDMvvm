@@ -25,8 +25,6 @@ class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewM
   let zoomButton = UIButton(type: .custom)
 
   override func initialize() {
-    enableBackButton = true
-
     flipButton.setTitle("Push Flip", for: .normal)
     flipButton.setBackgroundImage(UIImage.from(color: .blue), for: .normal)
     flipButton.contentEdgeInsets = .symmetric(horizontal: 10, vertical: 5)
@@ -39,12 +37,11 @@ class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewM
       flipButton,
       zoomButton
     ])
-    .setAxis(.vertical)
     .setDistribution(.fillEqually)
     .setSpacing(20)
     view.addSubview(layout)
     layout.snp.makeConstraints {
-      $0.edges.equalToSuperview()
+      $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(24)
     }
   }
 
@@ -90,62 +87,60 @@ class NavigationTransitionExamplePageViewModel: PageViewModel {
     self.menu = menu
     super.init()
   }
-
-  /*required init(model: MenuModel?, usingModal: Bool) {
-    self.usingModal = usingModal
-    super.init(model: model)
-  }
-
-  required init(model: MenuModel?) {
-    usingModal = false
-    super.init(model: model)
-  }
-
-  fileprivate func pushFlip() {
-    let page = FlipPage(viewModel: ViewModel<Any>())
-    let animator = FlipAnimator()
-    if usingModal {
-      let navPage = NavigationPage(rootViewController: page)
-      navigationService.push(to: navPage, type: .modally(presentationStyle: .fullScreen, animated: true, animator: animator))
-    } else {
-      navigationService.push(to: page, type: .push(animated: true, animator: animator))
-    }
-  }
-
-  fileprivate func pushZoom() {
-    let page = ZoomPage(viewModel: ViewModel<Any>())
-    let animator = ZoomAnimator()
-    if usingModal {
-      let navPage = NavigationPage(rootViewController: page)
-      navigationService.push(to: navPage, type: .modally(presentationStyle: .fullScreen, animated: true, animator: animator))
-    } else {
-      navigationService.push(to: page, type: .push(animated: true, animator: animator))
-    }
-  }*/
 }
 
 class FlipPage: Page<PageViewModel> {
   override func initialize() {
-    enableBackButton = true
-
     let label = UILabel()
     label.text = "Did you see the page is flipped?"
     view.addSubview(label)
     label.snp.makeConstraints {
-      $0.edges.equalToSuperview()
+      $0.center.equalToSuperview()
     }
+    
+    if transition?.type == .modal {
+      let dismissButton = UIButton()
+      dismissButton.setTitle("Dismiss", for: .normal)
+      dismissButton.setTitleColor(.systemBlue, for: .normal)
+      dismissButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+      view.addSubview(dismissButton)
+      dismissButton.snp.makeConstraints {
+        $0.centerX.equalToSuperview()
+        $0.bottom.equalToSuperview().inset(50)
+      }
+    }
+  }
+  
+  @objc
+  func goBack() {
+    router.dismiss()
   }
 }
 
 class ZoomPage: Page<PageViewModel> {
   override func initialize() {
-    enableBackButton = true
-
     let label = UILabel()
     label.text = "Did you see the page zoom and switch?"
     view.addSubview(label)
     label.snp.makeConstraints {
-      $0.edges.equalToSuperview()
+      $0.center.equalToSuperview()
     }
+    
+    if transition?.type == .modal {
+      let dismissButton = UIButton()
+      dismissButton.setTitle("Dismiss", for: .normal)
+      dismissButton.setTitleColor(.systemBlue, for: .normal)
+      dismissButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+      view.addSubview(dismissButton)
+      dismissButton.snp.makeConstraints {
+        $0.centerX.equalToSuperview()
+        $0.bottom.equalToSuperview().inset(50)
+      }
+    }
+  }
+  
+  @objc
+  func goBack() {
+    router.dismiss()
   }
 }

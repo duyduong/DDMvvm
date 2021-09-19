@@ -21,16 +21,12 @@ enum ContactListRoute: RouteType {
 }
 
 class ContactListPage: ListPage<ContactListPageViewModel> {
-
   let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
 
   override func initialize() {
-    // By default, tableView will pin to 4 edges of superview
-    // If you want to layout tableView differently, then remove this line
     super.initialize()
 
     title = "Contact List"
-
     navigationItem.rightBarButtonItem = addBtn
 
     tableView.estimatedRowHeight = 150
@@ -46,13 +42,14 @@ class ContactListPage: ListPage<ContactListPageViewModel> {
   }
 
   override func cellIdentifier(_ item: Contact) -> String {
-    return ContactCell.identifier
+    ContactCell.identifier
   }
 
   override func selectedItemDidChange(_ item: Contact) {
-//    if let indexPath = viewModel?.rxSelectedIndex.value {
-//      tableView.deselectRow(at: indexPath, animated: true)
-//    }
+    guard let indexPath = viewModel.itemsSource[item: item] else {
+      return
+    }
+    tableView.deselectRow(at: indexPath, animated: true)
   }
 }
 
@@ -70,22 +67,25 @@ class ContactListPageViewModel: ListViewModel<SingleSection, Contact> {
 
     // as you are controlling the ViewModel of edit page,
     // so we can get the result out without using any Delegates
-    viewModel.contactObservable.subscribe(onNext: { [weak self] updatedContact in
+    viewModel.contactUpdateObservable.subscribe(onNext: { [weak self] updatedContact in
       guard let self = self else { return }
       self.itemsSource.update(animated: true) { snapshot in
-        if snapshot.numberOfSections == 0 {
-          snapshot.appendSections([.main])
-        }
-        if snapshot.itemIdentifiers.contains(updatedContact) {
-          snapshot.reloadItems([updatedContact])
+        var newSnapshot = DataSourceSnapshot()
+        newSnapshot.appendSections([.main])
+        var items = snapshot.itemIdentifiers
+        if let index = items.firstIndex(where: { $0.id == updatedContact.id }) {
+          items[index] = updatedContact
         } else {
-          snapshot.appendItems([updatedContact])
+          items.append(updatedContact)
         }
+        newSnapshot.appendItems(items)
+        snapshot = newSnapshot
       }
     }) => disposeBag
+
     router?.route(
       to: ContactListRoute.contactForm(viewModel: viewModel),
-      transition: .init(type: .popup)
+      transition: .popup
     )
   }
 }

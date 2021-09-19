@@ -17,7 +17,9 @@ func delay(_ delay: Double, closure: @escaping () -> Void) {
 }
 
 class FlipAnimator: Animator {
-  override func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+  override func transitionDuration(
+    using transitionContext: UIViewControllerContextTransitioning?
+  ) -> TimeInterval {
     return 0.5
   }
 
@@ -32,12 +34,22 @@ class FlipAnimator: Animator {
 
     if isPresenting {
       delay(0) { // don't know why, iOS bug?
-        UIView.transition(from: fromVC.view, to: toVC.view, duration: duration, options: [.transitionFlipFromRight, .showHideTransitionViews]) { _ in
+        UIView.transition(
+          from: fromVC.view,
+          to: toVC.view,
+          duration: duration,
+          options: [.transitionFlipFromRight, .showHideTransitionViews]
+        ) { _ in
           transitionContext.completeTransition(true)
         }
       }
     } else {
-      UIView.transition(from: fromVC.view, to: toVC.view, duration: duration, options: [.transitionFlipFromLeft, .showHideTransitionViews]) { _ in
+      UIView.transition(
+        from: fromVC.view,
+        to: toVC.view,
+        duration: duration,
+        options: [.transitionFlipFromLeft, .showHideTransitionViews]
+      ) { _ in
         transitionContext.completeTransition(true)
       }
     }
@@ -45,7 +57,9 @@ class FlipAnimator: Animator {
 }
 
 class ZoomAnimator: Animator {
-  override func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+  override func transitionDuration(
+    using transitionContext: UIViewControllerContextTransitioning?
+  ) -> TimeInterval {
     return 2
   }
 

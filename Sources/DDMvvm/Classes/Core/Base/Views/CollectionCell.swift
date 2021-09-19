@@ -34,6 +34,8 @@ open class CollectionCell<CellData>: UICollectionViewCell, CellConfigurable, ICe
     initialize()
   }
   
+  /// Internally called when configure cell
+  /// - Parameter data: `CellData`
   func setData(data: Any) {
     self.data = data as? CellData
   }

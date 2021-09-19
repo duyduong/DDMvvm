@@ -29,6 +29,10 @@ public struct Transition {
 
 public extension Transition {
   static let `default` = Transition()
+  static let push = Transition(type: .push)
+  static let modal = Transition(type: .modal)
+  static let popup = Transition(type: .popup)
+  static let popover = Transition(type: .popover)
 }
 
 public struct FinishTransition {
