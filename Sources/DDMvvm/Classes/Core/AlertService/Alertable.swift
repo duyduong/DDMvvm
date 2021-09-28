@@ -18,6 +18,7 @@ public protocol Alertable {
   func schedule(alert: Alert, completion: ((Int) -> Void)?)
 }
 
+/// Alertable allows to schedule an alert on view controller only
 public extension Alertable where Self: UIViewController {
   func schedule(alert: Alert, completion: ((Int) -> Void)?) {
     let alertController = UIAlertController(title: alert.title, message: alert.message, preferredStyle: alert.preferredStyle)
