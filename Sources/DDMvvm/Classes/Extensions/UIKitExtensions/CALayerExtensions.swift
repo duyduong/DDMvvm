@@ -8,8 +8,6 @@
 import UIKit
 
 public extension CALayer {
-  var image: UIImage? { toImage() }
-
   func toImage(_ isOpaque: Bool = false) -> UIImage? {
     defer { UIGraphicsEndImageContext() }
 

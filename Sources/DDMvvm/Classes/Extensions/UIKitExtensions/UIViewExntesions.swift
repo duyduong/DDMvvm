@@ -101,8 +101,6 @@ extension UIView {
 // MARK: - Capture image
 
 public extension UIView {
-  var image: UIImage? { toImage() }
-
   func toImage(_ isOpaque: Bool = false) -> UIImage? {
     defer { UIGraphicsEndImageContext() }
 
@@ -117,7 +115,7 @@ public extension UIView {
 
 public extension UIView {
   static func gradientImage(gradient: Gradient) -> UIImage? {
-    gradientLayer(gradient: gradient).image
+    gradientLayer(gradient: gradient).toImage()
   }
 
   static func gradientLayer(gradient: Gradient) -> CAGradientLayer {
