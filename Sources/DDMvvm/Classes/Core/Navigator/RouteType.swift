@@ -1,5 +1,5 @@
 //
-//  Route.swift
+//  RouteType.swift
 //  DDMvvm
 //
 //  Created by Dao Duy Duong on 12/09/2021.

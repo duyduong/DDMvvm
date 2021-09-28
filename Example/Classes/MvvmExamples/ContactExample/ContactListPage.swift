@@ -8,6 +8,7 @@
 
 import DDMvvm
 import UIKit
+import RxSwift
 
 enum ContactListRoute: RouteType {
   case contactForm(viewModel: ContactEditPageViewModel)
@@ -21,6 +22,8 @@ enum ContactListRoute: RouteType {
 }
 
 class ContactListPage: ListPage<ContactListPageViewModel> {
+  typealias Route = ContactListRoute
+  
   let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
 
   override func initialize() {
@@ -37,7 +40,7 @@ class ContactListPage: ListPage<ContactListPageViewModel> {
     super.bindViewAndViewModel()
 
     addBtn.rx.tap.subscribe(onNext: { [weak self] _ in
-      self?.viewModel.addContact()
+      self?.updateContact(nil)
     }) => disposeBag
   }
 
@@ -50,20 +53,29 @@ class ContactListPage: ListPage<ContactListPageViewModel> {
       return
     }
     tableView.deselectRow(at: indexPath, animated: true)
+    updateContact(item)
+  }
+  
+  private func updateContact(_ contact: Contact?) {
+    let contactEditPageViewModel = ContactEditPageViewModel(contact: contact)
+    viewModel.observeContactChanged(viewModel: contactEditPageViewModel)
+    route(to: .contactForm(viewModel: contactEditPageViewModel))
+  }
+}
+
+/// Example to override default routable implementation
+extension ContactListPage: Routable {
+  func route(to route: ContactListRoute) {
+    guard let page = route.makePage() else { return }
+    navigationController?.present(page, animated: true, completion: nil)
   }
 }
 
 class ContactListPageViewModel: ListViewModel<SingleSection, Contact> {
-  override func selectedItemDidChange(_ item: Contact) {
-    handleContactModification(item)
-  }
+  private var updateBag = DisposeBag()
 
-  fileprivate func addContact() {
-    handleContactModification()
-  }
-
-  private func handleContactModification(_ contact: Contact? = nil) {
-    let viewModel = ContactEditPageViewModel(contact: contact)
+  fileprivate func observeContactChanged(viewModel: ContactEditPageViewModel) {
+    updateBag = DisposeBag()
 
     // as you are controlling the ViewModel of edit page,
     // so we can get the result out without using any Delegates
@@ -81,11 +93,6 @@ class ContactListPageViewModel: ListViewModel<SingleSection, Contact> {
         newSnapshot.appendItems(items)
         snapshot = newSnapshot
       }
-    }) => disposeBag
-
-    router?.route(
-      to: ContactListRoute.contactForm(viewModel: viewModel),
-      transition: .popup
-    )
+    }) => updateBag
   }
 }

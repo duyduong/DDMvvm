@@ -8,7 +8,7 @@
 import RxSwift
 import UIKit
 
-open class TableCell<CellData>: UITableViewCell, CellConfigurable, ICell, IDestroyable {
+open class TableCell<CellData>: UITableViewCell, ICell, IDestroyable {
   open class var identifier: String {
     String(describing: self)
   }
@@ -38,10 +38,6 @@ open class TableCell<CellData>: UITableViewCell, CellConfigurable, ICell, IDestr
     initialize()
   }
 
-  func setData(data: Any) {
-    self.data = data as? CellData
-  }
-
   override open func prepareForReuse() {
     super.prepareForReuse()
     disposeBag = DisposeBag()
@@ -53,4 +49,10 @@ open class TableCell<CellData>: UITableViewCell, CellConfigurable, ICell, IDestr
 
   open func initialize() {}
   open func cellDataChanged() {}
+}
+
+extension TableCell: CellConfigurable {
+  func setData(data: Any) {
+    self.data = data as? CellData
+  }
 }

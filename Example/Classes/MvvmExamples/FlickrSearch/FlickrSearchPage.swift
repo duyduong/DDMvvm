@@ -87,6 +87,11 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
         })
       }) => disposeBag
 
+    viewModel.alertRelay.flatMap { [weak self] alert -> Observable<Int> in
+      guard let self = self else { return .empty() }
+      return self.schedule(alert: alert).asObservable()
+    }.subscribe() => disposeBag
+
     // call out load more when reach to end of collection view
     collectionView.rx.endReach(50).subscribe(onNext: { [weak viewModel] in
       viewModel?.loadMore()
@@ -97,6 +102,10 @@ class FlickrSearchPage: CollectionPage<FlickrSearchPageViewModel> {
   override func cellIdentifier(_ item: FlickrSearchResponse.Photo) -> String {
     FlickrImageCell.identifier
   }
+}
+
+extension FlickrSearchPage: Alertable {
+  typealias Alert = DefaultAlert
 }
 
 extension FlickrSearchPage: UICollectionViewDelegateFlowLayout {
@@ -127,11 +136,11 @@ extension FlickrSearchPage: UICollectionViewDelegateFlowLayout {
 
 class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchResponse.Photo> {
   @Injected var jsonService: IJsonService
-  @Injected var alertService: IAlertService
 
   let rxSearchText = BehaviorRelay<String?>(value: nil)
   let rxIsSearching = BehaviorRelay(value: false)
   let rxIsLoadingMore = BehaviorRelay(value: false)
+  let alertRelay = PublishRelay<DefaultAlert>()
 
   var page = 1
   let perPage = 20
@@ -221,18 +230,14 @@ class FlickrSearchPageViewModel: ListViewModel<SingleSection, FlickrSearchRespon
 
   private func prepareSources(_ response: FlickrSearchResponse) -> [FlickrSearchResponse.Photo] {
     if response.stat == .fail {
-       let message = response.message ?? "Failed to search on Flickr"
-      alertService.schedule(
-        alert: DefaultAlert.ok(title: "Error", messge: message),
-        preferredStyle: .alert,
-        completion: nil
-      )
+      let message = response.message ?? "Failed to search on Flickr"
+      alertRelay.accept(.ok(title: "Error", message: message))
     }
-
+    
     if response.photos.page >= response.photos.pages {
       done = true
     }
-
+    
     return response.photos.photo
   }
 }

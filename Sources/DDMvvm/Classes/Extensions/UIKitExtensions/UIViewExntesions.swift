@@ -149,12 +149,4 @@ public extension UIView {
     }
     return nil
   }
-
-  /// Get the parent view controller router
-  var parentRouter: RouterType? {
-    guard let parentViewController = parentViewController as? IRoutable else {
-      return nil
-    }
-    return parentViewController.router
-  }
 }

@@ -14,7 +14,9 @@ enum SingleSection {
   case main
 }
 
-class ExampleMenuPage<Item: Menu>: ListPage<ExampleMenuPageViewModel<Item>> {
+class ExampleMenuPage<Item: Menu>: ListPage<ExampleMenuPageViewModel<Item>>, Routable {
+  typealias Route = Item
+
   override func initialize() {
     super.initialize()
 
@@ -32,6 +34,8 @@ class ExampleMenuPage<Item: Menu>: ListPage<ExampleMenuPageViewModel<Item>> {
   }
 
   override func selectedItemDidChange(_ item: Item) {
+    route(to: item)
+
     guard let indexPath = viewModel.itemsSource[item: item] else {
       return
     }
@@ -54,10 +58,6 @@ class ExampleMenuPageViewModel<Item: Menu>: ListViewModel<SingleSection, Item> {
       newSnapshot.appendItems(prepareMenus())
       snapshot = newSnapshot
     }
-  }
-
-  override func selectedItemDidChange(_ item: Item) {
-    router?.route(to: item, transition: .default)
   }
 
   func prepareMenus() -> [Item] {

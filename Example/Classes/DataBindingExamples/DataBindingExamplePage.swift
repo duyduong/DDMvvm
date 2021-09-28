@@ -71,9 +71,26 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
 
     viewModel.rxSubmitButtonEnabled ~> submitBtn.rx.isEnabled => disposeBag
     submitBtn.rx.tap.subscribe(onNext: { [weak self] in
-      self?.viewModel.submitPressed()
+      self?.submitPressed()
     }) => disposeBag
   }
+  
+  private func submitPressed() {
+    let email = emailTxt.text ?? ""
+    let pass = passTxt.text ?? ""
+
+    schedule(
+      alert: .ok(
+        title: "Submit Button Clicked!",
+        message: "You have just clicked on submit button. Here are your credentials:\nEmail: \(email)\nPass: \(pass)"
+      ),
+      completion: nil
+    )
+  }
+}
+
+extension DataBindingExamplePage: Alertable {
+  typealias Alert = DefaultAlert
 }
 
 class DataBindingExamplePageViewModel: PageViewModel {
@@ -98,16 +115,5 @@ class DataBindingExamplePageViewModel: PageViewModel {
     } ~> rxSubmitButtonEnabled => disposeBag // One-way binding is donated by ~>
 
     rxEmail.filter { $0 != nil }.map { "Hello, \($0!)" } ~> rxHelloText => disposeBag // One-way binding is donated by ~>
-  }
-
-  fileprivate func submitPressed() {
-    /*let email = rxEmail.value ?? ""
-    let pass = rxPass.value ?? ""
-
-    let alertService: IAlertService = DependencyManager.shared.getService()
-    alertService.presentOkayAlert(
-      title: "Submit Button Clicked!",
-      message: "You have just clicked on submit button. Here are your credentials:\nEmail: \(email)\nPass: \(pass)"
-    )*/
   }
 }

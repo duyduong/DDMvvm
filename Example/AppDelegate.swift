@@ -55,8 +55,5 @@ extension Resolver: ResolverRegistering {
     register(IJsonService.self) {
       JsonService(baseUrl: "https://api.flickr.com/services/rest")
     }
-    register(IAlertService.self) {
-      AlertService()
-    }
   }
 }

@@ -8,8 +8,8 @@
 import UIKit
 
 private struct AssociatedKeys {
-  static var AnimatorDelegate = "animator_delegate"
-  static var Transition = "transition"
+  static var AnimatorDelegate = "ddmvvm_animator_delegate"
+  static var Transition = "ddmvvm_transition"
 }
 
 public protocol ITransitionView where Self: UIViewController {

@@ -17,7 +17,7 @@ class WrapperPage: NavigationPage, IPopupView {
   }
 }
 
-class ContactEditPage: Page<ContactEditPageViewModel> {
+class ContactEditPage: Page<ContactEditPageViewModel>, Dismissable {
   let scrollView = ScrollableStackView()
   let containerView = UIView()
 
@@ -77,11 +77,12 @@ class ContactEditPage: Page<ContactEditPageViewModel> {
     viewModel.rxSaveEnabled ~> submitBtn.rx.isEnabled => disposeBag
 
     cancelBtn.rx.tap.subscribe(onNext: { [weak self] in
-      self?.router.dismiss()
+      self?.dismiss()
     }) => disposeBag
 
     submitBtn.rx.tap.subscribe(onNext: { [weak self] in
       self?.viewModel.save()
+      self?.dismiss()
     }) => disposeBag
   }
 }
@@ -119,6 +120,5 @@ class ContactEditPageViewModel: PageViewModel {
       phone: rxPhone.value ?? ""
     )
     contactUpdateRelay.accept(contact)
-    router?.dismiss()
   }
 }

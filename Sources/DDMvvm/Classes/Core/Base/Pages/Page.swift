@@ -9,16 +9,12 @@ import RxCocoa
 import RxSwift
 import UIKit
 
-open class Page<VM: IPageViewModel>: UIViewController, IRoutable, IDestroyable {
-  public private(set) lazy var router = createRouter()
+open class Page<VM: IPageViewModel>: UIViewController, IDestroyable {
   public let viewModel: VM
-
-  private var backDisposable: Disposable?
 
   public init(viewModel: VM) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
-    viewModel.router = router
   }
 
   @available(*, unavailable)
@@ -29,8 +25,6 @@ open class Page<VM: IPageViewModel>: UIViewController, IRoutable, IDestroyable {
   deinit { destroy() }
 
   /// Subclasses override this method to initialize UIs.
-  ///
-  /// This method is called in `viewDidLoad`. So try not to use `viewModel` property if you are not sure about it
   open func initialize() {}
 
   override open func viewDidLoad() {
@@ -38,13 +32,13 @@ open class Page<VM: IPageViewModel>: UIViewController, IRoutable, IDestroyable {
     view.backgroundColor = .white
 
     // Adding a custom back button
-    if let backButton = customBackBarButton() {
+    if let backButton = createCustomBackButton() {
       navigationItem.leftBarButtonItem = backButton
-
-      backDisposable?.dispose()
-      backDisposable = backButton.rx.tap.subscribe(onNext: { [weak self] _ in
-        self?.backBarButtonPressed()
-      })
+      backButton.rx.tap
+        .subscribe(onNext: { [weak self] _ in
+          self?.customBackButtonPressed()
+        })
+        .disposed(by: disposeBag)
     }
 
     initialize()
@@ -73,25 +67,11 @@ open class Page<VM: IPageViewModel>: UIViewController, IRoutable, IDestroyable {
     if isMovingFromParent { destroy() }
   }
 
-  /// Factory for create own router
-  open func createRouter() -> RouterType {
-    DefaultRouter(rootViewController: self)
-  }
-
   /// Factory for custom back bar button item
   /// - Returns: `UIBarButtonItem`
-  open func customBackBarButton() -> UIBarButtonItem? {
-    nil
-  }
+  open func createCustomBackButton() -> UIBarButtonItem? { nil }
 
-  /**
-   Subclasses override this method to create data binding between view and viewModel.
-
-   This method always happens, so subclasses should check if viewModel is nil or not. For example:
-   ```
-   guard let viewModel = viewModel else { return }
-   ```
-   */
+  /// This method will call after `initialize()`
   open func bindViewAndViewModel() {}
 
   /// Subclasses override this method to remove all things related to `DisposeBag`.
@@ -101,9 +81,6 @@ open class Page<VM: IPageViewModel>: UIViewController, IRoutable, IDestroyable {
   }
 
   /// Subclasses override this method to create custom back action for back button.
-  ///
-  /// By default, this will call pop action in navigation or dismiss in modal
-  open func backBarButtonPressed() {
-    router.dismiss()
-  }
+  /// This method only called when there is a custom back button implemented using `customBackBarButton()`
+  open func customBackButtonPressed() {}
 }

@@ -14,25 +14,18 @@ protocol InternalPageViewModel {
 
 public protocol IPageViewModel: IDestroyable {
   var pageLifeCycleChanged: Observable<PageLifeCycle> { get }
-  var router: RouterType? { get set }
 }
 
-/// A master based ViewModel for all
-open class PageViewModel: NSObject, IPageViewModel, InternalPageViewModel {
+/// The  based ViewModel for `Page`
+open class PageViewModel: IPageViewModel, InternalPageViewModel {
   let pageLifeCycleRelay = PublishRelay<PageLifeCycle>()
   public var pageLifeCycleChanged: Observable<PageLifeCycle> {
     pageLifeCycleRelay.asObservable()
   }
-  public var router: RouterType?
-  
-  public override init() {
-    super.init()
-    self.initialize()
+
+  public init() {
+    initialize()
   }
-  
+
   open func initialize() {}
-  
-  open func destroy() {
-    disposeBag = DisposeBag()
-  }
 }

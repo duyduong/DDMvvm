@@ -9,7 +9,7 @@
 import DDMvvm
 import UIKit
 
-enum NavigationTransitionExamplePageRoute: RouteType {
+enum NavigationTransitionRoute: RouteType {
   case flip, zoom
   
   func makePage() -> UIViewController? {
@@ -20,7 +20,9 @@ enum NavigationTransitionExamplePageRoute: RouteType {
   }
 }
 
-class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewModel> {
+class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewModel>, Routable {
+  typealias Route = NavigationTransitionRoute
+
   let flipButton = UIButton(type: .custom)
   let zoomButton = UIButton(type: .custom)
 
@@ -50,14 +52,16 @@ class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewM
       guard let self = self else { return }
       switch self.viewModel.menu {
       case .inNavigation:
-        self.router.route(
-          to: NavigationTransitionExamplePageRoute.flip,
-          transition: .init(type: .push, animator: FlipAnimator(), animated: true)
+        self.route(
+          to: .flip,
+          transition: Transition(type: .push, animator: FlipAnimator()),
+          completion: nil
         )
       case .inModal:
-        self.router.route(
-          to: NavigationTransitionExamplePageRoute.flip,
-          transition: .init(type: .modal, animator: FlipAnimator(), animated: true)
+        self.route(
+          to: .flip,
+          transition: Transition(type: .modal, animator: FlipAnimator()),
+          completion: nil
         )
       }
     }) => disposeBag
@@ -66,14 +70,16 @@ class NavigationTransitionExamplePage: Page<NavigationTransitionExamplePageViewM
       guard let self = self else { return }
       switch self.viewModel.menu {
       case .inNavigation:
-        self.router.route(
-          to: NavigationTransitionExamplePageRoute.flip,
-          transition: .init(type: .push, animator: ZoomAnimator(), animated: true)
+        self.route(
+          to: .zoom,
+          transition: .init(type: .push, animator: ZoomAnimator()),
+          completion: nil
         )
       case .inModal:
-        self.router.route(
-          to: NavigationTransitionExamplePageRoute.flip,
-          transition: .init(type: .modal, animator: ZoomAnimator(), animated: true)
+        self.route(
+          to: .zoom,
+          transition: .init(type: .modal, animator: ZoomAnimator()),
+          completion: nil
         )
       }
     }) => disposeBag
@@ -89,7 +95,7 @@ class NavigationTransitionExamplePageViewModel: PageViewModel {
   }
 }
 
-class FlipPage: Page<PageViewModel> {
+class FlipPage: Page<PageViewModel>, Dismissable {
   override func initialize() {
     let label = UILabel()
     label.text = "Did you see the page is flipped?"
@@ -113,11 +119,11 @@ class FlipPage: Page<PageViewModel> {
   
   @objc
   func goBack() {
-    router.dismiss()
+    dismiss()
   }
 }
 
-class ZoomPage: Page<PageViewModel> {
+class ZoomPage: Page<PageViewModel>, Dismissable {
   override func initialize() {
     let label = UILabel()
     label.text = "Did you see the page zoom and switch?"
@@ -141,6 +147,6 @@ class ZoomPage: Page<PageViewModel> {
   
   @objc
   func goBack() {
-    router.dismiss()
+    dismiss()
   }
 }

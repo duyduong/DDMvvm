@@ -9,16 +9,16 @@ import RxSwift
 import UIKit
 
 private struct AssociatedKeys {
-  static var DisposeBag = "rx_disposeBag"
+  static var DisposeBag = "ddmvvm_disposeBag"
 }
 
-public protocol IDestroyable: AnyObject {
+public protocol IDestroyable {
   var disposeBag: DisposeBag { get }
   func destroy()
 }
 
 // Default dispose bag setup
-extension IDestroyable where Self: NSObject {
+extension IDestroyable where Self: AnyObject {
   /// A dispose bag to be used exclusively for the instance's rx.action.
   public var disposeBag: DisposeBag {
     get {

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - Transition
+
 public struct Transition {
   public enum TransitionType {
     case auto
@@ -35,6 +37,8 @@ public extension Transition {
   static let popover = Transition(type: .popover)
 }
 
+// MARK: - FinishTransition
+
 public struct FinishTransition {
   public enum DimissType {
     case auto
@@ -53,4 +57,3 @@ public struct FinishTransition {
     self.animated = animated
   }
 }
-
