@@ -197,24 +197,6 @@ public extension UIView {
         
         return gradientLayer
     }
-    
-    @discardableResult
-    func autoPin(toTopLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
-        if #available(iOS 11.0, *) {
-            return autoPinEdge(toSuperviewSafeArea: .top, withInset: inset)
-        } else {
-            return autoPin(toTopLayoutGuideOf: viewController, withInset: inset)
-        }
-    }
-    
-    @discardableResult
-    func autoPin(toBottomLayoutOf viewController: UIViewController, withInset inset: CGFloat = 0) -> NSLayoutConstraint {
-        if #available(iOS 11.0, *) {
-            return autoPinEdge(toSuperviewSafeArea: .bottom, withInset: inset)
-        } else {
-            return autoPin(toBottomLayoutGuideOf: viewController, withInset: inset)
-        }
-    }
 }
 
 

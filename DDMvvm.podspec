@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DDMvvm'
-  s.version          = '2.0.0'
+  s.version          = '2.0.1'
   s.summary          = 'A MVVM library for iOS Swift.'
 
   s.description      = <<-DESC
@@ -12,7 +12,7 @@ A MVVM library for iOS Swift, including interfaces for View, ViewModel and Model
   s.author                = { 'Dao Duy Duong' => 'dduy.duong@gmail.com' }
   s.source                = { :git => 'https://github.com/duyduong/DDMvvm.git', :tag => s.version.to_s }
   s.swift_version         = '5.0'
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   s.source_files          = 'Sources/DDMvvm/Classes/**/*'
   s.frameworks            = 'UIKit'
 
