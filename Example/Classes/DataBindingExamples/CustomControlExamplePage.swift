@@ -42,7 +42,7 @@ class CustomControlExamplePage: Page<CustomControlExamplePageViewModel> {
 
 class CustomControlExamplePageViewModel: ViewModel<MenuModel> {
     
-    let rxPageTitle = BehaviorRelay<String>(value: "")
+    let rxPageTitle = BehaviorRelay<String?>(value: nil)
     let rxSelectedIndex = BehaviorRelay(value: 0)
     let rxSelectedText = BehaviorRelay<String?>(value: nil)
     

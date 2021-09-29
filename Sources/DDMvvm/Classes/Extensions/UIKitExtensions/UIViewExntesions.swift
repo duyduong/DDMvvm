@@ -106,8 +106,6 @@ extension UIView {
 
 public extension UIView {
     
-    var image: UIImage? { toImage() }
-    
     func toImage(_ isOpaque: Bool = false) -> UIImage? {
         defer { UIGraphicsEndImageContext() }
         
@@ -136,7 +134,7 @@ public extension UIView {
             endPoint: endPoint,
             transform: transform,
             insetBy: insetBy
-        ).image
+        ).toImage()
     }
     
     static func createGradientLayer(

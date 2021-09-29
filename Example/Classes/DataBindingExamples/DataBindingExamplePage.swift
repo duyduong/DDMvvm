@@ -77,7 +77,7 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
 
 class DataBindingExamplePageViewModel: ViewModel<MenuModel> {
     
-    let rxPageTitle = BehaviorRelay<String>(value: "")
+    let rxPageTitle = BehaviorRelay<String?>(value: nil)
     let rxHelloText = BehaviorRelay<String?>(value: nil)
     let rxEmail = BehaviorRelay<String?>(value: nil)
     let rxPass = BehaviorRelay<String?>(value: nil)

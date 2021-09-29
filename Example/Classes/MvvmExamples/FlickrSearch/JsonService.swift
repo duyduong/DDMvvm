@@ -99,7 +99,7 @@ class JsonService: IJsonService {
                 case .success(let data):
                     single(.success(data))
                 case .failure(let error):
-                    single(.error(error))
+                    single(.failure(error))
                 }
             }
             
