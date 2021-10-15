@@ -48,6 +48,7 @@ extension UIViewController: IDestroyable {
   open func destroy() {
     disposeBag = DisposeBag()
     animatorDelegate = nil
+    children.forEach { $0.destroy() }
   }
 }
 

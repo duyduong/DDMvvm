@@ -35,7 +35,7 @@ public final class PopupPage: UIViewController {
     contentPage.preferredStatusBarStyle
   }
 
-  let contentPage: UIViewController
+  public let contentPage: UIViewController
   private lazy var overlayView = OverlayView.addToPage(self)
 
   private var shouldDismissOnTapOutside = true
@@ -123,7 +123,7 @@ public final class PopupPage: UIViewController {
   }
 }
 
-extension PopupPage {
+public extension PopupPage {
   /// Present the content page as a popup, PopupPage will be the root view controller in a new window
   /// - Parameters:
   ///   - contentPage: Popup view controller

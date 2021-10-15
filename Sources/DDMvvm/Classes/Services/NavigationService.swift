@@ -29,13 +29,11 @@ public enum PopType {
 }
 
 public protocol INavigationService {
-  
   func push(to page: UIViewController, type: PushType, completion: (() -> Void)?)
   func pop(with type: PopType, completion: (() -> Void)?)
 }
 
 extension INavigationService {
-  
   public func push(to page: UIViewController, type: PushType = .default, completion: (() -> Void)? = nil) {
     push(to: page, type: type, completion: completion)
   }
@@ -46,11 +44,12 @@ extension INavigationService {
 }
 
 public class NavigationService: INavigationService {
-  
   private var topPage: UIViewController? {
     return DDConfigurations.topPageFindingBlock.create()
   }
-  
+
+  public init() {}
+
   // MARK: - Push functions
   
   public func push(to page: UIViewController, type: PushType, completion: (() -> Void)? = nil) {
