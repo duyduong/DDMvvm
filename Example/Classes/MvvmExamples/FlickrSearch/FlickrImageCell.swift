@@ -28,7 +28,7 @@ class FlickrImageCell: CollectionCell<FlickrImageCellViewModel> {
         contentView.addSubview(titleView)
         titleView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         
-        titleLbl.font = Font.system.normal(withSize: 15)
+        titleLbl.font = UIFont.preferredFont(forTextStyle: .headline)
         titleLbl.textColor = .white
         titleLbl.numberOfLines = 2
         titleView.addSubview(titleLbl)

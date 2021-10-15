@@ -21,10 +21,10 @@ class ContactCell: TableCell<ContactCellViewModel> {
         avatarIv.autoSetDimensions(to: CGSize(width: 64, height: 64))
         
         nameLbl.numberOfLines = 0
-        nameLbl.font = Font.system.bold(withSize: 17)
+        nameLbl.font = UIFont.preferredFont(forTextStyle: .headline)
         
         phoneLbl.numberOfLines = 0
-        phoneLbl.font = Font.system.normal(withSize: 15)
+        phoneLbl.font = UIFont.preferredFont(forTextStyle: .body)
         
         let layout = StackLayout().spacing(8).alignItems(.center).childrenBuilder {
             avatarIv

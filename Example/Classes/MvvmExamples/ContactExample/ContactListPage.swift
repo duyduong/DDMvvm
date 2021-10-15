@@ -80,7 +80,7 @@ class ContactListPageViewModel: ListViewModel<Any, SingleSection, ContactCellVie
         }) => disposeBag
         
         let navPage = WrapperPage(rootViewController: page)
-        navigationService.push(to: navPage, type: .popup(shouldDismissOnTapOutside: true, overlayColor: UIColor.black.withAlphaComponent(0.5)))
+        navigationService.push(to: navPage, type: .popup)
     }
 }
 

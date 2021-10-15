@@ -17,10 +17,10 @@ class SectionTextCell: TableCell<SectionTextCellViewModel> {
     
     override func initialize() {
         titleLbl.numberOfLines = 0
-        titleLbl.font = Font.system.bold(withSize: 17)
+        titleLbl.font = UIFont.preferredFont(forTextStyle: .headline)
         
         descLbl.numberOfLines = 0
-        descLbl.font = Font.system.normal(withSize: 15)
+        descLbl.font = UIFont.preferredFont(forTextStyle: .body)
         
         let layout = StackLayout().direction(.vertical).children([
             titleLbl,

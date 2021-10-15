@@ -18,7 +18,6 @@
 		CA13BF9425FDDC1700B63234 /* DifferentiableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8925FDDC1700B63234 /* DifferentiableSection.swift */; };
 		CA13BF9525FDDC1700B63234 /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8A25FDDC1700B63234 /* Changeset.swift */; };
 		CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA13BF8B25FDDC1700B63234 /* Differentiable.swift */; };
-		CA51910E25FB17E3002063AD /* LocalHud.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C125FB17E3002063AD /* LocalHud.swift */; };
 		CA51910F25FB17E3002063AD /* DecoratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C225FB17E3002063AD /* DecoratorView.swift */; };
 		CA51911025FB17E3002063AD /* AbstractView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C325FB17E3002063AD /* AbstractView.swift */; };
 		CA51911125FB17E3002063AD /* StackLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190C525FB17E3002063AD /* StackLayout.swift */; };
@@ -29,9 +28,8 @@
 		CA51911625FB17E3002063AD /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190CC25FB17E3002063AD /* Views.swift */; };
 		CA51911725FB17E3002063AD /* NavigationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190CE25FB17E3002063AD /* NavigationPage.swift */; };
 		CA51911825FB17E3002063AD /* ListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190CF25FB17E3002063AD /* ListPage.swift */; };
-		CA51911925FB17E3002063AD /* DrawerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D025FB17E3002063AD /* DrawerPage.swift */; };
 		CA51911A25FB17E3002063AD /* CollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D125FB17E3002063AD /* CollectionPage.swift */; };
-		CA51911B25FB17E3002063AD /* PresenterPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D225FB17E3002063AD /* PresenterPage.swift */; };
+		CA51911B25FB17E3002063AD /* PopupPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D225FB17E3002063AD /* PopupPage.swift */; };
 		CA51911C25FB17E3002063AD /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D325FB17E3002063AD /* Page.swift */; };
 		CA51911D25FB17E3002063AD /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D425FB17E3002063AD /* ViewModels.swift */; };
 		CA51911E25FB17E3002063AD /* TableViewDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190D725FB17E3002063AD /* TableViewDiffableDataSource.swift */; };
@@ -67,13 +65,11 @@
 		CA51913E25FB17E3002063AD /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190FE25FB17E3002063AD /* UIViewControllerExtensions.swift */; };
 		CA51913F25FB17E3002063AD /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5190FF25FB17E3002063AD /* UIImageExtensions.swift */; };
 		CA51914025FB17E3002063AD /* OptionalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910025FB17E3002063AD /* OptionalExtensions.swift */; };
-		CA51914125FB17E3002063AD /* NSObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910125FB17E3002063AD /* NSObjectExtensions.swift */; };
 		CA51914225FB17E3002063AD /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910225FB17E3002063AD /* UIColorExtensions.swift */; };
 		CA51914325FB17E3002063AD /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910425FB17E3002063AD /* Global.swift */; };
 		CA51914425FB17E3002063AD /* DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910525FB17E3002063AD /* DataSources.swift */; };
 		CA51914525FB17E3002063AD /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910625FB17E3002063AD /* Protocols.swift */; };
 		CA51914625FB17E3002063AD /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910725FB17E3002063AD /* Scheduler.swift */; };
-		CA51914725FB17E3002063AD /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910825FB17E3002063AD /* Font.swift */; };
 		CA51914825FB17E3002063AD /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910A25FB17E3002063AD /* AlertService.swift */; };
 		CA51914925FB17E3002063AD /* NavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51910B25FB17E3002063AD /* NavigationService.swift */; };
 		CA5191A725FB34AB002063AD /* PureLayout.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51919D25FB34AB002063AD /* PureLayout.xcframework */; };
@@ -110,6 +106,9 @@
 		CA51922425FB3BFA002063AD /* SegmentedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920825FB3BFA002063AD /* SegmentedView.swift */; };
 		CA51922525FB3BFA002063AD /* DataBindingExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920925FB3BFA002063AD /* DataBindingExamplePage.swift */; };
 		CA51922625FB3BFA002063AD /* CustomControlExamplePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA51920A25FB3BFA002063AD /* CustomControlExamplePage.swift */; };
+		CACBE19327195E910044D0EE /* IDestroyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CACBE19227195E910044D0EE /* IDestroyable.swift */; };
+		CACBE19527195F430044D0EE /* PopupPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CACBE19427195F430044D0EE /* PopupPresenting.swift */; };
+		CACBE197271964530044D0EE /* ITransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CACBE196271964530044D0EE /* ITransitionView.swift */; };
 		CAD5AA5A25FDF48B00D307E4 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51919C25FB34AB002063AD /* RxRelay.xcframework */; };
 		CAD5AA6025FDF5D200D307E4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAD5AA5F25FDF5D200D307E4 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -140,7 +139,6 @@
 		CA384DF325FB452B0093E4FC /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		CA384DF425FB452B0093E4FC /* DDMvvm.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = DDMvvm.podspec; sourceTree = "<group>"; };
 		CA5190A025FB175E002063AD /* DDMvvm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDMvvm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA5190C125FB17E3002063AD /* LocalHud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalHud.swift; sourceTree = "<group>"; };
 		CA5190C225FB17E3002063AD /* DecoratorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecoratorView.swift; sourceTree = "<group>"; };
 		CA5190C325FB17E3002063AD /* AbstractView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractView.swift; sourceTree = "<group>"; };
 		CA5190C525FB17E3002063AD /* StackLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackLayout.swift; sourceTree = "<group>"; };
@@ -151,9 +149,8 @@
 		CA5190CC25FB17E3002063AD /* Views.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		CA5190CE25FB17E3002063AD /* NavigationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationPage.swift; sourceTree = "<group>"; };
 		CA5190CF25FB17E3002063AD /* ListPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListPage.swift; sourceTree = "<group>"; };
-		CA5190D025FB17E3002063AD /* DrawerPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerPage.swift; sourceTree = "<group>"; };
 		CA5190D125FB17E3002063AD /* CollectionPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionPage.swift; sourceTree = "<group>"; };
-		CA5190D225FB17E3002063AD /* PresenterPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenterPage.swift; sourceTree = "<group>"; };
+		CA5190D225FB17E3002063AD /* PopupPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupPage.swift; sourceTree = "<group>"; };
 		CA5190D325FB17E3002063AD /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		CA5190D425FB17E3002063AD /* ViewModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
 		CA5190D725FB17E3002063AD /* TableViewDiffableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDiffableDataSource.swift; sourceTree = "<group>"; };
@@ -189,13 +186,11 @@
 		CA5190FE25FB17E3002063AD /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		CA5190FF25FB17E3002063AD /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		CA51910025FB17E3002063AD /* OptionalExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalExtensions.swift; sourceTree = "<group>"; };
-		CA51910125FB17E3002063AD /* NSObjectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSObjectExtensions.swift; sourceTree = "<group>"; };
 		CA51910225FB17E3002063AD /* UIColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		CA51910425FB17E3002063AD /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		CA51910525FB17E3002063AD /* DataSources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSources.swift; sourceTree = "<group>"; };
 		CA51910625FB17E3002063AD /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		CA51910725FB17E3002063AD /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
-		CA51910825FB17E3002063AD /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		CA51910A25FB17E3002063AD /* AlertService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		CA51910B25FB17E3002063AD /* NavigationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationService.swift; sourceTree = "<group>"; };
 		CA51919C25FB34AB002063AD /* RxRelay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxRelay.xcframework; path = Carthage/Build/RxRelay.xcframework; sourceTree = "<group>"; };
@@ -235,6 +230,9 @@
 		CA51920825FB3BFA002063AD /* SegmentedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedView.swift; sourceTree = "<group>"; };
 		CA51920925FB3BFA002063AD /* DataBindingExamplePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBindingExamplePage.swift; sourceTree = "<group>"; };
 		CA51920A25FB3BFA002063AD /* CustomControlExamplePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomControlExamplePage.swift; sourceTree = "<group>"; };
+		CACBE19227195E910044D0EE /* IDestroyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDestroyable.swift; sourceTree = "<group>"; };
+		CACBE19427195F430044D0EE /* PopupPresenting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresenting.swift; sourceTree = "<group>"; };
+		CACBE196271964530044D0EE /* ITransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITransitionView.swift; sourceTree = "<group>"; };
 		CAD5AA5F25FDF5D200D307E4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -362,7 +360,6 @@
 		CA5190C025FB17E3002063AD /* Controls */ = {
 			isa = PBXGroup;
 			children = (
-				CA5190C125FB17E3002063AD /* LocalHud.swift */,
 				CA5190C225FB17E3002063AD /* DecoratorView.swift */,
 				CA5190C325FB17E3002063AD /* AbstractView.swift */,
 			);
@@ -404,9 +401,8 @@
 			children = (
 				CA5190CE25FB17E3002063AD /* NavigationPage.swift */,
 				CA5190CF25FB17E3002063AD /* ListPage.swift */,
-				CA5190D025FB17E3002063AD /* DrawerPage.swift */,
 				CA5190D125FB17E3002063AD /* CollectionPage.swift */,
-				CA5190D225FB17E3002063AD /* PresenterPage.swift */,
+				CA5190D225FB17E3002063AD /* PopupPage.swift */,
 				CA5190D325FB17E3002063AD /* Page.swift */,
 			);
 			path = Pages;
@@ -501,7 +497,6 @@
 				CA5190FE25FB17E3002063AD /* UIViewControllerExtensions.swift */,
 				CA5190FF25FB17E3002063AD /* UIImageExtensions.swift */,
 				CA51910025FB17E3002063AD /* OptionalExtensions.swift */,
-				CA51910125FB17E3002063AD /* NSObjectExtensions.swift */,
 				CA51910225FB17E3002063AD /* UIColorExtensions.swift */,
 			);
 			path = UIKitExtensions;
@@ -514,7 +509,9 @@
 				CA51910525FB17E3002063AD /* DataSources.swift */,
 				CA51910625FB17E3002063AD /* Protocols.swift */,
 				CA51910725FB17E3002063AD /* Scheduler.swift */,
-				CA51910825FB17E3002063AD /* Font.swift */,
+				CACBE19227195E910044D0EE /* IDestroyable.swift */,
+				CACBE19427195F430044D0EE /* PopupPresenting.swift */,
+				CACBE196271964530044D0EE /* ITransitionView.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -798,7 +795,6 @@
 				CA51913E25FB17E3002063AD /* UIViewControllerExtensions.swift in Sources */,
 				CA51914025FB17E3002063AD /* OptionalExtensions.swift in Sources */,
 				CA13BF8D25FDDC1700B63234 /* ArraySection.swift in Sources */,
-				CA51914725FB17E3002063AD /* Font.swift in Sources */,
 				CA51913825FB17E3002063AD /* ArrayExtensions.swift in Sources */,
 				CA51912B25FB17E3002063AD /* UIBarButtonItemExtensions.swift in Sources */,
 				CA51911125FB17E3002063AD /* StackLayout.swift in Sources */,
@@ -806,11 +802,11 @@
 				CA51913B25FB17E3002063AD /* UINavigationItemExtensions.swift in Sources */,
 				CA13BF9025FDDC1700B63234 /* ContentIdentifiable.swift in Sources */,
 				CA51911E25FB17E3002063AD /* TableViewDiffableDataSource.swift in Sources */,
+				CACBE197271964530044D0EE /* ITransitionView.swift in Sources */,
 				CA51911F25FB17E3002063AD /* CollectionViewDiffableDataSource.swift in Sources */,
 				CA13BF8C25FDDC1700B63234 /* ContentEquatable.swift in Sources */,
 				CA13BF8F25FDDC1700B63234 /* UIKitExtension.swift in Sources */,
 				CA51914425FB17E3002063AD /* DataSources.swift in Sources */,
-				CA51911925FB17E3002063AD /* DrawerPage.swift in Sources */,
 				CA51912625FB17E3002063AD /* DiffableDataSourceSnapshot.swift in Sources */,
 				CA51911425FB17E3002063AD /* CollectionView.swift in Sources */,
 				CA51913F25FB17E3002063AD /* UIImageExtensions.swift in Sources */,
@@ -819,6 +815,8 @@
 				CA13BF8E25FDDC1700B63234 /* Algorithm.swift in Sources */,
 				CA51913225FB17E3002063AD /* UILabelExtensions.swift in Sources */,
 				CA51914525FB17E3002063AD /* Protocols.swift in Sources */,
+				CACBE19327195E910044D0EE /* IDestroyable.swift in Sources */,
+				CACBE19527195F430044D0EE /* PopupPresenting.swift in Sources */,
 				CA51914225FB17E3002063AD /* UIColorExtensions.swift in Sources */,
 				CA51913525FB17E3002063AD /* UITabBarItemExtensions.swift in Sources */,
 				CA13BF9225FDDC1700B63234 /* StagedChangeset.swift in Sources */,
@@ -828,16 +826,14 @@
 				CA51913325FB17E3002063AD /* UISwitchExtensions.swift in Sources */,
 				CA51913425FB17E3002063AD /* UIImageViewExtensions.swift in Sources */,
 				CA13BF9625FDDC1700B63234 /* Differentiable.swift in Sources */,
-				CA51911B25FB17E3002063AD /* PresenterPage.swift in Sources */,
+				CA51911B25FB17E3002063AD /* PopupPage.swift in Sources */,
 				CA51913D25FB17E3002063AD /* UIViewExntesions.swift in Sources */,
 				CA51913A25FB17E3002063AD /* CGSizeExtensions.swift in Sources */,
 				CA13BF9125FDDC1700B63234 /* AnyDifferentiable.swift in Sources */,
 				CA51912025FB17E3002063AD /* MainThreadSerialDispatcher.swift in Sources */,
 				CA51910F25FB17E3002063AD /* DecoratorView.swift in Sources */,
 				CA51912825FB17E3002063AD /* Animator.swift in Sources */,
-				CA51914125FB17E3002063AD /* NSObjectExtensions.swift in Sources */,
 				CA51912425FB17E3002063AD /* HashableExtension.swift in Sources */,
-				CA51910E25FB17E3002063AD /* LocalHud.swift in Sources */,
 				CA51913C25FB17E3002063AD /* StringExtensions.swift in Sources */,
 				CA51911D25FB17E3002063AD /* ViewModels.swift in Sources */,
 				CA51911A25FB17E3002063AD /* CollectionPage.swift in Sources */,
@@ -1051,7 +1047,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build";
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/DDMvvm/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1078,7 +1074,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build";
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/DDMvvm/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

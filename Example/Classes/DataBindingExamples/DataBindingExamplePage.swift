@@ -28,7 +28,7 @@ class DataBindingExamplePage: Page<DataBindingExamplePageViewModel> {
         scrollView.autoPinEdge(toSuperviewSafeArea: .top)
         scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .top)
         
-        helloLbl.font = Font.system.bold(withSize: 18)
+        helloLbl.font = UIFont.preferredFont(forTextStyle: .title3)
         
         emailTxt.borderStyle = .roundedRect
         emailTxt.placeholder = "Enter your name"
