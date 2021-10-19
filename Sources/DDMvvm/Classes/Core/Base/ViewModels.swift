@@ -36,7 +36,6 @@ open class ViewModel<M>: NSObject, IPageViewModel, IReactable {
         }
     }
     
-    public var disposeBag: DisposeBag? = DisposeBag()
     public var rxViewState = BehaviorRelay<ViewState>(value: .none)
     
     public let navigationService: INavigationService = DependencyManager.shared.getService()
@@ -102,9 +101,6 @@ open class CellViewModel<M>: NSObject, IViewModel, IIndexable, IReactable {
     /// Each cell will keep its own index path
     /// In some cases, each cell needs to use this index to create some customizations
     public internal(set) var indexPath: IndexPath?
-    
-    /// Bag for databindings
-    public var disposeBag: DisposeBag? = DisposeBag()
     
     var isReacted = false
     

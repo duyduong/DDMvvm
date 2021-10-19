@@ -14,8 +14,6 @@ open class View<VM: IViewModel>: UIView, IView {
     
     public typealias ViewModelElement = VM
     
-    public var disposeBag: DisposeBag? = DisposeBag()
-    
     private var _viewModel: VM?
     public var viewModel: VM? {
         get { return _viewModel }
@@ -74,8 +72,6 @@ open class CollectionCell<VM: IViewModel>: UICollectionViewCell, IView {
     
     public typealias ViewModelElement = VM
     
-    public var disposeBag: DisposeBag? = DisposeBag()
-    
     private var _viewModel: VM?
     public var viewModel: VM? {
         get { return _viewModel }
@@ -129,8 +125,6 @@ open class TableCell<VM: IViewModel>: UITableViewCell, IView {
     }
     
     public typealias ViewModelElement = VM
-    
-    public var disposeBag: DisposeBag? = DisposeBag()
     
     private var _viewModel: VM?
     public var viewModel: VM? {

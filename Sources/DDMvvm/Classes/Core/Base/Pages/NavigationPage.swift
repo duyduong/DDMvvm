@@ -24,8 +24,6 @@ open class NavigationPage: UINavigationController, UIGestureRecognizerDelegate {
     delegate = self
     interactivePopGestureRecognizer?.delegate = self
   }
-  
-  public var disposeBag: DisposeBag? = DisposeBag()
 }
 
 extension NavigationPage: UINavigationControllerDelegate {
